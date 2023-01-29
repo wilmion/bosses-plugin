@@ -1,0 +1,6 @@
+name: AlaractPlugin
+version: '${project.version}'
+main: com.wilmion.alaractplugin.AlaractPlugin
+api-version: 1.19
+authors: [ Wilmion ]
+description: Este es un plugin bien alaraco
