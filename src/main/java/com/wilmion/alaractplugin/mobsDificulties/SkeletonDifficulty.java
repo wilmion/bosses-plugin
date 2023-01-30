@@ -1,7 +1,8 @@
 package com.wilmion.alaractplugin.mobsDificulties;
 
+import com.wilmion.alaractplugin.utils.Utils;
 import com.wilmion.alaractplugin.mobsDificulties.boss.MasterSkeleton;
-import com.wilmion.alaractplugin.mobsDificulties.boss.SupportZombie;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -13,12 +14,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import com.wilmion.alaractplugin.utils.Utils;
-
 
 public class SkeletonDifficulty implements Listener {
     Plugin plugin;
@@ -27,6 +27,16 @@ public class SkeletonDifficulty implements Listener {
 
     public SkeletonDifficulty(Plugin plugin) {
         this.plugin = plugin;
+    }
+
+    @EventHandler()
+    public void OnShootByBow(EntityShootBowEvent event) {
+        MasterSkeleton.handleShoot(event);
+    }
+
+    @EventHandler()
+    public void OnDead(EntityDeathEvent event) {
+        MasterSkeleton.handleDead(event);
     }
 
     @EventHandler()
