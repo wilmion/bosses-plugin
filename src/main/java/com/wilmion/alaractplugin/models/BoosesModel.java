@@ -22,7 +22,6 @@ import java.util.Map;
 
 
 public class BoosesModel {
-
     protected Plugin plugin;
     protected World world;
     protected Server server;
@@ -31,7 +30,7 @@ public class BoosesModel {
     protected String perkName;
     protected ChatColor colorTextPerk;
     protected Material materialPerk;
-    public BoosesModel(Player player, Location location, Plugin plugin, Double initialHealth, String type, String id, String perkName) {
+    public BoosesModel(Player player, Location location, Plugin plugin, Double initialHealth, String type, String id, String perkName, String nameEntity) {
         this.plugin = plugin;
         this.world = player.getWorld();
         this.server = plugin.getServer();
@@ -47,16 +46,17 @@ public class BoosesModel {
         healthAttribute.setBaseValue(initialHealth);
 
         living.setHealth(initialHealth);
-        this.entity.setCustomName("ANN LA MAESTRA");
+        this.entity.setCustomName(nameEntity);
         this.entity.setCustomNameVisible(true);
         this.entity.setMetadata(id, new FixedMetadataValue(this.plugin, "true"));
         this.equipBoss();
     }
 
     protected boolean isAlive() {
-        LivingEntity living = (LivingEntity) this.entity;
+        boolean valid = this.entity.isValid();
+        boolean alive = !this.entity.isDead();
 
-        return living.getHealth() > 0.0;
+        return alive && valid;
     }
 
     protected Player getTarget() {
@@ -124,9 +124,7 @@ public class BoosesModel {
 
         lambda.ultimates(health, entityID);
 
-        boolean continueAlth = health <= 0.0 &&  isSupported;
-
-        return !continueAlth;
+        return false;
     }
 
 

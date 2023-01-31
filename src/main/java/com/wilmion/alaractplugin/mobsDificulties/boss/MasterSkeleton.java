@@ -2,8 +2,8 @@ package com.wilmion.alaractplugin.mobsDificulties.boss;
 
 import com.wilmion.alaractplugin.interfaces.IUltimateLambda;
 import com.wilmion.alaractplugin.models.BoosesModel;
-
 import com.wilmion.alaractplugin.utils.Utils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,7 +35,7 @@ public class MasterSkeleton extends BoosesModel {
     private boolean useUltimate1 = false;
 
     public MasterSkeleton(Player player, Location location, Plugin plugin) {
-        super(player, location, plugin, maxHealth, "SKELETON", idMetadata, "Cristal de Hueso");
+        super(player, location, plugin, maxHealth, "SKELETON", idMetadata, "Cristal de Hueso", "ANN LA MAESTRA");
 
         this.colorTextPerk = ChatColor.WHITE;
         this.materialPerk = Material.WHITE_DYE;
@@ -43,9 +43,9 @@ public class MasterSkeleton extends BoosesModel {
         String entityID = String.valueOf(this.entity.getEntityId());
         bosses.put(entityID, this);
 
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, () -> this.usePassive(), 120, 120);
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, () -> this.useATQE1(), 140, 100);
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, () -> this.useATQE2(), 200, 300);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive, 120, 120);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useATQE1, 140, 100);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useATQE2, 200, 300);
     }
     private Skeleton getBoos() {
         return (Skeleton) this.entity;
@@ -80,7 +80,7 @@ public class MasterSkeleton extends BoosesModel {
             world.createExplosion(location, 2F, false);
         }, 30);
 
-        if(probability <= 50) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> super.deadFunctionality(), 60);
+        if(probability <= 50) server.getScheduler().scheduleSyncDelayedTask(plugin, super::deadFunctionality, 60);
     }
 
     private void useATQE1() {

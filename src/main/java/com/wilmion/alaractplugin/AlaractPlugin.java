@@ -1,5 +1,6 @@
 package com.wilmion.alaractplugin;
 
+import com.wilmion.alaractplugin.mobsDificulties.SpiderDifficulty;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +29,7 @@ public final class AlaractPlugin extends JavaPlugin {
         pluginManager.registerEvents(new CreeperDifficulty(), this);
         pluginManager.registerEvents(skeletonPlugin, this);
         pluginManager.registerEvents(zombiePlugin, this);
+        pluginManager.registerEvents(new SpiderDifficulty(this), this);
     }
 
     @Override
