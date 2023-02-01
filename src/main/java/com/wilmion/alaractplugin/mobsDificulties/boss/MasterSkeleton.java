@@ -1,6 +1,7 @@
 package com.wilmion.alaractplugin.mobsDificulties.boss;
 
 import com.wilmion.alaractplugin.interfaces.IUltimateLambda;
+import com.wilmion.alaractplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.alaractplugin.models.BoosesModel;
 import com.wilmion.alaractplugin.utils.Utils;
 
@@ -60,6 +61,7 @@ public class MasterSkeleton extends BoosesModel {
 
         helmet.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, 4);
         bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 6);
+        bow.addUnsafeEnchantment(Enchantment.ARROW_KNOCKBACK, 3);
 
         boss.getEquipment().setHelmet(helmet);
         boss.getEquipment().setItemInMainHand(bow);
@@ -93,19 +95,13 @@ public class MasterSkeleton extends BoosesModel {
 
         this.setTemporalInvunerability();
 
-        for (int x = range * -1; x <= range ; x++) {
-            for (int z = range; z >= range * -1 ; z--) {
-                Location location = player.getLocation();
+        ActionRangeBlocks action = (location) -> {
+            server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                world.spawnArrow(location, new Vector(0,-1,0), 8.0f, 0);
+            }, 10);
+        };
 
-                location.setX(location.getX() + x);
-                location.setZ(location.getZ() + z);
-                location.setY(location.getY() + 30);
-
-                server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    world.spawnArrow(location, new Vector(0,-1,0), 8.0f, 0);
-                }, 10);
-            }
-        }
+        Utils.executeActionInARangeOfBlock(range, 30, player.getLocation(), action);
     }
 
     private void useATQE2() {
@@ -251,7 +247,7 @@ public class MasterSkeleton extends BoosesModel {
     }
 
     public static void handleDamage(EntityDamageEvent event) {
-        BoosesModel.handleDamage(event, "SKELETON", BarColor.WHITE, maxHealth, idMetadata);
+        BoosesModel.handleDamage(event, "SKELETON", BarColor.WHITE, maxHealth, idMetadata, null);
     }
 
     public static void handleDead(EntityDeathEvent event) {

@@ -55,8 +55,13 @@ public class SpiderDifficulty implements Listener {
 
         Location location = entity.getLocation();
 
-        if(true) {
+        if(probability <= 5) {
             new QueenSpider((Player) event.getDamager(), location, this.plugin);
+            return;
+        }
+
+        if(probability > 5 && probability < 10) {
+            new SoldierSpider((Player) event.getDamager(), location, this.plugin);
         }
     }
 }

@@ -3,4 +3,9 @@ version: '${project.version}'
 main: com.wilmion.alaractplugin.AlaractPlugin
 api-version: 1.19
 authors: [ Wilmion ]
-description: Este es un plugin bien alaraco
+description: Este es un plugin bien alaraco,
+commands:
+  spawnboss:
+    description: This command work for spawn the principal bosses of the plugin
+    usage: /<command> bossName
+

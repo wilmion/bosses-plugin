@@ -2,15 +2,13 @@ package com.wilmion.alaractplugin;
 
 import com.wilmion.alaractplugin.models.UserDataLevel;
 
+import java.util.Random;
+
 public class Test {
     public static void main(String[] args) {
-        String name = "TupapiWilmion";
+        Random random = new Random();
 
-        UserDataLevel user = new UserDataLevel(name);
+        int randomNUmber = random.nextInt(3) - 1;
 
-        user.addExp(30, null);
-
-        System.out.println("Name: " + user.getNameUser());
-        System.out.println("Exp: " + user.getExp());
     }
 }

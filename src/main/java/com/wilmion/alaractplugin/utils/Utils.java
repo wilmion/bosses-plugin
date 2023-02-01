@@ -1,10 +1,15 @@
 package com.wilmion.alaractplugin.utils;
 
+import com.wilmion.alaractplugin.interfaces.utils.ActionRangeBlocks;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
+import org.bukkit.Location;
 import org.bukkit.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.util.Vector;
 
 import java.io.*;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Utils {
@@ -27,6 +32,37 @@ public class Utils {
         int percentage = (int) rangeMultiplied;
 
         return  percentage;
+    }
+
+    public static int getRandomNumberForSpace() {
+        Random random = new Random();
+
+        int randomNUmber = random.nextInt(3) - 1;
+
+        return randomNUmber;
+    }
+
+    public static void executeActionInARangeOfBlock(int range, int modY, Location locationParam, ActionRangeBlocks lambda) {
+        for (int x = range * -1; x <= range ; x++) {
+            for (int z = range; z >= range * -1 ; z--) {
+                Location location = locationParam.clone();
+
+                location.setX(location.getX() + x);
+                location.setZ(location.getZ() + z);
+                location.setY(location.getY() + modY);
+
+                lambda.action(location);
+            }
+        }
+    }
+
+    public static void removeKnockback(EntityDamageByEntityEvent event) {
+        Entity damager = event.getDamager();
+        Entity mainer = event.getEntity();
+
+        Vector velocity = damager.getLocation().getDirection().setY(0).normalize().multiply(-2);
+
+        mainer.setVelocity(velocity);
     }
 
     public static void setTitleOnPlayer(Player player, String title, String subtitle) {

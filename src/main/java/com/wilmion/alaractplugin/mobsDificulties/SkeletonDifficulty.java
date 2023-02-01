@@ -61,7 +61,7 @@ public class SkeletonDifficulty implements Listener {
 
         Location location = entity.getLocation();
 
-        if(true) {
+        if(probability <= 5) {
             new MasterSkeleton((Player) event.getDamager(), location, this.plugin);
             return;
         }

@@ -68,7 +68,7 @@ public class ZombieDifficulty implements Listener  {
         int probability = Utils.getRandomInPercentage();
 
 
-        if(probability <= 70) {
+        if(probability <= 5) {
             new SupportZombie((Player) event.getDamager(), location, this.plugin);
             return;
         }

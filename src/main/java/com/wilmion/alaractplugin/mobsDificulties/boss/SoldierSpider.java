@@ -104,7 +104,7 @@ public class SoldierSpider extends BoosesModel {
     }
 
     public static void handleDamage(EntityDamageEvent event) {
-        BoosesModel.handleDamage(event, "CAVE_SPIDER", BarColor.GREEN, maxHealth, idMetadata);
+        BoosesModel.handleDamage(event, "CAVE_SPIDER", BarColor.GREEN, maxHealth, idMetadata, null);
     }
 
     public static void handleDead(EntityDeathEvent event) {

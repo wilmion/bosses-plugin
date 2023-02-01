@@ -128,18 +128,20 @@ public class BoosesModel {
     }
 
 
-    public static void handleDamage(EntityDamageEvent event, String key, BarColor color, double maxHealth, String idMetadata) {
+    public static void handleDamage(EntityDamageEvent event, String key, BarColor color, double maxHealth, String idMetadata, Runnable action) {
         Entity entity = event.getEntity();
 
         boolean isTypeEntity = entity.getType() == EntityType.valueOf(key);
         boolean isSupportedEntity = entity.hasMetadata(idMetadata);
 
         if(!isTypeEntity || !isSupportedEntity) return;
+
         LivingEntity bossEntity = (LivingEntity) entity;
 
         double health = Utils.getHealthByDamage(event.getFinalDamage(), bossEntity.getHealth());
 
         upsertHealthBar(entity, null, health, color, maxHealth, idMetadata);
+        action.run();
     }
 
     public static void handleDead(EntityDeathEvent event, String idMetadata, Map<String, ? extends BoosesModel> bosses) {
