@@ -1,13 +1,18 @@
 package com.wilmion.alaractplugin.player;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import com.wilmion.alaractplugin.models.MobDifficulty;
 
-public class PlayerDifficulty implements Listener {
-    @EventHandler
-    public void OnMove(PlayerMoveEvent event) {
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.Plugin;
+
+public class PlayerDifficulty extends MobDifficulty {
+
+    public PlayerDifficulty(Plugin plugin) {
+        super(plugin);
+    }
+
+    public void onMovePlayerDifficultyEvent(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
         double health = player.getHealth();

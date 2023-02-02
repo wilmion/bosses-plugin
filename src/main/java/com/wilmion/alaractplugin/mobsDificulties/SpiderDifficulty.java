@@ -2,42 +2,34 @@ package com.wilmion.alaractplugin.mobsDificulties;
 
 import com.wilmion.alaractplugin.mobsDificulties.boss.QueenSpider;
 import com.wilmion.alaractplugin.mobsDificulties.boss.SoldierSpider;
+import com.wilmion.alaractplugin.models.MobDifficulty;
 import com.wilmion.alaractplugin.utils.Utils;
 
 import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.Plugin;
 
-public class SpiderDifficulty implements Listener {
-    private Plugin plugin;
-    private Server server;
-    private World world;
+public class SpiderDifficulty extends MobDifficulty {
     public SpiderDifficulty(Plugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
-    @EventHandler()
-    public void OnDead(EntityDeathEvent event) {
+
+    public void OnDeadSpiderEvent(EntityDeathEvent event) {
         SoldierSpider.handleDead(event);
         QueenSpider.handleDead(event);
     }
 
-    @EventHandler()
-    public void OnDamage(EntityDamageEvent event) {
+    public void onDamageSpiderEvent(EntityDamageEvent event) {
         SoldierSpider.handleDamage(event);
         QueenSpider.handleDamage(event);
     }
 
-    @EventHandler()
-    public void OnDamageByEntity(EntityDamageByEntityEvent event) {
+    public void OnDamageByEntitySpiderEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         world = entity.getWorld();
         server = entity.getServer();

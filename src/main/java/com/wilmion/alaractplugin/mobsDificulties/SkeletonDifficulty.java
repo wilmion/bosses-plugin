@@ -1,17 +1,14 @@
 package com.wilmion.alaractplugin.mobsDificulties;
 
+import com.wilmion.alaractplugin.models.MobDifficulty;
 import com.wilmion.alaractplugin.utils.Utils;
 import com.wilmion.alaractplugin.mobsDificulties.boss.MasterSkeleton;
 
 import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -20,32 +17,24 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class SkeletonDifficulty implements Listener {
-    Plugin plugin;
-    World world;
-    Server server;
-
+public class SkeletonDifficulty extends MobDifficulty {
     public SkeletonDifficulty(Plugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
-    @EventHandler()
-    public void OnShootByBow(EntityShootBowEvent event) {
+    public void onShootSkeletonEvent(EntityShootBowEvent event) {
         MasterSkeleton.handleShoot(event);
     }
 
-    @EventHandler()
-    public void OnDead(EntityDeathEvent event) {
+    public void onDeadSkeletonEvent(EntityDeathEvent event) {
         MasterSkeleton.handleDead(event);
     }
 
-    @EventHandler()
-    public void OnDamage(EntityDamageEvent event) {
+    public void onDamageSkeletonEvent(EntityDamageEvent event) {
         MasterSkeleton.handleDamage(event);
     }
 
-    @EventHandler()
-    public void OnDamageByEntity(EntityDamageByEntityEvent event) {
+    public void onDamageByEntitySkeletonEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         world = entity.getWorld();
         server = entity.getServer();
@@ -72,13 +61,11 @@ public class SkeletonDifficulty implements Listener {
 
             spawnSkeletons(nSkeletons, location);
             spawnWhitersSkeletons(nWhiterSkeletons, location);
-            server.broadcast("Osas retar a los venecos >:v", "all");
         }
     }
 
     private void spawnLigthing(Location location) {
         if(world == null) return;
-
         world.spawnEntity(location, EntityType.LIGHTNING);
     }
 

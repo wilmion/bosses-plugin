@@ -1,19 +1,17 @@
 package com.wilmion.alaractplugin.mobsDificulties.boss;
 
-import com.wilmion.alaractplugin.models.ProgressBar;
+import com.wilmion.alaractplugin.interfaces.IUltimateLambda;
+import com.wilmion.alaractplugin.models.BoosesModel;
+
 import com.wilmion.alaractplugin.utils.Utils;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.BlockFace;
 import org.bukkit.boss.BarColor;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -22,53 +20,62 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class SupportZombie {
+public class SupportZombie extends BoosesModel {
     static Map<String, SupportZombie> bosses = new TreeMap<>();
-    static final int periodPassive = 100;
-    static final String idMetadata = "support-boss-zombie";
+    static final String idMetadata = "SUPPORT_ZOMBIE_BOSS";
     static final String idFollower = "PARENT-ID";
     static final  String idSpecialFollower = "IS-SPECIAL-FOLLOWER-FROM-ZOMBIE-SUPPORT";
+
+    static final double maxHealth = 100.0;
     private int spawnedZombies = 0;
     private boolean useUltimate1 = false;
     private boolean useUltimate2 = false;
-    Zombie entity;
-    World world;
-    Plugin plugin;
-   public SupportZombie(Player player, Location location, Plugin plugin) {
-       this.world = player.getWorld();
-       this.plugin = plugin;
+    public SupportZombie(Player player, Location location, Plugin plugin) {
+       super(player, location, plugin, maxHealth, "ZOMBIE", idMetadata, "Escencia de los condenados", "JORDI EL IRRESISTIBLE");
 
-       world.spawn(location, LightningStrike.class);
-       this.entity = world.spawn(location, Zombie.class);
-       this.setTemporalInvunerability();
+       this.colorTextPerk = ChatColor.YELLOW;
+       this.materialPerk = Material.YELLOW_DYE;
 
-       AttributeInstance healthAttribute = this.entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-       healthAttribute.setBaseValue(100.0);
-
-       this.entity.setHealth(100.0);
-       this.entity.setCustomName("JORDI EL IRRESISTIBLE");
-       this.entity.setCustomNameVisible(true);
-       this.equipZombie(this.entity);
-       this.entity.setMetadata(idMetadata, new FixedMetadataValue(this.plugin, "true"));
-
-       plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, () -> {
-             if(spawnedZombies < 4 && this.entity.getHealth() > 0.0) this.passiveHability();
-       }, periodPassive, periodPassive);
+       plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, this::usePassive, 50, 50);
 
        String entityID = String.valueOf(this.entity.getEntityId());
 
        bosses.put(entityID, this);
    }
 
-   private void setTemporalInvunerability() {
-       PotionEffect fireResistence = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 400, 10);
-       PotionEffect damageResistence = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 50,12);
-
-       this.entity.addPotionEffect(fireResistence);
-       this.entity.addPotionEffect(damageResistence);
+    private Zombie getBoss() {
+       return (Zombie) this.entity;
    }
 
-   private void passiveHability() {
+    @Override
+    protected void equipBoss() {
+        Zombie zombie = getBoss();
+
+        zombie.getEquipment().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
+        zombie.getEquipment().setChestplate(new ItemStack(Material.GOLDEN_CHESTPLATE));
+        zombie.getEquipment().setLeggings(new ItemStack(Material.GOLDEN_LEGGINGS));
+        zombie.getEquipment().setBoots(new ItemStack(Material.GOLDEN_BOOTS));
+
+        zombie.getEquipment().setItemInMainHand(new ItemStack(Material.STICK));
+    }
+    @Override
+    public void deadFunctionality() {
+        Location location = this.entity.getLocation();
+        world.spawn(location, TNTPrimed.class);
+        world.spawn(location, TNTPrimed.class);
+        world.spawn(location, TNTPrimed.class);
+
+        world.playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE , 1, 0);
+
+        final int probability = Utils.getRandomInPercentage();
+
+        if (probability <= 50) {
+            this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, super::deadFunctionality, 100);
+        }
+    }
+    private void usePassive() {
+       if(spawnedZombies >= 4 || !this.isAlive()) return;
+
        BlockFace face = entity.getFacing();
        Location location = entity.getLocation();
        String entityID = String.valueOf(this.entity.getEntityId());
@@ -95,16 +102,7 @@ public class SupportZombie {
        spawnedZombies++;
    }
 
-   private void equipZombie(Zombie zombie) {
-       zombie.getEquipment().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
-       zombie.getEquipment().setChestplate(new ItemStack(Material.GOLDEN_CHESTPLATE));
-       zombie.getEquipment().setLeggings(new ItemStack(Material.GOLDEN_LEGGINGS));
-       zombie.getEquipment().setBoots(new ItemStack(Material.GOLDEN_BOOTS));
-
-       zombie.getEquipment().setItemInMainHand(new ItemStack(Material.STICK));
-   }
-
-   private void generateSpecialFollower(Location location) {
+    private void generateSpecialFollower(Location location) {
        world.spawn(location, LightningStrike.class);
        Zombie zombie = world.spawn(location, Zombie.class);
 
@@ -123,28 +121,28 @@ public class SupportZombie {
        zombie.setMetadata(idSpecialFollower, new FixedMetadataValue(this.plugin, "YEAH"));
    }
 
-   private void teleportZombie(Location location, Player player) {
-       player.playSound(this.entity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+    private void teleportZombie(Location location) {
+       world.playSound(this.entity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 0);
        this.entity.teleport(location);
    }
 
-   private int getRandomDirection() {
+    private int getRandomDirection() {
        int randomNumber = Utils.getRandomInPercentage();
        int modifyDirection = randomNumber % 2 == 0? 1 : -1;
 
        return  modifyDirection;
    }
 
-   public void playUltimate1() {
-       BlockFace face = entity.getFacing();
-       Location location = entity.getLocation();
-       Entity target = entity.getTarget();
+    public void playUltimate1() {
+       Zombie boss = getBoss();
 
-       if(target == null || !(target instanceof Player) || useUltimate1) return;
+       BlockFace face = boss.getFacing();
+       Location location = boss.getLocation();
+       Entity target = boss.getTarget();
+
+       if(target == null || !(target instanceof LivingEntity) || useUltimate1) return;
 
        this.useUltimate1 = true;
-
-       Player player = (Player) target;
 
        int modX = face.getModX();
        int modZ = face.getModZ();
@@ -155,7 +153,7 @@ public class SupportZombie {
        location.setX(location.getX() + greaterValOnX);
        location.setZ(location.getZ() + greaterValOnZ);
 
-       this.teleportZombie(location, player);
+       this.teleportZombie(location);
 
        int newXGreaterVal = modX * 3;
        int newZGreaterVal = modZ * 3;
@@ -163,7 +161,7 @@ public class SupportZombie {
        for (int i = 0; i < 3; i++) {
            final int index = i;
 
-           plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin , () -> {
+           Runnable task = () -> {
                Location locationSpawn = entity.getLocation();
 
                locationSpawn.setX(locationSpawn.getX() + newXGreaterVal);
@@ -178,28 +176,29 @@ public class SupportZombie {
 
                this.generateSpecialFollower(locationSpawn);
 
-               if(index != 0) {
-                   if (newXGreaterVal != 0) locationSpawn2.setZ(locationSpawn2.getZ() - greaterCordinate);
-                   else locationSpawn.setX(locationSpawn2.getX() - greaterCordinate);
+               if(index != 0) return;
 
-                   this.generateSpecialFollower(locationSpawn2);
-                   this.setTemporalInvunerability();
-               }
-           }, 20 * index);
+               if (newXGreaterVal != 0) locationSpawn2.setZ(locationSpawn2.getZ() - greaterCordinate);
+               else locationSpawn.setX(locationSpawn2.getX() - greaterCordinate);
+
+               this.generateSpecialFollower(locationSpawn2);
+               this.setTemporalInvunerability();
+           };
+
+           plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin , task , 20 * index);
        }
    }
 
-   public void playUltimate2() {
-       Entity target = entity.getTarget();
+    public void playUltimate2() {
+       Zombie boss = getBoss();
+       Entity target = boss.getTarget();
 
-       if(target == null || !(target instanceof Player) || useUltimate2) return;
-
-       final Player player = (Player) target;
+       if(target == null || !(target instanceof LivingEntity) || useUltimate2) return;
 
        this.useUltimate2 = true;
 
        Runnable handleHability = () -> {
-           Location location = player.getLocation();
+           Location location = target.getLocation();
 
            int xMultiplier = this.getRandomDirection() * 5;
            int zMultiplier = this.getRandomDirection() * 5;
@@ -207,7 +206,7 @@ public class SupportZombie {
            location.setX(location.getX() + xMultiplier);
            location.setZ(location.getZ() + zMultiplier);
 
-           this.teleportZombie(location, player);
+           this.teleportZombie(location);
            this.setTemporalInvunerability();
 
            Runnable handleSpawnSpecial = () -> {
@@ -222,121 +221,40 @@ public class SupportZombie {
        }
    }
 
-   public void removeSpawnedZombies(int quantity) {
-       this.spawnedZombies -= quantity;
-   }
+    public void removeSpawnedZombies(int quantity) {
+        this.spawnedZombies -= quantity;
+    }
 
-   public void deadFunctionalitie() {
-       Location location = this.entity.getLocation();
-       world.spawn(location, TNTPrimed.class);
-       world.spawn(location, TNTPrimed.class);
-       world.spawn(location, TNTPrimed.class);
+    public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
+       IUltimateLambda ultimate = (health, entityID) -> {
+           SupportZombie boss = bosses.get(entityID);
 
-       world.playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE , 1, 0);
+           if(health <= maxHealth * 0.5) boss.playUltimate1();
 
-       Runnable handleSpawnReward = () -> {
-           ItemStack perk = new ItemStack(Material.YELLOW_DYE, 1, (short) 0);
+           if(health <= maxHealth * 0.3) boss.playUltimate2();
 
-           ItemMeta goldSwordMetadata = perk.getItemMeta();
-
-           goldSwordMetadata.setDisplayName(ChatColor.YELLOW + "Esencia de los condenados"); //Deprecated function
-
-           perk.setItemMeta(goldSwordMetadata);
-
-           world.dropItem(location, perk);
        };
 
-       final int probability = Utils.getRandomInPercentage();
-
-       if (probability <= 50) {
-           this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, handleSpawnReward, 100);
-       }
-   }
-
-   public static void upsertHealthBar(Zombie zombie, Player player, double health) {
-       String name = zombie.getCustomName();
-
-       ProgressBar progressBar = new ProgressBar(idMetadata);
-       progressBar.setTitle(name + ChatColor.DARK_RED);
-       progressBar.setColor(BarColor.RED);
-       progressBar.setProgress(health / 100.0);
-
-       if(health > 0.0) progressBar.enableBar();
-
-       if(player != null) progressBar.addPlayer(player);
-   }
-
-   public static void useUltimates(Zombie zombie, double health) {
-        String entityID = String.valueOf(zombie.getEntityId());
-
-        SupportZombie boss = bosses.get(entityID);
-
-        if(health <= 50.0) {
-            boss.playUltimate1();
-        }
-
-        if(health <= 30.00) {
-            boss.playUltimate2();
-        }
-   }
-
-   public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
        Entity entity = event.getEntity();
-       LivingEntity living = (LivingEntity) entity;
 
-       boolean isZombie = entity.getType() == EntityType.ZOMBIE;
-       boolean isSupportedZombie = entity.hasMetadata(idMetadata);
        boolean isSupportedSpecialZombie = entity.hasMetadata(idSpecialFollower);
-       Player playerDamager = Utils.playerDamager(event.getDamager());
-
        boolean isFollower = entity.hasMetadata(idFollower);
 
-       double health = Utils.getHealthByDamage(event.getFinalDamage(), living.getHealth());
+       boolean continueAlth =  BoosesModel.handleDamageByEntity(event, BarColor.RED, maxHealth, idMetadata, "ZOMBIE", ultimate);
 
-       if(!isZombie) return true;
-
-       if(isSupportedZombie) {
-           Zombie bossEntity = (Zombie) entity;
-           useUltimates(bossEntity, health);
-           upsertHealthBar(bossEntity, playerDamager, health);
-       }
-
-       boolean continueAlth = health <= 0.0 && (isFollower || isSupportedZombie || isSupportedSpecialZombie);
-
-       return !continueAlth;
+       return (isSupportedSpecialZombie || isFollower) ? false : continueAlth;
    }
 
-   public static void handleDamage(EntityDamageEvent event) {
-       Entity entity = event.getEntity();
-
-       boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.ZOMBIE);
-       boolean isSupportedZombie = entity.hasMetadata(idMetadata);
-
-       if(!isDead || !isSupportedZombie) return;
-       Zombie bossEntity = (Zombie) entity;
-
-       double health = Utils.getHealthByDamage(event.getFinalDamage(), bossEntity.getHealth());
-
-       upsertHealthBar(bossEntity, null, health);
+    public static void handleDamage(EntityDamageEvent event) {
+       BoosesModel.handleDamage(event, "ZOMBIE", BarColor.RED, maxHealth, idMetadata, null);
    }
 
-   public static void handleDead(EntityDeathEvent event) {
+    public static void handleDead(EntityDeathEvent event) {
+       BoosesModel.handleDead(event, idMetadata, bosses);
+
        Entity entity = event.getEntity();
-       String entityID = String.valueOf(entity.getEntityId());
 
        boolean isFollower = entity.hasMetadata(idFollower);
-       boolean isSupportedZombie = entity.hasMetadata(idMetadata);
-
-       if(isSupportedZombie) {
-           ProgressBar progressBar = new ProgressBar(idMetadata);
-           progressBar.disabledBar();
-           progressBar.removeAllUsers();
-
-           SupportZombie zombie = bosses.get(entityID);
-
-           zombie.deadFunctionalitie();
-           return;
-       }
 
        if(!isFollower) return;
 

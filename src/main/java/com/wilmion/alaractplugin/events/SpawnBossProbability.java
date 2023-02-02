@@ -5,17 +5,13 @@ import com.wilmion.alaractplugin.mobsDificulties.boss.QueenSpider;
 import com.wilmion.alaractplugin.mobsDificulties.boss.SoldierSpider;
 import com.wilmion.alaractplugin.mobsDificulties.boss.SupportZombie;
 import com.wilmion.alaractplugin.utils.Utils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.entity.Boss;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Random;
-import java.util.stream.Stream;
 
 public class SpawnBossProbability {
     private Plugin plugin;

@@ -26,10 +26,9 @@ public class Utils {
     }
 
     public static int getRandomInPercentage() {
-        double range = getRandom();
-        double rangeMultiplied = range * 10.00;
+        Random random = new Random();
 
-        int percentage = (int) rangeMultiplied;
+        int percentage = random.nextInt(101);
 
         return  percentage;
     }

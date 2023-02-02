@@ -1,17 +1,19 @@
 package com.wilmion.alaractplugin.mobsDificulties;
 
+import com.wilmion.alaractplugin.models.MobDifficulty;
+import com.wilmion.alaractplugin.utils.Utils;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.plugin.Plugin;
 
-import com.wilmion.alaractplugin.utils.Utils;
-
-public class CreeperDifficulty implements Listener {
-    @EventHandler
-    public void OnDamage(EntityDamageEvent event) {
+public class CreeperDifficulty extends MobDifficulty {
+    public CreeperDifficulty(Plugin plugin) {
+        super(plugin);
+    }
+    public void onDamageCrepperEvent(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.CREEPER);
         Boolean isValidCause = Utils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
@@ -22,13 +24,11 @@ public class CreeperDifficulty implements Listener {
 
         if(probability <= 3) {
             spawnCreeperCharge(entity.getLocation());
-            entity.getServer().broadcastMessage("Aparecio un creeper sobrecargado, yo que tu me alejaria mua jua jua");
             return;
         }
 
         if (probability <= 2) {
             spawnTNTCharge(entity.getLocation());
-            entity.getServer().broadcastMessage("Aparecio un TNT 0.0");
         }
     }
 

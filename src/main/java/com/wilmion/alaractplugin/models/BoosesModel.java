@@ -46,9 +46,12 @@ public class BoosesModel {
         healthAttribute.setBaseValue(initialHealth);
 
         living.setHealth(initialHealth);
+        living.setRemoveWhenFarAway(false);
+
         this.entity.setCustomName(nameEntity);
         this.entity.setCustomNameVisible(true);
         this.entity.setMetadata(id, new FixedMetadataValue(this.plugin, "true"));
+
         this.equipBoss();
     }
 

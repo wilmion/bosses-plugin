@@ -1,19 +1,16 @@
 package com.wilmion.alaractplugin.mobsDificulties;
 
 import com.wilmion.alaractplugin.mobsDificulties.boss.SupportZombie;
+import com.wilmion.alaractplugin.models.MobDifficulty;
 import com.wilmion.alaractplugin.utils.Utils;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -22,25 +19,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
-public class ZombieDifficulty implements Listener  {
-    Plugin plugin;
-    World world;
-    Server server;
-
-    // Use for specials zombies
-    String MINI_ZOMBIE_BOSS = "miniZombieBoss";
+public class ZombieDifficulty extends MobDifficulty  {
+    static String MINI_ZOMBIE_BOSS = "NETHERITE_ZOMBIE_BOSS";
 
     public ZombieDifficulty(Plugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
-    @EventHandler
-    public void onDieEntity(EntityDeathEvent event) {
+    public void onDeathZombieEvent(EntityDeathEvent event) {
        SupportZombie.handleDead(event);
     }
 
-    @EventHandler()
-    public void OnDamageByEntity(EntityDamageByEntityEvent event) {
+    public void onDamageByEntityZombieEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         world = entity.getWorld();
         server = entity.getServer();
@@ -79,8 +69,7 @@ public class ZombieDifficulty implements Listener  {
         }
     }
 
-    @EventHandler()
-    public void OnDamage(EntityDamageEvent event) {
+    public void onDamageZombieEvent(EntityDamageEvent event) {
         SupportZombie.handleDamage(event);
     }
 
@@ -94,7 +83,7 @@ public class ZombieDifficulty implements Listener  {
         zombie.getEquipment().setBoots(new ItemStack(Material.NETHERITE_BOOTS));
         zombie.getEquipment().setItemInMainHand(new ItemStack(Material.NETHERITE_SWORD));
 
-        zombie.setMetadata(MINI_ZOMBIE_BOSS, new FixedMetadataValue(plugin, "yes!"));
+        zombie.setMetadata(MINI_ZOMBIE_BOSS, new FixedMetadataValue(plugin, "true"));
 
     }
 
@@ -112,5 +101,4 @@ public class ZombieDifficulty implements Listener  {
 
         world.dropItem(location, GoldSword);
     }
-
 }

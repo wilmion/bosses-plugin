@@ -1,5 +1,6 @@
 package com.wilmion.alaractplugin.player;
 
+import com.wilmion.alaractplugin.models.MobDifficulty;
 import com.wilmion.alaractplugin.models.UserDataLevel;
 import com.wilmion.alaractplugin.models.ProgressBar;
 import com.wilmion.alaractplugin.utils.Utils;
@@ -9,36 +10,26 @@ import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 
-public class PlayerExp implements Listener {
-    Plugin plugin;
-
+public class PlayerExp extends MobDifficulty {
     public PlayerExp(Plugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
-
-    @EventHandler
-    public void OnPlayerMove(PlayerMoveEvent event) {
+    public void onMovePlayerEvent(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
         UserDataLevel userData = new UserDataLevel(player.getName());
 
         AttributeInstance maxHealthAttr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
 
-        long exp = userData.getExp();
-        double resultDivition = exp / 300;
+        int level = userData.getLevel();
 
-
-        if(resultDivition >= 1) {
-            double addHearts = Math.floor(resultDivition);
-            double newHearts = addHearts + 20.00;
-
+        if(level >= 1) {
+            double newHearts = level + 20.00;
             // 20.00 is the base value
             maxHealthAttr.setBaseValue(newHearts);
             return;
@@ -47,18 +38,16 @@ public class PlayerExp implements Listener {
         maxHealthAttr.setBaseValue(20.00);
     }
 
-    @EventHandler
-    public void OnDamageEntity(EntityDamageByEntityEvent event) {
+    public void onDamageByEntityPlayerEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         Entity damagerEntity = event.getDamager();
         LivingEntity livingEntity = (LivingEntity) entity;
 
-        double health = livingEntity.getHealth();
-        double currentHealth = health - event.getFinalDamage();
-
-        Boolean isDead = currentHealth <= 0.00;
-
         damagerEntity = Utils.playerDamager(damagerEntity);
+
+        double health = Utils.getHealthByDamage(event.getFinalDamage(), livingEntity.getHealth());
+
+        Boolean isDead = health <= 0.00;
 
         if(!isDead || damagerEntity == null) return;
 
@@ -125,10 +114,6 @@ public class PlayerExp implements Listener {
 
         ProgressBar reference = progressBar;
 
-        Runnable action = () -> {
-            reference.disabledBar();
-        };
-
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, action, 100);
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, reference::disabledBar, 100);
     }
 }
