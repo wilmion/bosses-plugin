@@ -58,12 +58,12 @@ public class ZombieDifficulty extends MobDifficulty  {
         int probability = Utils.getRandomInPercentage();
 
 
-        if(probability <= 5) {
+        if(probability <= 1) {
             new SupportZombie((Player) event.getDamager(), location, this.plugin);
             return;
         }
 
-        if(probability <= 15) {
+        if(probability <= 1) {
             spawnZombie(location);
             spawnZombie(location);
         }

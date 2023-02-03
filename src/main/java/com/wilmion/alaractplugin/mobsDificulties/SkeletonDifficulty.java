@@ -50,7 +50,7 @@ public class SkeletonDifficulty extends MobDifficulty {
 
         Location location = entity.getLocation();
 
-        if(probability <= 5) {
+        if(probability <= 1) {
             new MasterSkeleton((Player) event.getDamager(), location, this.plugin);
             return;
         }

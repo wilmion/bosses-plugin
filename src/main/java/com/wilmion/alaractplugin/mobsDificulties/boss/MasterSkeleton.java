@@ -3,6 +3,7 @@ package com.wilmion.alaractplugin.mobsDificulties.boss;
 import com.wilmion.alaractplugin.interfaces.IUltimateLambda;
 import com.wilmion.alaractplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.alaractplugin.models.BoosesModel;
+import com.wilmion.alaractplugin.models.Perk;
 import com.wilmion.alaractplugin.utils.Utils;
 
 import org.bukkit.ChatColor;
@@ -36,10 +37,7 @@ public class MasterSkeleton extends BoosesModel {
     private boolean useUltimate1 = false;
 
     public MasterSkeleton(Player player, Location location, Plugin plugin) {
-        super(player, location, plugin, maxHealth, "SKELETON", idMetadata, "Cristal de Hueso", "ANN LA MAESTRA");
-
-        this.colorTextPerk = ChatColor.WHITE;
-        this.materialPerk = Material.WHITE_DYE;
+        super(player, location, plugin, maxHealth, "SKELETON", idMetadata, "ANN LA MAESTRA");
 
         String entityID = String.valueOf(this.entity.getEntityId());
         bosses.put(entityID, this);
@@ -73,7 +71,8 @@ public class MasterSkeleton extends BoosesModel {
 
         int probability = Utils.getRandomInPercentage();
 
-        world.playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2, 0);
+        super.deadFunctionality();
+
         world.spawn(location, LightningStrike.class);
         world.createExplosion(location, 2F, false);
 
@@ -82,7 +81,9 @@ public class MasterSkeleton extends BoosesModel {
             world.createExplosion(location, 2F, false);
         }, 30);
 
-        if(probability <= 50) server.getScheduler().scheduleSyncDelayedTask(plugin, super::deadFunctionality, 60);
+        if(probability <= 50) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            Perk.generatePerk("Cristal de Hueso", Material.WHITE_DYE, entity.getLocation(), ChatColor.WHITE, world, plugin);
+        }, 60);
     }
 
     private void useATQE1() {

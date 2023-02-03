@@ -3,6 +3,7 @@ package com.wilmion.alaractplugin.mobsDificulties.boss;
 import com.wilmion.alaractplugin.interfaces.IUltimateLambda;
 import com.wilmion.alaractplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.alaractplugin.models.BoosesModel;
+import com.wilmion.alaractplugin.models.Perk;
 import com.wilmion.alaractplugin.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -32,10 +33,7 @@ public class QueenSpider extends BoosesModel {
     private int minions = 0;
     private boolean ultimate2Used = false;
     public QueenSpider(Player player, Location location, Plugin plugin) {
-        super(player, location, plugin, maxHealth, "SPIDER", idMetadata, "Pila de la fertilidad", "AURORA LA REINA");
-
-        this.colorTextPerk = ChatColor.BLACK;
-        this.materialPerk = Material.BLACK_DYE;
+        super(player, location, plugin, maxHealth, "SPIDER", idMetadata, "AURORA LA REINA");
 
         String entityID = String.valueOf(this.entity.getEntityId());
         bosses.put(entityID, this);
@@ -62,7 +60,7 @@ public class QueenSpider extends BoosesModel {
     public void deadFunctionality() {
         Location location = getBoss().getLocation();
 
-        world.playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2, 0);
+        super.deadFunctionality();
 
         ActionRangeBlocks actionRange = (locationParam) -> {
             locationParam.getBlock().setType(Material.COBWEB);
@@ -71,7 +69,7 @@ public class QueenSpider extends BoosesModel {
         Utils.executeActionInARangeOfBlock(4, 0, location, actionRange);
         Utils.executeActionInARangeOfBlock(4, 1, location, actionRange);
 
-        super.deadFunctionality();
+        Perk.generatePerk("Pila de la fertilidad", Material.BLACK_DYE, entity.getLocation(), ChatColor.BLACK, world, plugin);
     }
 
     public void lessMinions(int n) {

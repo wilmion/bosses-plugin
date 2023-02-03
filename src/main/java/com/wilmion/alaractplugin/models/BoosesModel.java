@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -25,16 +26,12 @@ public class BoosesModel {
     protected Plugin plugin;
     protected World world;
     protected Server server;
-
     protected Entity entity;
-    protected String perkName;
-    protected ChatColor colorTextPerk;
-    protected Material materialPerk;
-    public BoosesModel(Player player, Location location, Plugin plugin, Double initialHealth, String type, String id, String perkName, String nameEntity) {
+
+    public BoosesModel(Player player, Location location, Plugin plugin, Double initialHealth, String type, String id, String nameEntity) {
         this.plugin = plugin;
         this.world = player.getWorld();
         this.server = plugin.getServer();
-        this.perkName = perkName;
 
         world.spawn(location, LightningStrike.class);
         this.entity = world.spawnEntity(location, EntityType.valueOf(type));
@@ -86,15 +83,7 @@ public class BoosesModel {
     }
 
     public void deadFunctionality() {
-        ItemStack perk = new ItemStack(materialPerk, 1, (short) 0);
-
-        ItemMeta perkMetadata = perk.getItemMeta();
-
-        perkMetadata.setDisplayName(colorTextPerk + perkName); //Deprecated function
-
-        perk.setItemMeta(perkMetadata);
-
-        world.dropItem(this.entity.getLocation(), perk);
+        world.playSound(this.entity.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 2, 0);
     }
 
     private static void upsertHealthBar(Entity zombie, Player player, double health, BarColor color, double maxHealth, String idMetadata) {

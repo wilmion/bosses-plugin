@@ -47,12 +47,12 @@ public class SpiderDifficulty extends MobDifficulty {
 
         Location location = entity.getLocation();
 
-        if(probability <= 5) {
+        if(probability <= 1) {
             new QueenSpider((Player) event.getDamager(), location, this.plugin);
             return;
         }
 
-        if(probability > 5 && probability < 10) {
+        if(probability > 1 && probability < 10) {
             new SoldierSpider((Player) event.getDamager(), location, this.plugin);
         }
     }

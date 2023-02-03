@@ -3,6 +3,7 @@ package com.wilmion.alaractplugin.mobsDificulties.boss;
 import com.wilmion.alaractplugin.interfaces.IUltimateLambda;
 import com.wilmion.alaractplugin.models.BoosesModel;
 
+import com.wilmion.alaractplugin.models.Perk;
 import com.wilmion.alaractplugin.utils.Utils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
@@ -31,10 +32,7 @@ public class SupportZombie extends BoosesModel {
     private boolean useUltimate1 = false;
     private boolean useUltimate2 = false;
     public SupportZombie(Player player, Location location, Plugin plugin) {
-       super(player, location, plugin, maxHealth, "ZOMBIE", idMetadata, "Escencia de los condenados", "JORDI EL IRRESISTIBLE");
-
-       this.colorTextPerk = ChatColor.YELLOW;
-       this.materialPerk = Material.YELLOW_DYE;
+       super(player, location, plugin, maxHealth, "ZOMBIE", idMetadata, "JORDI EL IRRESISTIBLE");
 
        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, this::usePassive, 50, 50);
 
@@ -61,16 +59,19 @@ public class SupportZombie extends BoosesModel {
     @Override
     public void deadFunctionality() {
         Location location = this.entity.getLocation();
-        world.spawn(location, TNTPrimed.class);
-        world.spawn(location, TNTPrimed.class);
-        world.spawn(location, TNTPrimed.class);
 
-        world.playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE , 1, 0);
+        super.deadFunctionality();
+
+        world.spawn(location, TNTPrimed.class);
+        world.spawn(location, TNTPrimed.class);
+        world.spawn(location, TNTPrimed.class);
 
         final int probability = Utils.getRandomInPercentage();
 
         if (probability <= 50) {
-            this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, super::deadFunctionality, 100);
+            this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
+                Perk.generatePerk("Escencia de los condenados", Material.YELLOW_DYE, entity.getLocation(), ChatColor.YELLOW, world, plugin);
+            }, 100);
         }
     }
     private void usePassive() {

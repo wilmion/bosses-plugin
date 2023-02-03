@@ -1,6 +1,7 @@
 package com.wilmion.alaractplugin.mobsDificulties.boss;
 
 import com.wilmion.alaractplugin.models.BoosesModel;
+import com.wilmion.alaractplugin.models.Perk;
 import com.wilmion.alaractplugin.utils.Utils;
 
 import org.bukkit.ChatColor;
@@ -27,10 +28,7 @@ public class SoldierSpider extends BoosesModel {
     static double maxHealth = 70.0;
     static String idMetadata = "SOLDIER_SPIDER_BOSS";
     public SoldierSpider(Player player, Location location, Plugin plugin) {
-        super(player, location, plugin, maxHealth,"CAVE_SPIDER",  idMetadata, "Escencia de los primordiales", "MIQUEL EL SOLDADO");
-
-        this.colorTextPerk = ChatColor.DARK_GREEN;
-        this.materialPerk = Material.GREEN_DYE;
+        super(player, location, plugin, maxHealth,"CAVE_SPIDER",  idMetadata, "MIQUEL EL SOLDADO");
 
         String entityID = String.valueOf(this.entity.getEntityId());
         bosses.put(entityID, this);
@@ -55,12 +53,16 @@ public class SoldierSpider extends BoosesModel {
     @Override
     public void deadFunctionality() {
         Location location = this.entity.getLocation();
-        world.playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2, 0);
+
+        super.deadFunctionality();
+
         world.createExplosion(location, 5f , false);
 
         int probability = Utils.getRandomInPercentage();
 
-        if(probability >= 50.0) server.getScheduler().scheduleSyncDelayedTask(plugin, super::deadFunctionality, 20);
+        if(probability >= 50.0) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            Perk.generatePerk("Escencia de los primordiales", Material.GREEN_DYE, entity.getLocation(), ChatColor.DARK_GREEN, world, plugin);
+        }, 20);
     }
 
     private void usePassive() {

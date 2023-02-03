@@ -1,6 +1,7 @@
 package com.wilmion.alaractplugin;
 
 import com.wilmion.alaractplugin.events.EntityEvents;
+import com.wilmion.alaractplugin.events.ObserverPlayer;
 import com.wilmion.alaractplugin.events.SpawnBossCommand;
 import com.wilmion.alaractplugin.events.SpawnBossProbability;
 
@@ -19,6 +20,7 @@ public final class AlaractPlugin extends JavaPlugin {
         getCommand("spawnboss").setExecutor(new SpawnBossCommand(this));
 
         new SpawnBossProbability(this);
+        new ObserverPlayer(this);
     }
 
     @Override

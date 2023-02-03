@@ -54,11 +54,14 @@ public class UserDataLevel {
         return this.level;
     }
 
-    public double getRemaingPercentage() {
-        double expToNextLevelDouble = (double) expToNextLevel;
-        double expDouble = (double) exp;
+    public double getRemainPercentage() {
+        double lastAddingExp = 150.0 + (level * 50.0);
+        double lastLimitExp = expToNextLevel - lastAddingExp;
 
-        return  expDouble / expToNextLevelDouble;
+        double expToNextLevelDouble = expToNextLevel - lastLimitExp;
+        double expDouble = exp - lastLimitExp;
+
+        return expDouble / expToNextLevelDouble;
     }
 
     private boolean readUser(String name) {

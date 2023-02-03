@@ -28,14 +28,10 @@ public class PlayerExp extends MobDifficulty {
 
         int level = userData.getLevel();
 
-        if(level >= 1) {
-            double newHearts = level + 20.00;
-            // 20.00 is the base value
-            maxHealthAttr.setBaseValue(newHearts);
-            return;
-        }
+        double newHearts = level + 20.00;
+        // 20.00 is the base value
+        maxHealthAttr.setBaseValue(newHearts);
 
-        maxHealthAttr.setBaseValue(20.00);
     }
 
     public void onDamageByEntityPlayerEvent(EntityDamageByEntityEvent event) {
@@ -106,7 +102,7 @@ public class PlayerExp extends MobDifficulty {
 
         progressBar.setTitle("Para nivel " + nextLevel);
 
-        double progress = userData.getRemaingPercentage();
+        double progress = userData.getRemainPercentage();
 
         progressBar.setProgress(progress);
         progressBar.addPlayer(player);

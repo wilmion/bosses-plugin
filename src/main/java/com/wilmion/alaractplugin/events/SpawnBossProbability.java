@@ -16,18 +16,26 @@ import org.bukkit.plugin.Plugin;
 public class SpawnBossProbability {
     private Plugin plugin;
     private Server server;
+    private double delaySpawnBoss = 36000.0;
     public SpawnBossProbability(Plugin plugin) {
         this.plugin = plugin;
         this.server = plugin.getServer();
 
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::setSpawnObserver, 40, 40);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::setSpawnObserver, 100, 100);
     }
 
     private void setSpawnObserver() {
+        this.delaySpawnBoss -= 100.0;
+
+        if(delaySpawnBoss > 0.0) return;
+
         for(Player player: server.getOnlinePlayers()) {
             int probability = Utils.getRandomInPercentage();
 
-            if(probability <= 5) this.probabilityToSpawn(player);
+            if(probability <= 1) {
+                this.probabilityToSpawn(player);
+                this.delaySpawnBoss = 36000;
+            }
         }
     }
 
