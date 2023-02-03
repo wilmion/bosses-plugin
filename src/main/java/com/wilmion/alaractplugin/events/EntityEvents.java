@@ -1,5 +1,6 @@
 package com.wilmion.alaractplugin.events;
 
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.wilmion.alaractplugin.mobsDificulties.CreeperDifficulty;
 import com.wilmion.alaractplugin.mobsDificulties.SkeletonDifficulty;
 import com.wilmion.alaractplugin.mobsDificulties.SpiderDifficulty;
@@ -9,10 +10,7 @@ import com.wilmion.alaractplugin.player.PlayerExp;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -45,6 +43,16 @@ public class EntityEvents implements Listener {
     }
 
     @EventHandler
+    public void onEntityKnockbackByEntity(EntityKnockbackByEntityEvent event) {
+        creeper.onEntityKnockbackByEntityCreeperEvent(event);
+    }
+
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent event){
+        creeper.onEntityExplodeCreeperEvent(event);
+    }
+
+    @EventHandler
     public void onShootBow(EntityShootBowEvent event) {
         skeleton.onShootSkeletonEvent(event);
     }
@@ -54,7 +62,7 @@ public class EntityEvents implements Listener {
         zombie.onDamageZombieEvent(event);
         skeleton.onDamageSkeletonEvent(event);
         spider.onDamageSpiderEvent(event);
-        creeper.onDamageCrepperEvent(event);
+        creeper.onDamageCreeperEvent(event);
     }
 
     @EventHandler
@@ -63,6 +71,7 @@ public class EntityEvents implements Listener {
         zombie.onDamageByEntityZombieEvent(event);
         skeleton.onDamageByEntitySkeletonEvent(event);
         spider.OnDamageByEntitySpiderEvent(event);
+        creeper.onDamageByEntityCrepperEvent(event);
     }
 
     @EventHandler
@@ -70,5 +79,6 @@ public class EntityEvents implements Listener {
         zombie.onDeathZombieEvent(event);
         skeleton.onDeadSkeletonEvent(event);
         spider.OnDeadSpiderEvent(event);
+        creeper.onDeathCreeperEvent(event);
     }
 }

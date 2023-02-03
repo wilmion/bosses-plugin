@@ -86,8 +86,8 @@ public class BoosesModel {
         world.playSound(this.entity.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 2, 0);
     }
 
-    private static void upsertHealthBar(Entity zombie, Player player, double health, BarColor color, double maxHealth, String idMetadata) {
-        String name = zombie.getCustomName();
+    private static void upsertHealthBar(Entity entity, Player player, double health, BarColor color, double maxHealth, String idMetadata) {
+        String name = entity.getCustomName();
 
         ProgressBar progressBar = new ProgressBar(idMetadata);
         progressBar.setTitle(name);
@@ -127,13 +127,13 @@ public class BoosesModel {
         boolean isSupportedEntity = entity.hasMetadata(idMetadata);
 
         if(!isTypeEntity || !isSupportedEntity) return;
-
         LivingEntity bossEntity = (LivingEntity) entity;
+
+        action.run();
 
         double health = Utils.getHealthByDamage(event.getFinalDamage(), bossEntity.getHealth());
 
         upsertHealthBar(entity, null, health, color, maxHealth, idMetadata);
-        action.run();
     }
 
     public static void handleDead(EntityDeathEvent event, String idMetadata, Map<String, ? extends BoosesModel> bosses) {

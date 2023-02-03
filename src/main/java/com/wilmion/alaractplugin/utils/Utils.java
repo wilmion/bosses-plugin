@@ -131,7 +131,7 @@ public class Utils {
     }
 
     public static Boolean isDamageType(String causeName, String DAMAGE) {
-        Boolean isValidCause = causeName == DAMAGE;
+        Boolean isValidCause = causeName.equals(DAMAGE);
 
         return isValidCause;
     }
