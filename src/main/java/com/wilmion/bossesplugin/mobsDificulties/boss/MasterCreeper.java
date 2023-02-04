@@ -193,17 +193,8 @@ public class MasterCreeper extends BoosesModel {
 
         if(!isExplosion) return;
 
-        LivingEntity living = (LivingEntity) event.getEntity();
-
-        AttributeInstance healthAttribute = living.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-
-        double healthUpgraded = living.getHealth() + event.getFinalDamage();
-
-        healthAttribute.setBaseValue(healthUpgraded > maxHealth? healthUpgraded : maxHealth);
-
-        living.setHealth(healthUpgraded);
-
-        living.setVelocity(new Vector(0,-40,0));
+        event.setDamage(0.0);
+        event.setCancelled(true);
     }
 
     private static void detectDeathOfMinion(Entity entity) {

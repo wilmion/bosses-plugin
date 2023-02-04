@@ -10,7 +10,7 @@ public class UserDataLevel {
     private long expToNextLevel = 150;
     private String nameUser;
 
-    private final String pathPlugin = "plugins/bosses-plugin-data/exp-users";
+    private final String pathPlugin = "plugins/bosses-plugin-data/exp-users/";
 
     public UserDataLevel(String name) {
         boolean successRead = this.readUser(name);

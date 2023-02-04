@@ -1,9 +1,7 @@
 package com.wilmion.bossesplugin.events;
 
-import com.wilmion.bossesplugin.mobsDificulties.boss.MasterSkeleton;
-import com.wilmion.bossesplugin.mobsDificulties.boss.QueenSpider;
-import com.wilmion.bossesplugin.mobsDificulties.boss.SoldierSpider;
-import com.wilmion.bossesplugin.mobsDificulties.boss.SupportZombie;
+import com.wilmion.bossesplugin.mobsDificulties.boss.*;
+import com.wilmion.bossesplugin.models.BoosesModel;
 import com.wilmion.bossesplugin.utils.Utils;
 
 import org.bukkit.ChatColor;
@@ -11,6 +9,10 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
+import java.lang.reflect.Constructor;
+import java.util.Random;
+import java.util.function.Function;
 
 
 public class SpawnBossProbability {
@@ -34,20 +36,26 @@ public class SpawnBossProbability {
 
             if(probability <= 1) {
                 this.probabilityToSpawn(player);
-                this.delaySpawnBoss = 36000;
+                this.delaySpawnBoss = 36000.0;
             }
         }
     }
 
-    private void probabilityToSpawn(Player player) {
-        int probability = Utils.getRandomInPercentage();
-
+    private void probabilityToSpawn(Player player)  {
+        Random random = new Random();
         Location location = getRandomLocationNearlyPlayer(player);
 
-        if(probability >= 0 && probability <= 25) new SupportZombie(player, location, plugin);
-        if(probability > 25 && probability <= 50) new MasterSkeleton(player, location, plugin);
-        if(probability > 50 && probability <= 75) new QueenSpider(player, location, plugin);
-        if(probability > 75) new SoldierSpider(player, location, plugin);
+        Class<?>[] objects  = { SupportZombie.class, MasterSkeleton.class, QueenSpider.class, SoldierSpider.class, MasterCreeper.class};
+
+        int randomIndex = random.nextInt(objects.length);
+
+        Constructor constructor =  objects[randomIndex].getConstructors()[0];
+
+        try {
+            constructor.newInstance(player, location, plugin);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     };
 
     private int getRandomMultiplier() {

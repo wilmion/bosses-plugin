@@ -17,7 +17,7 @@ public final class BossesPlugin extends JavaPlugin {
         pluginManager.registerEvents(new EntityEvents(this), this);
 
         // Create my custom commands
-        getCommand("bsspl spawnboss").setExecutor(new SpawnBossCommand(this));
+        getCommand("bsspl").setExecutor(new SpawnBossCommand(this));
 
         new SpawnBossProbability(this);
         new ObserverPlayer(this);
