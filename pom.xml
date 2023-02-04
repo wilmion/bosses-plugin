@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.wilmion</groupId>
-    <artifactId>alaract-plugin</artifactId>
+    <artifactId>bossesplugin</artifactId>
     <version>1.0-DEV</version>
     <packaging>jar</packaging>
 
-    <name>Alaract Plugin</name>
+    <name>Bosses Plugin</name>
 
-    <description>Este es un plugin bien alaraco</description>
+    <description>Plugin echo para potenciar los mobs actuales de minecraft</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

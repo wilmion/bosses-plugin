@@ -1,6 +1,6 @@
-name: AlaractPlugin
+name: BossesPlugin
 version: '${project.version}'
-main: com.wilmion.alaractplugin.AlaractPlugin
+main: com.wilmion.bossesplugin.BossesPlugin
 api-version: 1.19
 authors: [ Wilmion ]
 description: Este es un plugin bien alaraco,
