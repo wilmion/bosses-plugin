@@ -1,0 +1,125 @@
+{
+  "entities": [
+    {
+      "key": "ARCHER_JORDI",
+      "entityType": "SKELETON",
+      "name": "lvl 5 | Flechero del castillo Jordi",
+      "followRange": 35.0,
+      "health": 40.0
+    },
+    {
+      "key": "JORDI_RESIDENT",
+      "entityType": "ZOMBIE",
+      "name": "Poblador de Jordi",
+      "health": 20.0,
+      "followRange": 5.0,
+      "equipment": {
+        "helmet": {
+          "type": "LEATHER_HELMET",
+          "unbreakable": true
+        }
+      }
+    },
+    {
+      "key": "JORDI_DOOR_GUARD",
+      "entityType": "ZOMBIE",
+      "name": "Guardia supremo de Jordi",
+      "health": 45.0,
+      "followRange": 8.0,
+      "noAI": true,
+      "equipment": {
+        "helmet": {
+          "type": "NETHERITE_HELMET",
+          "unbreakable": true
+        },
+        "chestplate": {
+          "type": "NETHERITE_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "NETHERITE_LEGGINGS"
+        },
+        "boots": {
+          "type": "NETHERITE_BOOTS"
+        },
+        "sword": {
+          "type": "DIAMOND_SWORD"
+        }
+      }
+    },
+    {
+      "key": "JORDI_SOLDIER_LVL1",
+      "entityType": "ZOMBIE",
+      "name": "lvl 1 | Soldado de Jordi",
+      "health": 35.0,
+      "followRange": 12.0,
+      "equipment": {
+        "helmet": {
+          "type": "LEATHER_HELMET",
+          "unbreakable": true
+        },
+        "chestplate": {
+          "type": "CHAINMAIL_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "CHAINMAIL_LEGGINGS"
+        },
+        "boots": {
+          "type": "CHAINMAIL_BOOTS"
+        },
+        "sword": {
+          "type": "WOODEN_SWORD"
+        }
+      }
+    },
+    {
+      "key": "JORDI_SOLDIER_LVL2",
+      "entityType": "ZOMBIE",
+      "name": "lvl 2 | Soldado de Jordi",
+      "health": 40.0,
+      "followRange": 15.0,
+      "equipment": {
+        "helmet": {
+          "type": "IRON_HELMET",
+          "unbreakable": true
+        },
+        "chestplate": {
+          "type": "IRON_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "IRON_LEGGINGS"
+        },
+        "boots": {
+          "type": "IRON_BOOTS"
+        },
+        "sword": {
+          "type": "GOLDEN_SWORD"
+        }
+      }
+    },
+    {
+      "key": "JORDI_SOLDIER_LVL3",
+      "entityType": "ZOMBIE",
+      "name": "lvl 3 | Soldado de Jordi",
+      "health": 45.0,
+      "followRange": 16.0,
+      "equipment": {
+        "helmet": {
+          "type": "DIAMOND_HELMET",
+          "unbreakable": true
+        },
+        "chestplate": {
+          "type": "DIAMOND_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "DIAMOND_LEGGINGS"
+        },
+        "boots": {
+          "type": "DIAMOND_BOOTS"
+        },
+        "sword": {
+          "type": "IRON_SWORD"
+        }
+      }
+    }
+  ]
+}

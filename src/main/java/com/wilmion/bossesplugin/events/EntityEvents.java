@@ -1,10 +1,8 @@
 package com.wilmion.bossesplugin.events;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
-import com.wilmion.bossesplugin.mobsDificulties.CreeperDifficulty;
-import com.wilmion.bossesplugin.mobsDificulties.SkeletonDifficulty;
-import com.wilmion.bossesplugin.mobsDificulties.SpiderDifficulty;
-import com.wilmion.bossesplugin.mobsDificulties.ZombieDifficulty;
+import com.wilmion.bossesplugin.mobsDificulties.*;
+import com.wilmion.bossesplugin.mobsDificulties.boss.MasterWizard;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
 
@@ -23,6 +21,7 @@ public class EntityEvents implements Listener {
     CreeperDifficulty creeper;
     SkeletonDifficulty skeleton;
     SpiderDifficulty spider;
+    WitchDifficulty witch;
 
     public EntityEvents(Plugin plugin) {
         this.plugin = plugin;
@@ -34,6 +33,7 @@ public class EntityEvents implements Listener {
         this.creeper = new CreeperDifficulty(plugin);
         this.skeleton = new SkeletonDifficulty(plugin);
         this.spider = new SpiderDifficulty(plugin);
+        this.witch = new WitchDifficulty(plugin);
     }
 
     @EventHandler
@@ -45,6 +45,7 @@ public class EntityEvents implements Listener {
     @EventHandler
     public void onEntityKnockbackByEntity(EntityKnockbackByEntityEvent event) {
         creeper.onEntityKnockbackByEntityCreeperEvent(event);
+        witch.onEntityKnockbackByEntityWitchEvent(event);
     }
 
     @EventHandler
@@ -63,6 +64,7 @@ public class EntityEvents implements Listener {
         skeleton.onDamageSkeletonEvent(event);
         spider.onDamageSpiderEvent(event);
         creeper.onDamageCreeperEvent(event);
+        witch.onDamageWitchEvent(event);
     }
 
     @EventHandler
@@ -72,6 +74,7 @@ public class EntityEvents implements Listener {
         skeleton.onDamageByEntitySkeletonEvent(event);
         spider.OnDamageByEntitySpiderEvent(event);
         creeper.onDamageByEntityCrepperEvent(event);
+        witch.onDamageByEntityWitchEvent(event);
     }
 
     @EventHandler
@@ -80,5 +83,6 @@ public class EntityEvents implements Listener {
         skeleton.onDeadSkeletonEvent(event);
         spider.OnDeadSpiderEvent(event);
         creeper.onDeathCreeperEvent(event);
+        witch.onDeathWitchEvent(event);
     }
 }

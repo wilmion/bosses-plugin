@@ -159,14 +159,12 @@ public class MasterCreeper extends BoosesModel {
         boolean isBoss = event.getEntity().hasMetadata(idMetadata);
 
         if(isBoss) event.setCancelled(true);
-
     }
     public static void handleExplode(EntityExplodeEvent event) {
         detectDeathOfMinion(event.getEntity());
     }
 
     public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
-
         IUltimateLambda useUltimates = (health, entityID) -> {
             MasterCreeper boss = bosses.get(entityID);
 

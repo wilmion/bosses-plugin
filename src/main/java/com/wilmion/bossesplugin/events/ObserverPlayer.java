@@ -34,6 +34,12 @@ public class ObserverPlayer {
                         new PerkPotionItem("LUCK")
                 ));
 
+                Perk.usePerkFunctionality(plugin, player, Material.AMETHYST_SHARD, Arrays.asList(
+                        new PerkPotionItem("REGENERATION"),
+                        new PerkPotionItem("DAMAGE_RESISTANCE", 3),
+                        new PerkPotionItem("FIRE_RESISTANCE")
+                ));
+
                 Perk.usePerkFunctionality(plugin, player, Material.GREEN_DYE, Arrays.asList(
                         new PerkPotionItem("REGENERATION"),
                         new PerkPotionItem("INCREASE_DAMAGE"),
