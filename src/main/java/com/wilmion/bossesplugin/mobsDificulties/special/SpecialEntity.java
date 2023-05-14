@@ -26,14 +26,14 @@ public class SpecialEntity {
 
     private LivingEntity living;
 
-    public SpecialEntity(World world, Location location, String type) {
+    public SpecialEntity(Location location, String type) {
         Map<String, Object> entityData = getEntityData(type);
 
         Double health = (Double) entityData.get("health");
         String name = (String) entityData.get("name");
         String entityType = (String) entityData.get("entityType");
 
-        Entity entity = world.spawnEntity(location, EntityType.valueOf(entityType));
+        Entity entity = location.getWorld().spawnEntity(location, EntityType.valueOf(entityType));
 
         living = (LivingEntity) entity;
 
@@ -43,7 +43,6 @@ public class SpecialEntity {
         AttributeInstance view = living.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
 
         if(entityData.get("followRange") != null) view.setBaseValue((Double) entityData.get("followRange"));
-        // if(entityData.get("noAI") != null) living.setAI(false);
 
         living.setHealth(health);
         living.setRemoveWhenFarAway(false);

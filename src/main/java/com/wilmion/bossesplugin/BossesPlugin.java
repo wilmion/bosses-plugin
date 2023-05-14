@@ -1,8 +1,8 @@
 package com.wilmion.bossesplugin;
 
+import com.wilmion.bossesplugin.events.CommandManager;
 import com.wilmion.bossesplugin.events.EntityEvents;
 import com.wilmion.bossesplugin.events.ObserverPlayer;
-import com.wilmion.bossesplugin.events.SpawnBossCommand;
 import com.wilmion.bossesplugin.events.SpawnBossProbability;
 
 import org.bukkit.plugin.PluginManager;
@@ -17,7 +17,7 @@ public final class BossesPlugin extends JavaPlugin {
         pluginManager.registerEvents(new EntityEvents(this), this);
 
         // Create my custom commands
-        getCommand("bsspl").setExecutor(new SpawnBossCommand(this));
+        getCommand("bsspl").setExecutor(new CommandManager(this));
 
         new SpawnBossProbability(this);
         new ObserverPlayer(this);

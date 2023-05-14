@@ -1,0 +1,72 @@
+{
+    "general_help": [
+        {
+            "text": "===== Help of Bosses Plugin ===== \n",
+            "color": "LIGHT_PURPLE"
+        },
+        {
+            "text": "/bsspl spawnboss <name-of-boss> \n Generate a boss in your current location. \n",
+            "color": "GOLD"
+        },
+        {
+            "text": "/bsspl save <name> <x-size> <y-size> <z-size> \n Save a building by X, Y and Z size. \n",
+            "color": "GOLD"
+        },
+        {
+            "text": "/bsspl build <name> <angle = 0deg> \n Build a structure by name that you save in X angle. \n",
+            "color": "GOLD"
+        },
+        {
+            "text": "/bsspl metadata-block <opts> \n Set group of metadata",
+            "color": "GOLD"
+        }
+    ],
+    "spawn_boss_error": [
+        {
+            "text": "===== Spawn Boss Help | Bosses Plugin ===== \n",
+            "color": "GOLD"
+        },
+        {
+            "text": "/bsspl spawnboss <name-of-boss> \n Generate a boss in your current location. \n",
+            "color": "YELLOW"
+        },
+        {
+            "text": "Available Bosses: [BOSSES]",
+            "color": "WHITE"
+        }
+    ],
+    "build_error": [
+        {
+            "text": "===== Build Help | Bosses Plugin ===== \n",
+            "color": "BLUE"
+        },
+        {
+            "text": "/bsspl build <name> <angle = 0deg> \n Build a structure by name that you save in X angle. \n",
+            "color": "YELLOW"
+        },
+        {
+            "text": "Your Builds: [BUILD_NAME]",
+            "color": "WHITE"
+        }
+    ],
+    "save_error": [
+        {
+            "text": "===== Save build Help | Bosses Plugin ===== \n",
+            "color": "DARK_AQUA"
+        },
+        {
+            "text": "/bsspl save <name> <x-size> <y-size> <z-size> \n Save a building by X, Y and Z size. \n",
+            "color": "YELLOW"
+        }
+    ],
+    "metadata_error": [
+        {
+            "text": "===== Metadata Block Help | Bosses Plugin ===== \n",
+            "color": "AQUA"
+        },
+        {
+            "text": "[CONTENT]",
+            "color": "WHITE"
+        }
+    ]
+}
