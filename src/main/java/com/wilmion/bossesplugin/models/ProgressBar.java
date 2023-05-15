@@ -16,15 +16,16 @@ public class ProgressBar {
 
     public ProgressBar(String id) {
         BossBar oldBarData = bars.get(id);
-        this.id = id;
 
         if(oldBarData == null) {
             this.bar = Bukkit.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
             this.bar.setVisible(false);
+
             bars.put(id, this.bar);
             return;
         }
 
+        this.id = id;
         this.bar = oldBarData;
     }
 
@@ -54,16 +55,16 @@ public class ProgressBar {
     }
 
     public void setTitle(String title) {
-        this.bar.setTitle(title);
+        bar.setTitle(title);
         bars.put(id, this.bar);
     }
 
-    public BossBar getBar() {
-        return this.bar;
-    }
-
     public void setProgress(double progress) {
-        this.bar.setProgress(progress);
+        if(progress < 0.0) progress = 0.0;
+        if(progress > 1.0) progress = 1.0;
+
+        bar.setProgress(progress);
+
         bars.put(id, this.bar);
     }
 

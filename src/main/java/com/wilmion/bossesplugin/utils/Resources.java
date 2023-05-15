@@ -2,6 +2,7 @@ package com.wilmion.bossesplugin.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -13,10 +14,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class Resources {
-
-
     public static <T> T getJsonByData(String filename, Type classInstance) {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY).create();
 
@@ -43,6 +41,8 @@ public class Resources {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY).create();
 
         String data = Utils.readFile(filename);
+
+        if(data == null) return null;
 
         return gson.fromJson(data, classInstance);
     }

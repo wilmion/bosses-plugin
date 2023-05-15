@@ -4,6 +4,7 @@ import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
+
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.*;
@@ -175,45 +176,27 @@ public class Utils {
         return isValidCause;
     }
 
-    public static LivingEntity livingDamager(Entity damagerEntity) {
-        LivingEntity result = null;
+    public static <T> T livingDamager(Entity damagerEntity, Class<T> clazz) {
+        T result = null;
 
         Boolean isProjectile = damagerEntity instanceof Projectile;
-        boolean isEntity = damagerEntity instanceof LivingEntity;
+        boolean isEntity = clazz.isInstance(damagerEntity);
 
-        if(isEntity) result = (LivingEntity) damagerEntity;
+        if(isEntity) result = clazz.cast(damagerEntity);
 
         if(isProjectile) {
             Projectile projectile = (Projectile) damagerEntity;
-
-            isEntity = projectile.getShooter() instanceof LivingEntity;
+            isEntity = clazz.isInstance(projectile.getShooter());
 
             if(!isEntity) return null;
 
-            damagerEntity = (LivingEntity) projectile.getShooter();
+            result = clazz.cast(projectile.getShooter());
         }
 
         return result;
     }
 
-    public static Player playerDamager(Entity damagerEntity) {
-        Player result = null;
-
-        Boolean isProjectile = damagerEntity instanceof Projectile;
-        boolean isEntity = damagerEntity instanceof Player;
-
-        if(isEntity) result = (Player) damagerEntity;
-
-        if(isProjectile) {
-            Projectile projectile = (Projectile) damagerEntity;
-
-            isEntity = projectile.getShooter() instanceof Player;
-
-            if(!isEntity) return null;
-
-            damagerEntity = (Player) projectile.getShooter();
-        }
-
-        return result;
+    public static LivingEntity livingDamager(Entity damagerEntity) {
+        return livingDamager(damagerEntity, LivingEntity.class);
     }
 }

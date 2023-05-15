@@ -21,16 +21,12 @@ public class PlayerExp extends MobDifficulty {
 
     public void onMovePlayerEvent(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-
         UserDataLevel userData = new UserDataLevel(player.getName());
-
         AttributeInstance maxHealthAttr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        Integer level = userData.getLevel();
+        Double newHearts = level + 20.00;
 
-        int level = userData.getLevel();
-
-        double newHearts = level + 20.00;
-        // 20.00 is the base value
-        maxHealthAttr.setBaseValue(newHearts);
+        maxHealthAttr.setBaseValue(newHearts); // 20.00 is the base value
 
     }
 
@@ -38,10 +34,9 @@ public class PlayerExp extends MobDifficulty {
         Entity entity = event.getEntity();
         Entity damagerEntity = event.getDamager();
         LivingEntity livingEntity = (LivingEntity) entity;
-
-        damagerEntity = Utils.playerDamager(damagerEntity);
-
         double health = Utils.getHealthByDamage(event.getFinalDamage(), livingEntity.getHealth());
+
+        damagerEntity = Utils.livingDamager(damagerEntity, Player.class);
 
         Boolean isDead = health <= 0.00;
 
@@ -49,67 +44,35 @@ public class PlayerExp extends MobDifficulty {
 
         Player player = (Player) damagerEntity;
 
-        this.setExpPlayer(player, entity);
+        String name = entity.getName();
+
+        addExp(player, name.length());
     }
 
-    private void setExpPlayer(Player player, Entity entity) {
-        Boolean isSkeleton = entity.getType() == EntityType.SKELETON;
-        Boolean isZombie = entity.getType() == EntityType.ZOMBIE;
-        Boolean isCreeper = entity.getType() == EntityType.CREEPER;
-        Boolean isDrowned = entity.getType() == EntityType.DROWNED;
-        Boolean isWitch = entity.getType() == EntityType.WITCH;
-        Boolean isEnderman = entity.getType() == EntityType.ENDERMAN;
-        Boolean isZombieVillager = entity.getType() == EntityType.ZOMBIE_VILLAGER;
-        Boolean isSpider = entity.getType() == EntityType.SPIDER;
-        Boolean isSlime = entity.getType() == EntityType.SLIME;
-        Boolean isZombiePig = entity.getType() == EntityType.ZOMBIFIED_PIGLIN;
-        Boolean isPliginBrute = entity.getType() == EntityType.PIGLIN_BRUTE;
-        Boolean isPligin = entity.getType() == EntityType.PIGLIN;
-        Boolean isWitherSkeleton = entity.getType() == EntityType.WITHER_SKELETON;
-        Boolean isBlaze = entity.getType() == EntityType.BLAZE;
-        Boolean isPillager = entity.getType() == EntityType.PILLAGER;
-        Boolean isVindicator = entity.getType() == EntityType.VINDICATOR;
-
-        if (isSkeleton || isWitherSkeleton) this.addExp(player, 5);
-        if (isZombieVillager || isZombie || isZombiePig) this.addExp(player,2);
-        if (isCreeper) this.addExp(player,8);
-        if (isDrowned || isBlaze) this.addExp(player, 3);
-        if (isWitch || isEnderman) this.addExp(player, 6);
-        if (isSpider) this.addExp(player,2);
-        if (isSlime) this.addExp(player,1);
-        if (isPillager || isVindicator || isPligin || isPliginBrute) this.addExp(player, 4);
-    }
-
-    private void addExp(Player player, int exp) {
-        String name = player.getName();
-        String trimedName = name.trim();
-
-        UserDataLevel userData = new UserDataLevel(name);
+    private void addExp(Player player, Integer exp) {
+        String trimmedName = player.getName().trim();
+        UserDataLevel userData = new UserDataLevel(player.getName());
 
         Runnable handleLevelUp = () -> {
-            int level = userData.getLevel();
+            Integer level = userData.getLevel();
             String title = ChatColor.BLUE + "Bien hecho! Subiste a nivel " + level;
 
             Utils.setTitleOnPlayer(player, title, "<=> Crecez en vida <=>");
+
             player.playSound(player.getLocation(),Sound.ENTITY_WITHER_SKELETON_HURT, 1 , 0 );
         };
 
         userData.addExp(exp, handleLevelUp);
 
-        ProgressBar progressBar = new ProgressBar(trimedName);
-
-        int nextLevel = userData.getLevel() + 1;
+        ProgressBar progressBar = new ProgressBar(trimmedName);
+        Integer nextLevel = userData.getLevel() + 1;
+        Double progress = userData.getRemainPercentage();
 
         progressBar.setTitle("Para nivel " + nextLevel);
-
-        double progress = userData.getRemainPercentage();
-
         progressBar.setProgress(progress);
         progressBar.addPlayer(player);
         progressBar.enableBar();
 
-        ProgressBar reference = progressBar;
-
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, reference::disabledBar, 100);
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, progressBar::disabledBar, 100);
     }
 }

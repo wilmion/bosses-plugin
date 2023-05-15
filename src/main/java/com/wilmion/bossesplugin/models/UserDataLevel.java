@@ -1,26 +1,24 @@
 package com.wilmion.bossesplugin.models;
 
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.Resources;
 
-import com.google.gson.Gson;
+import lombok.Getter;
 
+@Getter
 public class UserDataLevel {
-    private  int level = 0;
-    private long exp;
-    private long expToNextLevel = 150;
+    private final String path = "plugins/bosses-plugin-data/exp-users/";
     private String nameUser;
-
-    private final String pathPlugin = "plugins/bosses-plugin-data/exp-users/";
+    private Integer level = 0;
+    private Long exp;
+    private Long expToNextLevel = 150l;
 
     public UserDataLevel(String name) {
-        boolean successRead = this.readUser(name);
+        if(readUser(name)) return;
 
-        if(successRead) return;
-
-        this.exp = 0;
+        this.exp = 0l;
         this.nameUser = name;
 
-        this.upsertUser(name);
+        upsertUser(name);
     }
 
     public void addExp(int exp, Runnable onLevelUp) {
@@ -39,56 +37,34 @@ public class UserDataLevel {
     public void lessExp(int exp) {
         this.exp -= exp;
 
-        this.upsertUser(this.nameUser);
-    }
-
-    public long getExp() {
-        return this.exp;
-    }
-
-    public String getNameUser() {
-        return this.nameUser;
-    }
-
-    public int getLevel() {
-        return this.level;
+        upsertUser(nameUser);
     }
 
     public double getRemainPercentage() {
-        double lastAddingExp = 150.0 + (level * 50.0);
-        double lastLimitExp = expToNextLevel - lastAddingExp;
-
-        double expToNextLevelDouble = expToNextLevel - lastLimitExp;
-        double expDouble = exp - lastLimitExp;
+        Double lastAddingExp = 150.0 + (level * 50.0);
+        Double lastLimitExp = expToNextLevel - lastAddingExp;
+        Double expToNextLevelDouble = expToNextLevel - lastLimitExp;
+        Double expDouble = exp - lastLimitExp;
 
         return expDouble / expToNextLevelDouble;
     }
 
     private boolean readUser(String name) {
-        final Gson gson = new Gson();
-        final String path = this.pathPlugin + name.trim() + ".json";
+        String filename = path + name.trim() + ".json";
+        UserDataLevel file = Resources.getJsonByLocalData(filename, UserDataLevel.class);
 
-        String data = Utils.readFile(path);
+        if(file == null) return false;
 
-        if(data == null) return false;
-
-        UserDataLevel jsonData = gson.fromJson(data, UserDataLevel.class);
-
-        this.nameUser = jsonData.nameUser;
-        this.exp =  jsonData.exp;
-        this.expToNextLevel =  jsonData.expToNextLevel;
-        this.level = jsonData.level;
+        this.nameUser = file.getNameUser();
+        this.exp = file.getExp();
+        this.expToNextLevel = file.getExpToNextLevel();
+        this.level = file.getLevel();
 
         return true;
     }
 
     private void upsertUser(String name) {
-        Gson gson = new Gson();
-
-        String path =  this.pathPlugin + name.trim() + ".json";
-
-        String dataInJson = gson.toJson(this);
-
-        Utils.writeFile(path, dataInJson);
+        String filename = path + name.trim() + ".json";
+        Resources.writeFile(filename, this);
     }
 }

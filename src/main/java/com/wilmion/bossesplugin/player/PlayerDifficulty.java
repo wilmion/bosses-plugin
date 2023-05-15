@@ -14,8 +14,7 @@ public class PlayerDifficulty extends MobDifficulty {
 
     public void onMovePlayerDifficultyEvent(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-
-        double health = player.getHealth();
+        Double health = player.getHealth();
 
         if(health <= 10.00 && health >= 5.00) {
             player.setWalkSpeed(0.18f);

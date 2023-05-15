@@ -121,7 +121,6 @@ public class BoosesModel {
         return false;
     }
 
-
     public static void handleDamage(EntityDamageEvent event, Integer id, Runnable action) {
         BossDataModel bossData = getMetadata(id);
         Entity entity = event.getEntity();
