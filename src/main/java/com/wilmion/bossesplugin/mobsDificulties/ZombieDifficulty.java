@@ -7,7 +7,6 @@ import com.wilmion.bossesplugin.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -44,7 +43,7 @@ public class ZombieDifficulty extends MobDifficulty  {
         int probability = Utils.getRandomInPercentage();
 
 
-        if(probability <= 1) new SupportZombie((Player) event.getDamager(), location, this.plugin);
+        if(probability <= 1) new SupportZombie(location, this.plugin);
     }
 
     public void onDamageZombieEvent(EntityDamageEvent event) {

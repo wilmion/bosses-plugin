@@ -2,16 +2,13 @@ package com.wilmion.bossesplugin.mobsDificulties.boss;
 
 import com.wilmion.bossesplugin.models.BoosesModel;
 import com.wilmion.bossesplugin.models.Perk;
+import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.utils.Utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.boss.BarColor;
 import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -24,10 +21,9 @@ import java.util.TreeMap;
 
 public class SoldierSpider extends BoosesModel {
     static Map<String, SoldierSpider> bosses = new TreeMap<>();
-    static double maxHealth = 70.0;
-    static String idMetadata = "SOLDIER_SPIDER_BOSS";
-    public SoldierSpider(Player player, Location location, Plugin plugin) {
-        super(player, location, plugin, maxHealth,"CAVE_SPIDER",  idMetadata, "MIQUEL EL SOLDADO");
+
+    public SoldierSpider(Location location, Plugin plugin) {
+        super(location, plugin, 4);
 
         String entityID = String.valueOf(this.entity.getEntityId());
         bosses.put(entityID, this);
@@ -62,22 +58,23 @@ public class SoldierSpider extends BoosesModel {
         if(probability >= 50.0) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(4, location, plugin), 20);
     }
 
+    private CaveSpider getBoss() {
+        return (CaveSpider) this.entity;
+    }
+
     private void usePassive() {
-        if(!this.isAlive()) return;
+        if(!isAlive()) return;
+
+        equipBoss();
 
         CaveSpider boss = getBoss();
-        this.equipBoss();
-
-        int probability = Utils.getRandomInPercentage();
-
         PotionEffect invisible = new PotionEffect(PotionEffectType.INVISIBILITY, 100, 1);
 
-        if(probability <= 50.0) boss.addPotionEffect(invisible);
+        if(Utils.getRandomInPercentage() <= 50.0) boss.addPotionEffect(invisible);
     }
 
     public void useUltimate1() {
         CaveSpider boss = getBoss();
-
         PotionEffect velocity = new PotionEffect(PotionEffectType.SPEED, 200, 8);
 
         boss.addPotionEffect(velocity);
@@ -85,36 +82,33 @@ public class SoldierSpider extends BoosesModel {
 
     public void useUltimate2() {
         CaveSpider boss = getBoss();
-
         PotionEffect strength = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 500, 7);
 
         boss.addPotionEffect(strength);
-    }
-    private CaveSpider getBoss() {
-        return (CaveSpider) this.entity;
     }
 
     public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
         handleAttack(event);
 
-        boolean continueAlth = BoosesModel.handleDamageByEntity(event, BarColor.GREEN, maxHealth, idMetadata, "CAVE_SPIDER", null);
+        boolean continueAlth = BoosesModel.handleDamageByEntity(event, 4, (a, b) -> {});
 
         return continueAlth;
     }
 
     public static void handleDamage(EntityDamageEvent event) {
-        BoosesModel.handleDamage(event, "CAVE_SPIDER", BarColor.GREEN, maxHealth, idMetadata, null);
+        BoosesModel.handleDamage(event, 4, () -> {});
     }
 
     public static void handleDead(EntityDeathEvent event) {
-        BoosesModel.handleDead(event, idMetadata, bosses);
+        BoosesModel.handleDead(event, 4, bosses);
     }
 
     public static void handleAttack(EntityDamageByEntityEvent event) {
+        BossDataModel bossData = BoosesModel.getMetadata(4);
         Entity entity = event.getEntity();
         Entity damager = event.getDamager();
 
-        boolean isBoss = damager.hasMetadata(idMetadata);
+        boolean isBoss = damager.hasMetadata(bossData.getMetadata());
 
         if(!isBoss) return;
 

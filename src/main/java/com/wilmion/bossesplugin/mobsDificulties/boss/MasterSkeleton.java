@@ -4,14 +4,13 @@ import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
 import com.wilmion.bossesplugin.models.Perk;
+import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.utils.Utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.BlockFace;
-import org.bukkit.boss.BarColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -30,13 +29,11 @@ import java.util.TreeMap;
 
 public class MasterSkeleton extends BoosesModel {
     static Map<String, MasterSkeleton> bosses = new TreeMap<>();
-    static double maxHealth = 150.0;
-    static String idMetadata = "SKELETON_BOSS";
     static String idMetadataMinion = "SKELETON_BOSS_MINION";
     private boolean useUltimate1 = false;
 
-    public MasterSkeleton(Player player, Location location, Plugin plugin) {
-        super(player, location, plugin, maxHealth, "SKELETON", idMetadata, "ANN LA MAESTRA");
+    public MasterSkeleton(Location location, Plugin plugin) {
+        super(location, plugin, 2);
 
         String entityID = String.valueOf(this.entity.getEntityId());
         bosses.put(entityID, this);
@@ -45,13 +42,14 @@ public class MasterSkeleton extends BoosesModel {
         server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useATQE1, 140, 100);
         server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useATQE2, 200, 300);
     }
+
     private Skeleton getBoos() {
         return (Skeleton) this.entity;
     }
 
     @Override
     protected void equipBoss() {
-        Skeleton boss = this.getBoos();
+        Skeleton boss = getBoos();
 
         ItemStack helmet = new ItemStack(Material.IRON_HELMET);
         ItemStack bow = new ItemStack(Material.BOW);
@@ -66,11 +64,10 @@ public class MasterSkeleton extends BoosesModel {
 
     @Override
     public void deadFunctionality() {
-        Location location = this.entity.getLocation();
-
-        int probability = Utils.getRandomInPercentage();
-
         super.deadFunctionality();
+        Location location = entity.getLocation();
+
+        Integer probability = Utils.getRandomInPercentage();
 
         world.spawn(location, LightningStrike.class);
         world.createExplosion(location, 2F, false);
@@ -84,14 +81,10 @@ public class MasterSkeleton extends BoosesModel {
     }
 
     private void useATQE1() {
-        int probability = Utils.getRandomInPercentage();
-        Player player = this.getTarget();
+        Entity target = getBoos().getTarget();
+        Integer probability = Utils.getRandomInPercentage();
 
-        if(player == null || !this.isAlive() || probability <= 40) return;
-
-        final int range = 3;
-
-        this.setTemporalInvunerability();
+        if(target == null || !this.isAlive() || probability <= 40) return;
 
         ActionRangeBlocks action = (location) -> {
             server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -99,38 +92,35 @@ public class MasterSkeleton extends BoosesModel {
             }, 10);
         };
 
-        Utils.executeActionInARangeOfBlock(range, 30, player.getLocation(), action);
+        setTemporalInvunerability();
+        Utils.executeActionInARangeOfBlock(3, 30, target.getLocation(), action);
     }
 
     private void useATQE2() {
-        Player player = this.getTarget();
+        LivingEntity target = getBoos().getTarget();
 
-        if(player == null || !this.isAlive()) return;
+        if(target == null || !this.isAlive()) return;
 
-        this.useIlusion(3, -3, player);
-        this.useIlusion(3, 3, player);
-        this.useIlusion(-3, -3, player);
-        this.useIlusion(-3, 3, player);
+        useIlusion(3, -3, target);
+        useIlusion(3, 3, target);
+        useIlusion(-3, -3, target);
+        useIlusion(-3, 3, target);
     }
 
     private void usePassive() {
-        Skeleton boss = this.getBoos();
+        if(!isAlive()) return;
 
-        if(!this.isAlive()) return;
-
-        this.setTemporalInvunerability();
-
-        this.lightingPassive(2, 0, boss);
-        this.lightingPassive(-2, 0, boss);
-        this.lightingPassive(0, 2, boss);
-        this.lightingPassive(0, -2, boss);
+        setTemporalInvunerability();
+        lightingPassive(2, 0);
+        lightingPassive(-2, 0);
+        lightingPassive(0, 2);
+        lightingPassive(0, -2);
     }
 
     public void useUltimate1() {
-        BlockFace face = this.getBoos().getFacing();
+        BlockFace face = getBoos().getFacing();
 
         if(useUltimate1) return;
-
         useUltimate1 = true;
         
         this.setTemporalInvunerability();
@@ -173,7 +163,6 @@ public class MasterSkeleton extends BoosesModel {
 
         skeleton.addPotionEffect(fireResistance);
         skeleton.addPotionEffect(damageResistance);
-
         skeleton.setMetadata(idMetadataMinion, new FixedMetadataValue(plugin, "true"));
 
         return skeleton;
@@ -196,19 +185,18 @@ public class MasterSkeleton extends BoosesModel {
         horse.setTamed(true);
     }
 
-
     private void useJinet(double x, double z) {
         Location location = getBoos().getLocation();
 
         location.setX(location.getX() + x);
         location.setZ(location.getZ() + z);
-
-        this.summonMinionHorse(location);
         world.spawn(location, LightningStrike.class);
+
+        summonMinionHorse(location);
     }
 
-    private void lightingPassive(int x, int z, Skeleton boss) {
-        Location location = boss.getLocation();
+    private void lightingPassive(int x, int z) {
+        Location location = entity.getLocation();
 
         location.setX(location.getX() + x);
         location.setZ(location.getZ() + z);
@@ -216,8 +204,8 @@ public class MasterSkeleton extends BoosesModel {
         world.spawn(location, LightningStrike.class);
     }
 
-    private void useIlusion(int x, int z, Player player) {
-        Location location = player.getLocation();
+    private void useIlusion(int x, int z, LivingEntity entity) {
+        Location location = entity.getLocation();
 
         location.setX(location.getX() + x);
         location.setZ(location.getZ() + z);
@@ -225,6 +213,7 @@ public class MasterSkeleton extends BoosesModel {
         world.spawn(location, LightningStrike.class);
         Illusioner ilusioner = world.spawn(location, Illusioner.class);
         ilusioner.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0);
+        ilusioner.setTarget(entity);
 
         server.getScheduler().scheduleSyncDelayedTask(plugin, () -> ilusioner.damage(100), 50);
     }
@@ -233,26 +222,27 @@ public class MasterSkeleton extends BoosesModel {
         IUltimateLambda ultimateLambda = (health, bossID) -> {
             MasterSkeleton boss = bosses.get(bossID);
 
-            if(health <= maxHealth / 2.0) {
+            if(health <= boss.maxHealth / 2.0) {
                 boss.useUltimate1();
             }
         };
 
         boolean isMinion = event.getEntity().hasMetadata(idMetadataMinion);
-        boolean continueAlth = BoosesModel.handleDamageByEntity(event, BarColor.WHITE, maxHealth, idMetadata, "SKELETON", ultimateLambda);
+        boolean continueAlth = BoosesModel.handleDamageByEntity(event, 2, ultimateLambda);
 
         return isMinion? false : continueAlth;
     }
 
     public static void handleDamage(EntityDamageEvent event) {
-        BoosesModel.handleDamage(event, "SKELETON", BarColor.WHITE, maxHealth, idMetadata, null);
+        BoosesModel.handleDamage(event, 2, () -> {});
     }
 
     public static void handleDead(EntityDeathEvent event) {
-        BoosesModel.handleDead(event, idMetadata, bosses);
+        BoosesModel.handleDead(event, 2, bosses);
     }
 
     public static void handleShoot(EntityShootBowEvent event) {
+        BossDataModel bossData = BoosesModel.getMetadata(2);
         Entity entity = event.getEntity();
         Entity projectile = event.getProjectile();
 
@@ -260,7 +250,7 @@ public class MasterSkeleton extends BoosesModel {
 
         boolean isSkeleton = entity instanceof Skeleton;
         boolean isArrow = projectile instanceof Arrow;
-        boolean isBoss = entity.hasMetadata(idMetadata);
+        boolean isBoss = entity.hasMetadata(bossData.getMetadata());
 
         if(!isSkeleton || !isArrow || !isBoss) return;
 
@@ -268,7 +258,7 @@ public class MasterSkeleton extends BoosesModel {
         Arrow arrow = (Arrow) projectile;
         MasterSkeleton boss = bosses.get(entityID);
 
-        if(health <= maxHealth * 0.3) {
+        if(health <= bossData.getHealth() * 0.3) {
             boss.useUltimate2(arrow);
         }
 

@@ -7,7 +7,6 @@ import com.wilmion.bossesplugin.mobsDificulties.boss.MasterSkeleton;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -47,7 +46,7 @@ public class SkeletonDifficulty extends MobDifficulty {
 
         Location location = entity.getLocation();
 
-        if(probability <= 1) new MasterSkeleton((Player) event.getDamager(), location, this.plugin);
+        if(probability <= 1) new MasterSkeleton(location, this.plugin);
 
     }
 

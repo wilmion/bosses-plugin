@@ -36,7 +36,7 @@ public class SpawnBossCommand {
 
         if(!match) return false;
 
-        spawnBoss(bossType, player, location, plugin);
+        spawnBoss(bossType, location, plugin);
 
         return true;
     }
@@ -58,11 +58,11 @@ public class SpawnBossCommand {
     }
 
     @SneakyThrows
-    public static void spawnBoss(String bossType, Player player, Location location, Plugin plugin) {
+    public static void spawnBoss(String bossType, Location location, Plugin plugin) {
         String constructorName = convertBossCommandToConstructorName(bossType);
 
         Class<?> ClassEntity = Class.forName("com.wilmion.bossesplugin.mobsDificulties.boss." + constructorName);
-        Constructor<?> constructor = ClassEntity.getConstructor(Player.class, Location.class, Plugin.class);
-        constructor.newInstance(player, location, plugin);
+        Constructor<?> constructor = ClassEntity.getConstructor(Location.class, Plugin.class);
+        constructor.newInstance(location, plugin);
     }
 }

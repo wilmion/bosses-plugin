@@ -5,13 +5,11 @@ import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
 import com.wilmion.bossesplugin.models.Perk;
+import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.utils.Utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.boss.BarColor;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -26,12 +24,11 @@ import java.util.TreeMap;
 
 public class MasterWizard extends BoosesModel {
     private static Map<String, MasterWizard> bosses = new TreeMap();
-    static final String idMetadata = "WITCH-MASTER-BOSS";
-    static final double maxHealth = 150.0;
     private boolean useUltimate1 = false;
     private boolean useUltimate2 = false;
-    public MasterWizard(Player player, Location location, Plugin plugin) {
-        super(player, location, plugin, maxHealth, "WITCH", idMetadata, "ZETANNA LA ERUDITA");
+
+    public MasterWizard(Location location, Plugin plugin) {
+        super(location, plugin, 6);
 
         String entityID = String.valueOf(this.entity.getEntityId());
         bosses.put(entityID, this);
@@ -52,9 +49,7 @@ public class MasterWizard extends BoosesModel {
         world.spawn(getWitch().getLocation(), LightningStrike.class);
         world.createExplosion(getWitch().getLocation(), 2f, false);
 
-        int probability = Utils.getRandomInPercentage();
-
-        if(probability > 50) return;
+        if(Utils.getRandomInPercentage() > 50) return;
 
         server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(6, getWitch().getLocation(), plugin), 20);
     }
@@ -167,25 +162,26 @@ public class MasterWizard extends BoosesModel {
         IUltimateLambda useUltimates = (health, entityID) -> {
             MasterWizard boss = bosses.get(entityID);
 
-            if(health <= maxHealth * 0.5) boss.useDangerRainUltimate();
-            if(health <= maxHealth * 0.25) boss.useWizardGonnaUltimate();
+            if(health <= boss.maxHealth * 0.5) boss.useDangerRainUltimate();
+            if(health <= boss.maxHealth * 0.25) boss.useWizardGonnaUltimate();
         };
 
-        boolean continueAlth = BoosesModel.handleDamageByEntity(event, BarColor.WHITE, maxHealth, idMetadata, "WITCH", useUltimates);
+        boolean continueAlth = BoosesModel.handleDamageByEntity(event, 6, useUltimates);
 
         return continueAlth;
     }
 
     public static void handleEntityKnockbackByEntity(EntityKnockbackByEntityEvent event) {
-        boolean isBoss = event.getEntity().hasMetadata(idMetadata);
+        BossDataModel bossData = getMetadata(6);
+        boolean isBoss = event.getEntity().hasMetadata(bossData.getMetadata());
         if(isBoss) event.setCancelled(true);
     }
 
     public static void handleDamage(EntityDamageEvent event) {
-        BoosesModel.handleDamage(event, "WITCH", BarColor.WHITE, maxHealth, idMetadata, () -> {});
+        BoosesModel.handleDamage(event, 6, () -> {});
     }
 
     public static void handleDead(EntityDeathEvent event) {
-        BoosesModel.handleDead(event, idMetadata, bosses);
+        BoosesModel.handleDead(event, 6, bosses);
     }
 }

@@ -1,10 +1,11 @@
 package com.wilmion.bossesplugin.mobsDificulties.special;
 
-import com.google.gson.Gson;
+import com.wilmion.bossesplugin.objects.special_entity.SpecialEntityDataModel;
+import com.wilmion.bossesplugin.objects.special_entity.SpecialEntityModel;
+import com.wilmion.bossesplugin.utils.Resources;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
@@ -15,42 +16,29 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SpecialEntity {
-    private final String path = "special-entities.json";
-
     private LivingEntity living;
 
     public SpecialEntity(Location location, String type) {
-        Map<String, Object> entityData = getEntityData(type);
-
-        Double health = (Double) entityData.get("health");
-        String name = (String) entityData.get("name");
-        String entityType = (String) entityData.get("entityType");
-
-        Entity entity = location.getWorld().spawnEntity(location, EntityType.valueOf(entityType));
-
+        SpecialEntityDataModel entityData = getEntityData(type);
+        Entity entity = location.getWorld().spawnEntity(location, EntityType.valueOf(entityData.getEntityType()));
         living = (LivingEntity) entity;
 
         AttributeInstance healthAttribute = living.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        healthAttribute.setBaseValue(health);
-
         AttributeInstance view = living.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
+        healthAttribute.setBaseValue(entityData.getHealth());
 
-        if(entityData.get("followRange") != null) view.setBaseValue((Double) entityData.get("followRange"));
-
-        living.setHealth(health);
+        living.setHealth(entityData.getHealth());
         living.setRemoveWhenFarAway(false);
 
-        entity.setCustomName(name);
+        entity.setCustomName(entityData.getName());
         entity.setCustomNameVisible(false);
 
-        if(entityData.get("equipment") != null) equipEntity((Map<String, Object>) entityData.get("equipment"));
+        if(entityData.getFollowRange().isPresent()) view.setBaseValue(entityData.getFollowRange().get());
+        if(entityData.getEquipment().isPresent()) equipEntity(entityData.getEquipment().get());
     }
 
     public void equipEntity(Map<String, Object> data) {
@@ -91,20 +79,9 @@ public class SpecialEntity {
         return item;
     }
 
-    private Map<String, Object> getJson() {
-        Gson gson = new Gson();
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(path);
-        InputStreamReader reader = new InputStreamReader(inputStream);
+    private SpecialEntityDataModel getEntityData(String type) {
+        SpecialEntityModel file = Resources.getJsonByData("special-entities.json", SpecialEntityModel.class);
 
-        return gson.fromJson(reader, Map.class);
-    }
-
-    private Map<String, Object> getEntityData(String type) {
-        Map<String, Object> json = getJson();
-        List<Map<String, Object>> entities = (List<Map<String, Object>>) json.get("entities");
-        Map<String, Object> entity = entities.stream().filter(data -> data.get("key").equals(type)).collect(Collectors.toList()).get(0);
-
-        return entity;
+        return file.getEntities().stream().filter(e -> e.getKey().equals(type)).collect(Collectors.toList()).get(0);
     }
 }

@@ -1,6 +1,9 @@
 package com.wilmion.bossesplugin.models;
 
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
+import com.wilmion.bossesplugin.objects.boss.BossDataModel;
+import com.wilmion.bossesplugin.objects.boss.BossModel;
+import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
 
 import org.bukkit.*;
@@ -16,62 +19,52 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class BoosesModel {
     protected Plugin plugin;
     protected World world;
     protected Server server;
-    protected Entity entity;
+    protected LivingEntity entity;
+    protected Double maxHealth;
+    protected String idMetadata;
 
-    public BoosesModel(Player player, Location location, Plugin plugin, Double initialHealth, String type, String id, String nameEntity) {
+    public BoosesModel(Location location, Plugin plugin, Integer id) {
+        BossDataModel bossData = getMetadata(id);
+
+        this.maxHealth = bossData.getHealth();
+        this.idMetadata = bossData.getMetadata();
         this.plugin = plugin;
-        this.world = player.getWorld();
+        this.world = location.getWorld();
         this.server = plugin.getServer();
+        this.entity = (LivingEntity) world.spawnEntity(location, EntityType.valueOf(bossData.getType()));
+
+        setTemporalInvunerability();
 
         world.spawn(location, LightningStrike.class);
-        this.entity = world.spawnEntity(location, EntityType.valueOf(type));
-        this.setTemporalInvunerability();
 
-        LivingEntity living = (LivingEntity) entity;
+        AttributeInstance healthAttribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        healthAttribute.setBaseValue(maxHealth);
 
-        AttributeInstance healthAttribute = living.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        healthAttribute.setBaseValue(initialHealth);
-
-        living.setHealth(initialHealth);
-        living.setRemoveWhenFarAway(false);
-
-        this.entity.setCustomName(nameEntity);
-        this.entity.setCustomNameVisible(true);
-        this.entity.setMetadata(id, new FixedMetadataValue(this.plugin, "true"));
+        entity.setHealth(maxHealth);
+        entity.setRemoveWhenFarAway(false);
+        entity.setCustomName(bossData.getName());
+        entity.setCustomNameVisible(true);
+        entity.setMetadata(idMetadata, new FixedMetadataValue(this.plugin, "true"));
 
         this.equipBoss();
     }
 
     protected boolean isAlive() {
-        boolean valid = this.entity.isValid();
-        boolean alive = !this.entity.isDead();
-
-        return alive && valid;
+        return entity.isValid() && !entity.isDead();
     }
 
-    protected Player getTarget() {
-        Monster living = (Monster) this.entity;
-        LivingEntity target = living.getTarget();
-
-        if(target instanceof Player) return (Player) target;
-
-        return null;
-    }
-
-    protected void equipBoss() {
-
-    }
+    protected void equipBoss() {}
 
     protected void setTemporalInvunerability() {
-        Monster entity = (Monster) this.entity;
-
         PotionEffect fireResistance = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 400, 10);
         PotionEffect damageResistance = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 30,12);
 
@@ -83,7 +76,10 @@ public class BoosesModel {
         world.playSound(this.entity.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 2, 0);
     }
 
-    private static void upsertHealthBar(Entity entity, Player player, double health, BarColor color, double maxHealth, String idMetadata) {
+    private static void upsertHealthBar(Entity entity, LivingEntity shooter, double health, BarColor color, double maxHealth, String idMetadata) {
+        if(!(shooter instanceof Player)) return;
+
+        Player player = (Player) shooter;
         String name = entity.getCustomName();
 
         ProgressBar progressBar = new ProgressBar(idMetadata);
@@ -96,20 +92,29 @@ public class BoosesModel {
         if(player != null) progressBar.addPlayer(player);
     }
 
-    public static boolean handleDamageByEntity(EntityDamageByEntityEvent event, BarColor color, double maxHealth, String idMetadata, String key, IUltimateLambda lambda) {
+    public static BossDataModel getMetadata(Integer id) {
+        BossModel file = Resources.getJsonByData("boss.json", BossModel.class);
+        List<BossDataModel> data = file.getBosses();
+
+        return data.stream().filter(d -> d.getId().equals(id)).collect(Collectors.toList()).get(0);
+    }
+
+    public static boolean handleDamageByEntity(EntityDamageByEntityEvent event, Integer id, IUltimateLambda lambda) {
+        BossDataModel bossData = getMetadata(id);
+        BarColor color = BarColor.valueOf(bossData.getBarColor());
         Entity entity = event.getEntity();
         LivingEntity living = (LivingEntity) entity;
         String entityID = String.valueOf(entity.getEntityId());
 
-        boolean isZombie = entity.getType() == EntityType.valueOf(key);
-        boolean isSupported = entity.hasMetadata(idMetadata);
-        Player playerDamager = Utils.playerDamager(event.getDamager());
+        boolean isZombie = entity.getType() == EntityType.valueOf(bossData.getType());
+        boolean isSupported = entity.hasMetadata(bossData.getMetadata());
+        LivingEntity shooter = Utils.livingDamager(event.getDamager());
 
         double health = Utils.getHealthByDamage(event.getFinalDamage(), living.getHealth());
 
         if (!isZombie || !isSupported) return true;
 
-        upsertHealthBar(entity, playerDamager, health, color, maxHealth, idMetadata);
+        upsertHealthBar(entity, shooter, health, color, bossData.getHealth(), bossData.getMetadata());
 
         lambda.ultimates(health, entityID);
 
@@ -117,31 +122,35 @@ public class BoosesModel {
     }
 
 
-    public static void handleDamage(EntityDamageEvent event, String key, BarColor color, double maxHealth, String idMetadata, Runnable action) {
+    public static void handleDamage(EntityDamageEvent event, Integer id, Runnable action) {
+        BossDataModel bossData = getMetadata(id);
         Entity entity = event.getEntity();
+        BarColor color = BarColor.valueOf(bossData.getBarColor());
 
-        boolean isTypeEntity = entity.getType() == EntityType.valueOf(key);
-        boolean isSupportedEntity = entity.hasMetadata(idMetadata);
+        boolean isTypeEntity = entity.getType() == EntityType.valueOf(bossData.getType());
+        boolean isSupportedEntity = entity.hasMetadata(bossData.getMetadata());
 
         if(!isTypeEntity || !isSupportedEntity) return;
+
         LivingEntity bossEntity = (LivingEntity) entity;
 
         action.run();
 
         double health = Utils.getHealthByDamage(event.getFinalDamage(), bossEntity.getHealth());
 
-        upsertHealthBar(entity, null, health, color, maxHealth, idMetadata);
+        upsertHealthBar(entity, null, health, color, bossData.getHealth(), bossData.getMetadata());
     }
 
-    public static void handleDead(EntityDeathEvent event, String idMetadata, Map<String, ? extends BoosesModel> bosses) {
+    public static void handleDead(EntityDeathEvent event, Integer id, Map<String, ? extends BoosesModel> bosses) {
+        BossDataModel bossData = getMetadata(id);
         Entity entity = event.getEntity();
         String entityID = String.valueOf(entity.getEntityId());
 
-        boolean isSupported = entity.hasMetadata(idMetadata);
+        boolean isSupported = entity.hasMetadata(bossData.getMetadata());
 
         if(!isSupported) return;
 
-        ProgressBar progressBar = new ProgressBar(idMetadata);
+        ProgressBar progressBar = new ProgressBar(bossData.getMetadata());
         progressBar.disabledBar();
         progressBar.removeAllUsers();
 

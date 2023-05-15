@@ -1,16 +1,16 @@
 package com.wilmion.bossesplugin.mobsDificulties.boss;
 
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
 import com.wilmion.bossesplugin.models.Perk;
+import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.utils.Utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import org.bukkit.boss.BarColor;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -25,19 +25,16 @@ import java.util.TreeMap;
 
 public class QueenSpider extends BoosesModel {
     private static Map<String, QueenSpider> bosses = new TreeMap<>();
-    private static String idMetadata = "QUEEN_SPIDER_BOSS";
     private static String idMetadataMinion = "QUEEN_SPIDER_MINION_BOSS";
-    private static double maxHealth = 310.0;
-
     private int minions = 0;
     private boolean ultimate2Used = false;
-    public QueenSpider(Player player, Location location, Plugin plugin) {
-        super(player, location, plugin, maxHealth, "SPIDER", idMetadata, "AURORA LA REINA");
+
+    public QueenSpider(Location location, Plugin plugin) {
+        super(location, plugin, 3);
 
         String entityID = String.valueOf(this.entity.getEntityId());
         bosses.put(entityID, this);
 
-        //Attacks
         server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive, 50, 50);
         server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useUltimate1, 20, 20);
     }
@@ -61,9 +58,7 @@ public class QueenSpider extends BoosesModel {
 
         super.deadFunctionality();
 
-        ActionRangeBlocks actionRange = (locationParam) -> {
-            locationParam.getBlock().setType(Material.COBWEB);
-        };
+        ActionRangeBlocks actionRange = (locationParam) -> locationParam.getBlock().setType(Material.COBWEB);
 
         Utils.executeActionInARangeOfBlock(4, 0, location, actionRange);
         Utils.executeActionInARangeOfBlock(4, 1, location, actionRange);
@@ -82,12 +77,13 @@ public class QueenSpider extends BoosesModel {
 
         Spider spider = world.spawn(location, Spider.class);
         spider.setMetadata(idMetadataMinion, new FixedMetadataValue(plugin, entityID));
+        spider.setTarget(getBoss().getTarget());
 
         return spider;
     }
 
     private void usePassive() {
-        if(!this.isAlive() || minions >= 8) return;
+        if(!isAlive() || minions >= 8) return;
 
         Spider boss = getBoss();
         BlockFace face = boss.getFacing();
@@ -103,16 +99,15 @@ public class QueenSpider extends BoosesModel {
         location.setX(location.getX() + x);
         location.setZ(location.getZ() + z);
 
-        this.generateMinion(location);
+        generateMinion(location);
         minions++;
     }
 
     private void useUltimate1() {
         Spider boss = getBoss();
+        Double health = boss.getHealth();
 
-        double health = boss.getHealth();
-
-        if(!this.isAlive() || health > maxHealth * 0.7) return;
+        if(!isAlive() || health > maxHealth * 0.7) return;
 
         Location location = boss.getLocation().clone();
         BlockFace face = boss.getFacing();
@@ -131,13 +126,10 @@ public class QueenSpider extends BoosesModel {
         ultimate2Used = true;
 
         ActionRangeBlocks actionRange = (location) -> {
-            int probability = Utils.getRandomInPercentage();
-
-            if(probability <= 80) location.getBlock().setType(Material.COBWEB);
+            if(Utils.getRandomInPercentage() <= 80) location.getBlock().setType(Material.COBWEB);
         };
 
         Spider boss = getBoss();
-
         BlockFace face = boss.getFacing();
 
         Utils.executeActionInARangeOfBlock(3, 0, boss.getLocation(), actionRange);
@@ -156,35 +148,41 @@ public class QueenSpider extends BoosesModel {
 
             EntityType entityType = i != 0 ? EntityType.SKELETON : EntityType.WITHER_SKELETON;
 
-            Spider minionSpider = this.generateMinion(location);
-            Entity entity = world.spawnEntity(location, entityType);
+            Spider minionSpider = generateMinion(location);
+            Monster entity = (Monster) world.spawnEntity(location, entityType);
 
+            entity.setTarget(boss.getTarget());
+            minionSpider.setTarget(boss.getTarget());
             minionSpider.addPassenger(entity);
             boss.addPassenger(world.spawn(boss.getLocation(), WitherSkeleton.class));
         }
+    }
+
+    public static void handleEntityKnockbackByEntity(EntityKnockbackByEntityEvent event) {
+        BossDataModel bossData = getMetadata(3);
+        boolean isBoss = event.getEntity().hasMetadata(bossData.getMetadata());
+        if(isBoss) event.setCancelled(true);
     }
 
     public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
         IUltimateLambda lambda = (health, entityID) -> {
             QueenSpider boss = bosses.get(entityID);
 
-            Utils.removeKnockback(event);
-
-            if(health <= maxHealth * 0.4)  boss.useUltimate2();
+            if(health <= boss.maxHealth * 0.4)  boss.useUltimate2();
         };
 
         boolean isMinion = event.getEntity().hasMetadata(idMetadataMinion);
-        boolean continueAlth = BoosesModel.handleDamageByEntity(event, BarColor.PURPLE, maxHealth, idMetadata, "SPIDER", lambda);
+        boolean continueAlth = BoosesModel.handleDamageByEntity(event, 3, lambda);
 
         return isMinion? false : continueAlth;
     }
 
     public static void handleDamage(EntityDamageEvent event) {
-        BoosesModel.handleDamage(event, "SPIDER", BarColor.PURPLE, maxHealth, idMetadata, null);
+        BoosesModel.handleDamage(event, 3, () -> {});
     }
 
     public static void handleDead(EntityDeathEvent event) {
-        BoosesModel.handleDead(event, idMetadata, bosses);
+        BoosesModel.handleDead(event, 3, bosses);
 
         Entity entity = event.getEntity();
 

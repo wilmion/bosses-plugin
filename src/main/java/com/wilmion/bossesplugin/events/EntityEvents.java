@@ -2,7 +2,6 @@ package com.wilmion.bossesplugin.events;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.wilmion.bossesplugin.mobsDificulties.*;
-import com.wilmion.bossesplugin.mobsDificulties.boss.MasterWizard;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
 
@@ -46,6 +45,7 @@ public class EntityEvents implements Listener {
     public void onEntityKnockbackByEntity(EntityKnockbackByEntityEvent event) {
         creeper.onEntityKnockbackByEntityCreeperEvent(event);
         witch.onEntityKnockbackByEntityWitchEvent(event);
+        spider.onEntityKnockbackByEntitySpiderEvent(event);
     }
 
     @EventHandler

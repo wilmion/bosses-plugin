@@ -86,7 +86,7 @@ public class BuildCommand {
 
         Utils.setMetadataValue("bossSpawn", info.getBossSpawn().get(), loc.getBlock().getState(), plugin);
 
-        SpawnBossCommand.spawnBoss(info.getBossSpawn().get(), player, loc, plugin);
+        SpawnBossCommand.spawnBoss(info.getBossSpawn().get(), loc, plugin);
     }
 
     private void setMetadataAndSpawnSpecialEntities(Location loc, BuildFileDataModel info) {

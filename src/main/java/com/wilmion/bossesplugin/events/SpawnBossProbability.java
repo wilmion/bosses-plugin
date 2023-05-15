@@ -52,7 +52,7 @@ public class SpawnBossProbability {
         Constructor constructor =  objects[randomIndex].getConstructors()[0];
 
         try {
-            constructor.newInstance(player, location, plugin);
+            constructor.newInstance(location, plugin);
         } catch (Exception e) {
             e.printStackTrace();
         }

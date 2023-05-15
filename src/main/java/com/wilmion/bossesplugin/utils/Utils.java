@@ -175,20 +175,41 @@ public class Utils {
         return isValidCause;
     }
 
-    public static Player playerDamager(Entity damagerEntity) {
-        Player result = null;
+    public static LivingEntity livingDamager(Entity damagerEntity) {
+        LivingEntity result = null;
 
         Boolean isProjectile = damagerEntity instanceof Projectile;
-        boolean isPlayer = damagerEntity instanceof Player;
+        boolean isEntity = damagerEntity instanceof LivingEntity;
 
-        if(isPlayer) result = (Player) damagerEntity;
+        if(isEntity) result = (LivingEntity) damagerEntity;
 
         if(isProjectile) {
             Projectile projectile = (Projectile) damagerEntity;
 
-            isPlayer = projectile.getShooter() instanceof Player;
+            isEntity = projectile.getShooter() instanceof LivingEntity;
 
-            if(!isPlayer) return null;
+            if(!isEntity) return null;
+
+            damagerEntity = (LivingEntity) projectile.getShooter();
+        }
+
+        return result;
+    }
+
+    public static Player playerDamager(Entity damagerEntity) {
+        Player result = null;
+
+        Boolean isProjectile = damagerEntity instanceof Projectile;
+        boolean isEntity = damagerEntity instanceof Player;
+
+        if(isEntity) result = (Player) damagerEntity;
+
+        if(isProjectile) {
+            Projectile projectile = (Projectile) damagerEntity;
+
+            isEntity = projectile.getShooter() instanceof Player;
+
+            if(!isEntity) return null;
 
             damagerEntity = (Player) projectile.getShooter();
         }

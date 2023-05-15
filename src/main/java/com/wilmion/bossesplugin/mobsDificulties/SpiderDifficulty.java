@@ -1,5 +1,7 @@
 package com.wilmion.bossesplugin.mobsDificulties;
 
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+
 import com.wilmion.bossesplugin.mobsDificulties.boss.QueenSpider;
 import com.wilmion.bossesplugin.mobsDificulties.boss.SoldierSpider;
 import com.wilmion.bossesplugin.models.MobDifficulty;
@@ -8,7 +10,6 @@ import com.wilmion.bossesplugin.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -17,6 +18,10 @@ import org.bukkit.plugin.Plugin;
 public class SpiderDifficulty extends MobDifficulty {
     public SpiderDifficulty(Plugin plugin) {
         super(plugin);
+    }
+
+    public void onEntityKnockbackByEntitySpiderEvent(EntityKnockbackByEntityEvent event) {
+        QueenSpider.handleEntityKnockbackByEntity(event);
     }
 
     public void OnDeadSpiderEvent(EntityDeathEvent event) {
@@ -48,12 +53,12 @@ public class SpiderDifficulty extends MobDifficulty {
         Location location = entity.getLocation();
 
         if(probability <= 1) {
-            new QueenSpider((Player) event.getDamager(), location, this.plugin);
+            new QueenSpider(location, this.plugin);
             return;
         }
 
         if(probability > 1 && probability < 10) {
-            new SoldierSpider((Player) event.getDamager(), location, this.plugin);
+            new SoldierSpider(location, this.plugin);
         }
     }
 }

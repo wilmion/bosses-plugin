@@ -1,0 +1,52 @@
+{
+  "bosses": [
+    {
+      "id": 1,
+      "name": "JORDI EL IRRESISTIBLE",
+      "metadata": "SUPPORT_ZOMBIE_BOSS",
+      "type": "ZOMBIE",
+      "health": 100.0,
+      "barColor": "RED"
+    },
+    {
+      "id": 2,
+      "name": "ANN LA MAESTRA",
+      "metadata": "SKELETON_BOSS",
+      "type": "SKELETON",
+      "health": 150.0,
+      "barColor": "WHITE"
+    },
+    {
+      "id": 3,
+      "name": "AURORA LA REINA",
+      "metadata": "QUEEN_SPIDER_BOSS",
+      "type": "SPIDER",
+      "health": 310.0,
+      "barColor": "PURPLE"
+    },
+    {
+      "id": 4,
+      "name": "MIQUEL EL SOLDADO",
+      "metadata": "SOLDIER_SPIDER_BOSS",
+      "type": "CAVE_SPIDER",
+      "health": 70.0,
+      "barColor": "GREEN"
+    },
+    {
+      "id": 5,
+      "name": "JACK EL PIROMANO",
+      "metadata": "CREPPER-MASTER-BOSS",
+      "type": "CREEPER",
+      "health": 150.0,
+      "barColor": "BLUE"
+    },
+    {
+      "id": 6,
+      "name": "ZETANNA LA ERUDITA",
+      "metadata": "WITCH-MASTER-BOSS",
+      "type": "WITCH",
+      "health": 150.0,
+      "barColor": "GREEN"
+    }
+  ]
+}

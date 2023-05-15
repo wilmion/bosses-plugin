@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.mobsDificulties;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+
 import com.wilmion.bossesplugin.mobsDificulties.boss.MasterCreeper;
 import com.wilmion.bossesplugin.models.MobDifficulty;
 import com.wilmion.bossesplugin.utils.Utils;
@@ -47,7 +48,7 @@ public class CreeperDifficulty extends MobDifficulty {
         int probability = Utils.getRandomInPercentage();
 
         if(probability <= 1) {
-            new MasterCreeper((Player) event.getDamager(), entity.getLocation(), plugin);
+            new MasterCreeper(entity.getLocation(), plugin);
             return;
         }
 
