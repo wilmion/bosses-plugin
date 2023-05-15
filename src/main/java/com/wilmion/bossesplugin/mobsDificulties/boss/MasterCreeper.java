@@ -70,10 +70,7 @@ public class MasterCreeper extends BoosesModel {
 
         if(probability > 50) return;
 
-        server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            String name = "Piedra de la resistencia explosiva";
-            Perk.generatePerk(name, Material.LIGHT_BLUE_DYE, entity.getLocation(), ChatColor.BLUE, world, plugin);
-        } , 40);
+        server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(5, entity.getLocation(), plugin), 40);
     }
 
     private void usePassive() {

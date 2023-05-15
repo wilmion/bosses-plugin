@@ -80,9 +80,7 @@ public class MasterSkeleton extends BoosesModel {
             world.createExplosion(location, 2F, false);
         }, 30);
 
-        if(probability <= 50) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            Perk.generatePerk("Cristal de Hueso", Material.WHITE_DYE, entity.getLocation(), ChatColor.WHITE, world, plugin);
-        }, 60);
+        if(probability <= 50) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(2, location, plugin), 60);
     }
 
     private void useATQE1() {
@@ -160,11 +158,11 @@ public class MasterSkeleton extends BoosesModel {
         PotionEffect effect;
 
         if(probability >= 0 && probability <= 25) effect = potion;
-        if(probability >= 26 && probability <= 50) effect = weakness;
-        if(probability >= 51 && probability <= 75) effect = slowness;
-        if(probability >= 76) effect = damage;
+        else if(probability >= 26 && probability <= 50) effect = weakness;
+        else if(probability >= 51 && probability <= 75) effect = slowness;
+        else effect = damage;
 
-        arrow.addCustomEffect(potion, true);
+        arrow.addCustomEffect(effect, true);
     }
 
     private Skeleton summonMinion(Location location) {

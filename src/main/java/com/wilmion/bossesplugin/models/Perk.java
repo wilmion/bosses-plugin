@@ -1,6 +1,9 @@
 package com.wilmion.bossesplugin.models;
 
-import net.kyori.adventure.text.Component;
+import com.wilmion.bossesplugin.objects.perk.PerkDataModel;
+import com.wilmion.bossesplugin.objects.perk.PerkModel;
+import com.wilmion.bossesplugin.utils.Resources;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,6 +15,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import net.kyori.adventure.text.Component;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -19,6 +24,8 @@ import java.util.stream.Collectors;
 
 public class Perk {
     private static final String PERK_METADATA = "PERK_BOOSTS_PLUGIN";
+
+    private static  List<PerkDataModel> perksData;
 
     public static class PerkPotionItem {
         private String name;
@@ -42,29 +49,36 @@ public class Perk {
         }
     }
 
-    public static void generatePerk(String name, Material material, Location location, ChatColor color,  World world, Plugin plugin) {
-        ItemStack perk = new ItemStack(material, 1, (short) 0);
+    public static void generatePerk(Integer id, Location location, Plugin plugin) {
+        getPerksData();
+        PerkDataModel perkMtd = perksData.stream().filter(p -> p.getId().equals(id)).collect(Collectors.toList()).get(0);
 
+        Material material = Material.getMaterial(perkMtd.getMaterial());
+        ItemStack perk = new ItemStack(material, 1, (short) 0);
+        String name = ChatColor.valueOf(perkMtd.getColorName()) + perkMtd.getName();
+        Component displayName = Component.text(name);
         ItemMeta perkMetadata = perk.getItemMeta();
         PersistentDataContainer perkDataContainer = perkMetadata.getPersistentDataContainer();
 
-        Component displayName = Component.text(color + name);
-
         perkMetadata.displayName(displayName);
-
         perkDataContainer.set(new NamespacedKey(plugin, PERK_METADATA), PersistentDataType.STRING, "true");
 
         perk.setItemMeta(perkMetadata);
 
-        world.dropItem(location, perk);
+        location.getWorld().dropItem(location, perk);
     }
 
-    public static void usePerkFunctionality(Plugin plugin, Player player, Material material, List<PerkPotionItem> effects) {
-        PlayerInventory inventory = player.getInventory();
+    public static void usePerkFunctionality(Plugin plugin, Player player) {
+        getPerksData();
+        perksData.forEach(perk -> {
+            Material material = Material.getMaterial(perk.getMaterial());
+            PlayerInventory inventory = player.getInventory();
+            List<PerkPotionItem> effects = perk.getEffects().stream().map(p -> new PerkPotionItem(p.getName(), p.getLevel() - 1)).collect(Collectors.toList());
 
-        boolean isPerkItem = isPerk(inventory.getItemInMainHand(), inventory.getItemInOffHand(), plugin, material);
+            boolean isPerkItem = isPerk(inventory.getItemInMainHand(), inventory.getItemInOffHand(), plugin, material);
 
-        if(isPerkItem) useAbility(player, effects);
+            if(isPerkItem) useAbility(player, effects);
+        });
     }
 
     private static boolean isPerk(ItemStack mainItem, ItemStack offItem, Plugin plugin, Material material) {
@@ -88,5 +102,10 @@ public class Perk {
         Collection<PotionEffect> potionEffects = effects.stream().map(mapper).collect(Collectors.toList());
 
         player.addPotionEffects(potionEffects);
+    }
+
+    private static void getPerksData() {
+        PerkModel perkFile = Resources.getJsonByData("perks.json", PerkModel.class);
+        perksData = perkFile.getPerks();
     }
 }

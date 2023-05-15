@@ -1,0 +1,116 @@
+{
+  "perks": [
+    {
+      "id": 1,
+      "name": "Escencia de los condenados",
+      "material": "YELLOW_DYE",
+      "colorName": "YELLOW",
+      "effects": [
+        {
+          "name": "REGENERATION",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Cristal de Hueso",
+      "material": "WHITE_DYE",
+      "colorName": "WHITE",
+      "effects": [
+        {
+          "name": "SPEED",
+          "level": 1
+        },
+        {
+          "name": "DAMAGE_RESISTANCE",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Pila de la fertilidad",
+      "material": "BLACK_DYE",
+      "colorName": "BLACK",
+      "effects": [
+        {
+          "name": "REGENERATION",
+          "level": 1
+        },
+        {
+          "name": "JUMP",
+          "level": 1
+        },
+        {
+          "name": "LUCK",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Escencia de los primordiales",
+      "material": "GREEN_DYE",
+      "colorName": "DARK_GREEN",
+      "effects": [
+        {
+          "name": "REGENERATION",
+          "level": 1
+        },
+        {
+          "name": "DAMAGE_RESISTANCE",
+          "level": 2
+        },
+        {
+          "name": "FIRE_RESISTANCE",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Piedra de la resistencia explosiva",
+      "material": "LIGHT_BLUE_DYE",
+      "colorName": "BLUE",
+      "effects": [
+        {
+          "name": "REGENERATION",
+          "level": 1
+        },
+        {
+          "name": "INCREASE_DAMAGE",
+          "level": 1
+        },
+        {
+          "name": "DAMAGE_RESISTANCE",
+          "level": 2
+        },
+        {
+          "name": "JUMP",
+          "level": 1
+        },
+        {
+          "name": "LUCK",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "GEMA DE LOS MAGOS MALDITOS",
+      "material": "AMETHYST_SHARD",
+      "colorName": "LIGHT_PURPLE",
+      "effects": [
+        {
+          "name": "SPEED",
+          "level": 2
+        },
+        {
+          "name": "DAMAGE_RESISTANCE",
+          "level": 3
+        }
+      ]
+    }
+  ]
+}

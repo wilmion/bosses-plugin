@@ -26,7 +26,6 @@ public class SupportZombie extends BoosesModel {
     static final String idMetadata = "SUPPORT_ZOMBIE_BOSS";
     static final String idFollower = "PARENT-ID";
     static final  String idSpecialFollower = "IS-SPECIAL-FOLLOWER-FROM-ZOMBIE-SUPPORT";
-
     static final double maxHealth = 100.0;
     private int spawnedZombies = 0;
     private boolean useUltimate1 = false;
@@ -69,9 +68,7 @@ public class SupportZombie extends BoosesModel {
         final int probability = Utils.getRandomInPercentage();
 
         if (probability <= 50) {
-            this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
-                Perk.generatePerk("Escencia de los condenados", Material.YELLOW_DYE, entity.getLocation(), ChatColor.YELLOW, world, plugin);
-            }, 100);
+            server.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> Perk.generatePerk(1, location, plugin), 100);
         }
     }
     private void usePassive() {

@@ -53,13 +53,12 @@ public class CommandManager implements CommandExecutor {
         Player player = (Player) sender;
         String subCommand = args[0];
 
-        if(subCommand.equals("help")) return showHelp(player);
         if(subCommand.equals("spawnboss")) return spawnBossCommand(player, args);
         if(subCommand.equals("build")) return build(player, args);
         if(subCommand.equals("save")) return saveBuild(player, args);
         if(subCommand.equals("metadata-block")) return metadataBlockCmd(player, args);
 
-        return false;
+        return showHelp(player);
     }
 
     private Boolean metadataBlockCmd(Player player, String[] args) {

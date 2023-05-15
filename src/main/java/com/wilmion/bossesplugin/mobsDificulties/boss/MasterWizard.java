@@ -56,10 +56,7 @@ public class MasterWizard extends BoosesModel {
 
         if(probability > 50) return;
 
-        server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            String name = "GEMA DE LOS MAGOS MALDITOS";
-            Perk.generatePerk(name, Material.AMETHYST_SHARD, getWitch().getLocation(), ChatColor.LIGHT_PURPLE, world, plugin);
-        } , 20);
+        server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(6, getWitch().getLocation(), plugin), 20);
     }
 
     /* === Passive Skills === */

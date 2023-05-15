@@ -68,7 +68,7 @@ public class QueenSpider extends BoosesModel {
         Utils.executeActionInARangeOfBlock(4, 0, location, actionRange);
         Utils.executeActionInARangeOfBlock(4, 1, location, actionRange);
 
-        Perk.generatePerk("Pila de la fertilidad", Material.BLACK_DYE, entity.getLocation(), ChatColor.BLACK, world, plugin);
+        Perk.generatePerk(3, location, plugin);
     }
 
     public void lessMinions(int n) {

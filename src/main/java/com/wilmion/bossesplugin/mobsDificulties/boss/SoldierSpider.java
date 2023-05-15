@@ -59,9 +59,7 @@ public class SoldierSpider extends BoosesModel {
 
         int probability = Utils.getRandomInPercentage();
 
-        if(probability >= 50.0) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            Perk.generatePerk("Escencia de los primordiales", Material.GREEN_DYE, entity.getLocation(), ChatColor.DARK_GREEN, world, plugin);
-        }, 20);
+        if(probability >= 50.0) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(4, location, plugin), 20);
     }
 
     private void usePassive() {
