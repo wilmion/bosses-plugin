@@ -8,17 +8,13 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.*;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.Vector;
 
-import java.io.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Utils {
     public static Optional<MetadataValue> getMetadataValue(String key, BlockState blockState) {
@@ -37,17 +33,6 @@ public class Utils {
     public static void setMetadataValue(String key, Object value, BlockState blockState, Plugin plugin) {
         blockState.setMetadata(key, new FixedMetadataValue(plugin, value));
     }
-    public static double getRandom() {
-        double range = Math.random() * 10 + 1;
-
-        return range;
-    }
-
-    public static int getRandomIntNumber() {
-        int value = (int) getRandom();
-
-        return value;
-    }
 
     public static int getRandomInPercentage() {
         Random random = new Random();
@@ -60,9 +45,7 @@ public class Utils {
     public static int getRandomNumberForSpace() {
         Random random = new Random();
 
-        int randomNUmber = random.nextInt(3) - 1;
-
-        return randomNUmber;
+        return random.nextInt(3) - 1;
     }
 
     public static void executeActionInARangeOfBlock(int range, int modY, Location locationParam, ActionRangeBlocks lambda) {
@@ -95,70 +78,16 @@ public class Utils {
         }
     }
 
-    public static void removeKnockback(EntityDamageByEntityEvent event) {
-        Entity damager = event.getDamager();
-        Entity mainer = event.getEntity();
-
-        Vector velocity = damager.getLocation().getDirection().setY(0).normalize().multiply(-2);
-
-        mainer.setVelocity(velocity);
-    }
-
     public static void setTitleOnPlayer(Player player, String title, String subtitle) {
         Component titleComponent = Component.text(title);
         Component subtitleComponent = Component.text(subtitle);
-
         Title titleToShow = Title.title(titleComponent, subtitleComponent);
 
         player.showTitle(titleToShow);
     }
 
-    public static String readFile(String path) {
-        try {
-            File file = new File(path);
-            Scanner reader = new Scanner(file);
-
-            String data = "";
-
-            while (reader.hasNextLine()) {
-                data += "\n" + reader.nextLine();
-            }
-
-            return data;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static boolean writeFile(String path, String content) {
-        try {
-            File file = new File(path);
-
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            FileWriter writer = new FileWriter(path);
-            writer.write(content);
-            writer.close();
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     public static double getHealthByDamage(double damage, double health) {
-        double currentHealth = health - damage;
-
-        return currentHealth;
+        return health - damage;
     }
 
     public static Boolean isDeadEntityOnDamage(Entity entity, double damage, EntityType MobType) {

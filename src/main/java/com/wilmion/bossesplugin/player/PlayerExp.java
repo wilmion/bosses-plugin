@@ -32,6 +32,9 @@ public class PlayerExp extends MobDifficulty {
 
     public void onDamageByEntityPlayerEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
+
+        if(!(entity instanceof LivingEntity)) return;
+
         Entity damagerEntity = event.getDamager();
         LivingEntity livingEntity = (LivingEntity) entity;
         double health = Utils.getHealthByDamage(event.getFinalDamage(), livingEntity.getHealth());
@@ -43,7 +46,6 @@ public class PlayerExp extends MobDifficulty {
         if(!isDead || damagerEntity == null) return;
 
         Player player = (Player) damagerEntity;
-
         String name = entity.getName();
 
         addExp(player, name.length());

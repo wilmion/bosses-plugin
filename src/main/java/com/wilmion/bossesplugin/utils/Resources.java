@@ -6,12 +6,14 @@ import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.Type;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Resources {
@@ -40,7 +42,7 @@ public class Resources {
     public static <T> T getJsonByLocalData(String filename, Type classInstance) {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY).create();
 
-        String data = Utils.readFile(filename);
+        String data = readFile(filename);
 
         if(data == null) return null;
 
@@ -50,6 +52,45 @@ public class Resources {
     public static void writeFile(String path, Object obj) {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY).create();
 
-        Utils.writeFile(path, gson.toJson(obj));
+        writeFile(path, gson.toJson(obj));
+    }
+
+    private static String readFile(String path) {
+        try {
+            File file = new File(path);
+            Scanner reader = new Scanner(file);
+            String data = "";
+
+            while (reader.hasNextLine()) data += "\n" + reader.nextLine();
+
+            return data;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static boolean writeFile(String path, String content) {
+        try {
+            File file = new File(path);
+
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter writer = new FileWriter(path);
+            writer.write(content);
+            writer.close();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
