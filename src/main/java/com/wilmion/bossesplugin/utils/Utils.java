@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.*;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -16,6 +17,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Consumer;
 
 public class Utils {
     public static Optional<MetadataValue> getMetadataValue(String key, BlockState blockState) {
@@ -75,6 +77,25 @@ public class Utils {
                     loc.setY(loc.getY() + y);
 
                     actionRangeBlocks.action(loc);
+                }
+            }
+        }
+    }
+
+    public static void executeActionIn3DRange(Location centerLocation, Integer radius, Consumer<Block> callback) {
+        int minX = centerLocation.getBlockX() - radius;
+        int minY = centerLocation.getBlockY() - radius;
+        int minZ = centerLocation.getBlockZ() - radius;
+
+        int maxX = centerLocation.getBlockX() + radius;
+        int maxY = centerLocation.getBlockY() + radius;
+        int maxZ = centerLocation.getBlockZ() + radius;
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    Block block = centerLocation.getWorld().getBlockAt(x, y, z);
+                    callback.accept(block);
                 }
             }
         }

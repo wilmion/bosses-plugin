@@ -3,6 +3,7 @@ package com.wilmion.bossesplugin.utils;
 import com.wilmion.bossesplugin.objects.LocationDataModel;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
@@ -17,7 +18,7 @@ public class WorldUtils {
     public static void displayFloatingTextByXSeconds(Location location, String text, Integer seconds, Plugin plugin) {
         ArmorStand armorStand = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
 
-        armorStand.setCustomName(text);
+        armorStand.setCustomName(ChatColor.DARK_GREEN + text);
         armorStand.setCustomNameVisible(true);
         armorStand.setVisible(false);
         armorStand.setGravity(false);
