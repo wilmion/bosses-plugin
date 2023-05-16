@@ -17,11 +17,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 public class SupportZombie extends BoosesModel {
-    static Map<String, SupportZombie> bosses = new TreeMap<>();
     static final String idFollower = "PARENT-ID";
     static final  String idSpecialFollower = "IS-SPECIAL-FOLLOWER-FROM-ZOMBIE-SUPPORT";
     private int spawnedZombies = 0;
@@ -30,17 +26,16 @@ public class SupportZombie extends BoosesModel {
 
     public SupportZombie(Location location, Plugin plugin) {
        super(location, plugin, 1);
-
-       plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, this::usePassive, 50, 50);
-
-       String entityID = String.valueOf(this.entity.getEntityId());
-
-       bosses.put(entityID, this);
    }
 
     private Zombie getBoss() {
        return (Zombie) this.entity;
    }
+
+    @Override
+    public void useSchedulerEvents() {
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, this::usePassive, 50, 50);
+    }
 
     @Override
     protected void equipBoss() {
@@ -221,11 +216,8 @@ public class SupportZombie extends BoosesModel {
     }
 
     public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
-       IUltimateLambda ultimate = (health, entityID) -> {
-           SupportZombie boss = bosses.get(entityID);
-
+       IUltimateLambda<SupportZombie> ultimate = (health, boss) -> {
            if(health <= boss.maxHealth * 0.5) boss.playUltimate1();
-
            if(health <= boss.maxHealth * 0.3) boss.playUltimate2();
        };
 
@@ -244,7 +236,7 @@ public class SupportZombie extends BoosesModel {
    }
 
     public static void handleDead(EntityDeathEvent event) {
-       BoosesModel.handleDead(event, 1, bosses);
+       BoosesModel.handleDead(event, 1);
 
        Entity entity = event.getEntity();
 
@@ -254,7 +246,7 @@ public class SupportZombie extends BoosesModel {
 
        String idParent = (String) entity.getMetadata(idFollower).get(0).value();
 
-       SupportZombie boss = bosses.get(idParent);
+       SupportZombie boss = (SupportZombie) BoosesModel.bosses.get(idParent);
        boss.removeSpawnedZombies(1);
    }
 }

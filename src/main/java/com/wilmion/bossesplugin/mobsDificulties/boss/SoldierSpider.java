@@ -16,18 +16,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 public class SoldierSpider extends BoosesModel {
-    static Map<String, SoldierSpider> bosses = new TreeMap<>();
-
     public SoldierSpider(Location location, Plugin plugin) {
         super(location, plugin, 4);
+    }
 
-        String entityID = String.valueOf(this.entity.getEntityId());
-        bosses.put(entityID, this);
-
+    @Override
+    public void useSchedulerEvents() {
         server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive, 200, 200);
     }
 
@@ -100,7 +95,7 @@ public class SoldierSpider extends BoosesModel {
     }
 
     public static void handleDead(EntityDeathEvent event) {
-        BoosesModel.handleDead(event, 4, bosses);
+        BoosesModel.handleDead(event, 4);
     }
 
     public static void handleAttack(EntityDamageByEntityEvent event) {

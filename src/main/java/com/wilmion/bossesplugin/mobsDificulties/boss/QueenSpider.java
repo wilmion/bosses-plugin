@@ -20,27 +20,23 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 public class QueenSpider extends BoosesModel {
-    private static Map<String, QueenSpider> bosses = new TreeMap<>();
     private static String idMetadataMinion = "QUEEN_SPIDER_MINION_BOSS";
     private int minions = 0;
     private boolean ultimate2Used = false;
 
     public QueenSpider(Location location, Plugin plugin) {
         super(location, plugin, 3);
-
-        String entityID = String.valueOf(this.entity.getEntityId());
-        bosses.put(entityID, this);
-
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive, 50, 50);
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useUltimate1, 20, 20);
     }
 
     private Spider getBoss() {
         return (Spider) this.entity;
+    }
+
+    @Override
+    public void useSchedulerEvents() {
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive, 50, 50);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useUltimate1, 20, 20);
     }
 
     @Override
@@ -71,7 +67,7 @@ public class QueenSpider extends BoosesModel {
     }
 
     private Spider generateMinion(Location location) {
-        String entityID = String.valueOf(entity.getEntityId());
+        String entityID = String.valueOf(entity.getUniqueId());
 
         location.getBlock().setType(Material.COBWEB);
 
@@ -165,9 +161,7 @@ public class QueenSpider extends BoosesModel {
     }
 
     public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
-        IUltimateLambda lambda = (health, entityID) -> {
-            QueenSpider boss = bosses.get(entityID);
-
+        IUltimateLambda<QueenSpider> lambda = (health, boss) -> {
             if(health <= boss.maxHealth * 0.4)  boss.useUltimate2();
         };
 
@@ -182,7 +176,7 @@ public class QueenSpider extends BoosesModel {
     }
 
     public static void handleDead(EntityDeathEvent event) {
-        BoosesModel.handleDead(event, 3, bosses);
+        BoosesModel.handleDead(event, 3);
 
         Entity entity = event.getEntity();
 
@@ -192,7 +186,7 @@ public class QueenSpider extends BoosesModel {
 
         String idParent = (String) entity.getMetadata(idMetadataMinion).get(0).value();
 
-        QueenSpider boss = bosses.get(idParent);
+        QueenSpider boss = (QueenSpider) BoosesModel.bosses.get(idParent);
         boss.lessMinions(1);
     }
 

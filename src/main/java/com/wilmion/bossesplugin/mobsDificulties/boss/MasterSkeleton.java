@@ -24,27 +24,23 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 public class MasterSkeleton extends BoosesModel {
-    static Map<String, MasterSkeleton> bosses = new TreeMap<>();
     static String idMetadataMinion = "SKELETON_BOSS_MINION";
     private boolean useUltimate1 = false;
 
     public MasterSkeleton(Location location, Plugin plugin) {
         super(location, plugin, 2);
-
-        String entityID = String.valueOf(this.entity.getEntityId());
-        bosses.put(entityID, this);
-
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive, 120, 120);
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useATQE1, 140, 100);
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useATQE2, 200, 300);
     }
 
     private Skeleton getBoos() {
         return (Skeleton) this.entity;
+    }
+
+    @Override
+    public void useSchedulerEvents() {
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive, 120, 120);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useATQE1, 140, 100);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useATQE2, 200, 300);
     }
 
     @Override
@@ -219,12 +215,8 @@ public class MasterSkeleton extends BoosesModel {
     }
 
     public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
-        IUltimateLambda ultimateLambda = (health, bossID) -> {
-            MasterSkeleton boss = bosses.get(bossID);
-
-            if(health <= boss.maxHealth / 2.0) {
-                boss.useUltimate1();
-            }
+        IUltimateLambda<MasterSkeleton> ultimateLambda = (health, boss) -> {
+            if(health <= boss.maxHealth / 2.0) boss.useUltimate1();
         };
 
         boolean isMinion = event.getEntity().hasMetadata(idMetadataMinion);
@@ -238,7 +230,7 @@ public class MasterSkeleton extends BoosesModel {
     }
 
     public static void handleDead(EntityDeathEvent event) {
-        BoosesModel.handleDead(event, 2, bosses);
+        BoosesModel.handleDead(event, 2);
     }
 
     public static void handleShoot(EntityShootBowEvent event) {
@@ -246,7 +238,7 @@ public class MasterSkeleton extends BoosesModel {
         Entity entity = event.getEntity();
         Entity projectile = event.getProjectile();
 
-        String entityID = String.valueOf(entity.getEntityId());
+        String entityID = String.valueOf(entity.getUniqueId());
 
         boolean isSkeleton = entity instanceof Skeleton;
         boolean isArrow = projectile instanceof Arrow;
@@ -254,14 +246,11 @@ public class MasterSkeleton extends BoosesModel {
 
         if(!isSkeleton || !isArrow || !isBoss) return;
 
-        double health = ((Skeleton) entity).getHealth();
+        Double health = ((Skeleton) entity).getHealth();
         Arrow arrow = (Arrow) projectile;
-        MasterSkeleton boss = bosses.get(entityID);
+        MasterSkeleton boss = (MasterSkeleton) BoosesModel.bosses.get(entityID);
 
-        if(health <= bossData.getHealth() * 0.3) {
-            boss.useUltimate2(arrow);
-        }
-
+        if(health <= bossData.getHealth() * 0.3) boss.useUltimate2(arrow);
     }
 
 }

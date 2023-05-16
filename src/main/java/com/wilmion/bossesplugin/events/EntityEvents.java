@@ -2,13 +2,16 @@ package com.wilmion.bossesplugin.events;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.wilmion.bossesplugin.mobsDificulties.*;
+import com.wilmion.bossesplugin.models.KeepMetadata;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.Plugin;
 
 public class EntityEvents implements Listener {
@@ -84,5 +87,11 @@ public class EntityEvents implements Listener {
         spider.OnDeadSpiderEvent(event);
         creeper.onDeathCreeperEvent(event);
         witch.onDeathWitchEvent(event);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        KeepMetadata keepMetadata = new KeepMetadata(plugin);
+        keepMetadata.keepMetadata();
     }
 }

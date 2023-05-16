@@ -52,7 +52,7 @@ public class Resources {
     public static void writeFile(String path, Object obj) {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY).create();
 
-        writeFile(path, gson.toJson(obj));
+        writeFileA(path, gson.toJson(obj));
     }
 
     private static String readFile(String path) {
@@ -66,12 +66,11 @@ public class Resources {
             return data;
 
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
 
-    private static boolean writeFile(String path, String content) {
+    private static boolean writeFileA(String path, String content) {
         try {
             File file = new File(path);
 

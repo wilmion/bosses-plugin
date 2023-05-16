@@ -21,14 +21,17 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 
 public class BoosesModel {
-    protected Plugin plugin;
-    protected World world;
-    protected Server server;
-    protected LivingEntity entity;
+    public static Map<String, BoosesModel> bosses = new TreeMap<>();
+
+    protected transient Plugin plugin;
+    protected transient World world;
+    protected transient Server server;
+    protected transient LivingEntity entity;
     protected Double maxHealth;
     protected String idMetadata;
 
@@ -55,7 +58,17 @@ public class BoosesModel {
         entity.setCustomNameVisible(true);
         entity.setMetadata(idMetadata, new FixedMetadataValue(this.plugin, "true"));
 
+        bosses.put(String.valueOf(entity.getUniqueId()), this);
+
+        this.useSchedulerEvents();
+        this.setMetadata();
         this.equipBoss();
+    }
+
+    public void useSchedulerEvents() {}
+
+    protected void setMetadata() {
+        entity.setMetadata(idMetadata, new FixedMetadataValue(this.plugin, "true"));
     }
 
     protected boolean isAlive() {
@@ -73,14 +86,13 @@ public class BoosesModel {
     }
 
     public void deadFunctionality() {
+        String entityID = String.valueOf(entity.getUniqueId());
+
+        bosses.remove(entityID);
         world.playSound(this.entity.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 2, 0);
     }
 
     private static void upsertHealthBar(String name, LivingEntity shooter, double health, BarColor color, double maxHealth, String idMetadata) {
-        if(!(shooter instanceof Player)) return;
-
-        Player player = (Player) shooter;
-
         ProgressBar progressBar = new ProgressBar(idMetadata);
         progressBar.setTitle(name);
         progressBar.setColor(color);
@@ -88,7 +100,7 @@ public class BoosesModel {
 
         if(health > 0.0) progressBar.enableBar();
 
-        if(player != null) progressBar.addPlayer(player);
+        if(shooter instanceof Player && shooter != null) progressBar.addPlayer((Player) shooter);
     }
 
     public static BossDataModel getMetadata(Integer id) {
@@ -98,12 +110,12 @@ public class BoosesModel {
         return data.stream().filter(d -> d.getId().equals(id)).collect(Collectors.toList()).get(0);
     }
 
-    public static boolean handleDamageByEntity(EntityDamageByEntityEvent event, Integer id, IUltimateLambda lambda) {
+    public static<T> boolean handleDamageByEntity(EntityDamageByEntityEvent event, Integer id, IUltimateLambda<T> lambda) {
         BossDataModel bossData = getMetadata(id);
         BarColor color = BarColor.valueOf(bossData.getBarColor());
         Entity entity = event.getEntity();
         LivingEntity living = (LivingEntity) entity;
-        String entityID = String.valueOf(entity.getEntityId());
+        String entityID = String.valueOf(entity.getUniqueId());
 
         boolean isZombie = entity.getType() == EntityType.valueOf(bossData.getType());
         boolean isSupported = entity.hasMetadata(bossData.getMetadata());
@@ -115,7 +127,7 @@ public class BoosesModel {
 
         upsertHealthBar(bossData.getName(), shooter, health, color, bossData.getHealth(), bossData.getMetadata());
 
-        lambda.ultimates(health, entityID);
+        lambda.ultimates(health, (T) bosses.get(entityID));
 
         return false;
     }
@@ -139,10 +151,10 @@ public class BoosesModel {
         upsertHealthBar(bossData.getName(), null, health, color, bossData.getHealth(), bossData.getMetadata());
     }
 
-    public static void handleDead(EntityDeathEvent event, Integer id, Map<String, ? extends BoosesModel> bosses) {
+    public static void handleDead(EntityDeathEvent event, Integer id) {
         BossDataModel bossData = getMetadata(id);
         Entity entity = event.getEntity();
-        String entityID = String.valueOf(entity.getEntityId());
+        String entityID = String.valueOf(entity.getUniqueId());
 
         boolean isSupported = entity.hasMetadata(bossData.getMetadata());
 
@@ -152,7 +164,7 @@ public class BoosesModel {
         progressBar.disabledBar();
         progressBar.removeAllUsers();
 
-        BoosesModel boss = bosses.get(entityID);
+        BoosesModel boss = BoosesModel.bosses.get(entityID);
 
         boss.deadFunctionality();
     }

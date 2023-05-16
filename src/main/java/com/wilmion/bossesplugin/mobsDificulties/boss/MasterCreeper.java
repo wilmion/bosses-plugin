@@ -24,27 +24,23 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 public class MasterCreeper extends BoosesModel {
-    private static Map<String, MasterCreeper> bosses = new TreeMap();
     static final String idMinionMetadata = "CREEPER-MINION-MASTER-BOSS";
     private int minions = 0;
     private boolean usedUltimate1 = false;
 
     public MasterCreeper(Location location, Plugin plugin) {
         super(location, plugin, 5);
-
-        String entityID = String.valueOf(this.entity.getEntityId());
-        bosses.put(entityID, this);
-
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive, 100, 100);
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useUtimate1, 50, 50);
     }
 
     private Creeper getBoss() {
         return (Creeper) this.entity;
+    }
+
+    @Override
+    public void useSchedulerEvents() {
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive, 100, 100);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useUtimate1, 50, 50);
     }
 
     @Override
@@ -89,7 +85,7 @@ public class MasterCreeper extends BoosesModel {
 
         Creeper minion = world.spawn(location, Creeper.class);
 
-        minion.setMetadata(idMinionMetadata, new FixedMetadataValue(plugin, String.valueOf(entity.getEntityId())));
+        minion.setMetadata(idMinionMetadata, new FixedMetadataValue(plugin, String.valueOf(entity.getUniqueId())));
         minion.setTarget(boss.getTarget());
         minion.addPotionEffect(fire);
         minion.setRemoveWhenFarAway(false);
@@ -144,14 +140,13 @@ public class MasterCreeper extends BoosesModel {
 
         if(isBoss) event.setCancelled(true);
     }
+
     public static void handleExplode(EntityExplodeEvent event) {
         detectDeathOfMinion(event.getEntity());
     }
 
     public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
-        IUltimateLambda useUltimates = (health, entityID) -> {
-            MasterCreeper boss = bosses.get(entityID);
-
+        IUltimateLambda<MasterCreeper> useUltimates = (health, boss) -> {
             if(health <= boss.maxHealth * 0.3) boss.useUtimate2();
         };
 
@@ -166,7 +161,7 @@ public class MasterCreeper extends BoosesModel {
     }
 
     public static void handleDead(EntityDeathEvent event) {
-        BoosesModel.handleDead(event, 5, bosses);
+        BoosesModel.handleDead(event, 5);
         detectDeathOfMinion(event.getEntity());
     }
 
@@ -185,9 +180,8 @@ public class MasterCreeper extends BoosesModel {
         boolean isBoss = entity.hasMetadata(bossData.getMetadata());
 
         if(isBoss) {
-            String idParent = String.valueOf(entity.getEntityId());
-
-            MasterCreeper boss = bosses.get(idParent);
+            String idParent = String.valueOf(entity.getUniqueId());
+            MasterCreeper boss = (MasterCreeper) BoosesModel.bosses.get(idParent);
 
             boss.generateDeathExplosion();
 
@@ -199,7 +193,7 @@ public class MasterCreeper extends BoosesModel {
         if(isMinion) {
             String idParent = (String) entity.getMetadata(idMinionMetadata).get(0).value();
 
-            MasterCreeper boss = bosses.get(idParent);
+            MasterCreeper boss = (MasterCreeper) BoosesModel.bosses.get(idParent);
             boss.lessMinion();
         }
     }

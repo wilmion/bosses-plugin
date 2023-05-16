@@ -1,5 +1,5 @@
 package com.wilmion.bossesplugin.interfaces;
 
-public interface IUltimateLambda {
-    public void ultimates(double health, String entity);
+public interface IUltimateLambda<T> {
+    public void ultimates(double health, T boss);
 }

@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.mobsDificulties.boss;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
@@ -18,28 +19,23 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.*;
 
-import java.util.Map;
-import java.util.TreeMap;
-
-
 public class MasterWizard extends BoosesModel {
-    private static Map<String, MasterWizard> bosses = new TreeMap();
     private boolean useUltimate1 = false;
     private boolean useUltimate2 = false;
 
     public MasterWizard(Location location, Plugin plugin) {
         super(location, plugin, 6);
-
-        String entityID = String.valueOf(this.entity.getEntityId());
-        bosses.put(entityID, this);
-
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive1, 100, 100);
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive2, 200, 200);
-        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useDeserterPotion, 160, 160);
     }
 
     private Witch getWitch() {
         return (Witch) this.entity;
+    }
+
+    @Override
+    public void useSchedulerEvents() {
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive1, 100, 100);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::usePassive2, 200, 200);
+        server.getScheduler().scheduleSyncRepeatingTask(plugin, this::useDeserterPotion, 160, 160);
     }
 
     @Override
@@ -159,9 +155,7 @@ public class MasterWizard extends BoosesModel {
     /* === Events === */
 
     public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {
-        IUltimateLambda useUltimates = (health, entityID) -> {
-            MasterWizard boss = bosses.get(entityID);
-
+        IUltimateLambda<MasterWizard> useUltimates = (health, boss) -> {
             if(health <= boss.maxHealth * 0.5) boss.useDangerRainUltimate();
             if(health <= boss.maxHealth * 0.25) boss.useWizardGonnaUltimate();
         };
@@ -182,6 +176,6 @@ public class MasterWizard extends BoosesModel {
     }
 
     public static void handleDead(EntityDeathEvent event) {
-        BoosesModel.handleDead(event, 6, bosses);
+        BoosesModel.handleDead(event, 6);
     }
 }
