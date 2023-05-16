@@ -57,22 +57,9 @@ public class CommandManager implements CommandExecutor {
         if(subCommand.equals("build")) return build(player, args);
         if(subCommand.equals("save")) return saveBuild(player, args);
         if(subCommand.equals("metadata-block")) return metadataBlockCmd(player, args);
+        if(subCommand.equals("clean-range")) return cleanRange(player, args);
 
         return showHelp(player);
-    }
-
-    private Boolean metadataBlockCmd(Player player, String[] args) {
-        List<String> errors = metadataBlockCommand.handleCommand(player, args);
-
-        if (errors == null) return true;
-
-        Function<String, String> modifyText = (text) -> {
-            String result = "";
-            for(String error: errors) result += error;
-            return text.replace("[CONTENT]", result);
-        };
-
-        return printHelp(allHelp.get("metadata_error"), player, modifyText);
     }
 
     private boolean showHelp(Player player) {
@@ -111,6 +98,29 @@ public class CommandManager implements CommandExecutor {
         Boolean buildSaved = saveCommand.handleCommand(player, args);
 
         if(!buildSaved) return printHelp(allHelp.get("save_error"), player);
+
+        return true;
+    }
+
+    private Boolean metadataBlockCmd(Player player, String[] args) {
+        List<String> errors = metadataBlockCommand.handleCommand(player, args);
+
+        if (errors == null) return true;
+
+        Function<String, String> modifyText = (text) -> {
+            String result = "";
+            for(String error: errors) result += error;
+            return text.replace("[CONTENT]", result);
+        };
+
+        return printHelp(allHelp.get("metadata_error"), player, modifyText);
+    }
+
+    private Boolean cleanRange(Player player, String[] args) {
+        if(args.length < 3) return showHelp(player);
+
+        WorldUtils.cleanInRange(player.getLocation().clone(), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+        player.sendMessage(Component.text(ChatColor.DARK_GREEN + "Range cleaned!"));
 
         return true;
     }

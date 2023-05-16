@@ -17,7 +17,11 @@
             "color": "GOLD"
         },
         {
-            "text": "/bsspl metadata-block <opts> \n Set group of metadata",
+            "text": "/bsspl metadata-block <opts> \n Set group of metadata. \n",
+            "color": "GOLD"
+        },
+        {
+            "text": "/bsspl clean-range <XSize> <Zsize> \n Clean a range depending by X and Z size.",
             "color": "GOLD"
         }
     ],

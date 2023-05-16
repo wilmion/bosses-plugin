@@ -13,6 +13,4 @@ import java.util.List;
 @NoArgsConstructor
 public class BuildFileModel {
     private List<BuildFileDataModel> data;
-
-    private String name;
 }

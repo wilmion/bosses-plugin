@@ -68,10 +68,9 @@ public class BuildCommand {
             Location loc = player.getLocation().clone();
 
             loc.add(info.getAlterX(), info.getAlterY(), info.getAlterZ());
-            loc.getBlock().setType(Material.getMaterial(info.getMaterialType()));
             loc.getBlock().setBlockData(blockData);
 
-            if(info.getMaterialType().equals("CHEST")) setChestContent(loc.getBlock());
+            if(loc.getBlock().getType().toString().equals("CHEST")) setChestContent(loc.getBlock());
 
             setMetadataAndSpawnBosses(info, loc, player);
             setMetadataAndSpawnSpecialEntities(loc, info);

@@ -1,17 +1,19 @@
 package com.wilmion.bossesplugin.utils;
 
+import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.objects.LocationDataModel;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class WorldUtils {
@@ -44,5 +46,20 @@ public class WorldUtils {
     public static Location getLocationByData(LocationDataModel boss, Plugin plugin) {
         World world = plugin.getServer().getWorld(UUID.fromString(boss.getWorldId()));
         return new Location(world, boss.getX(), boss.getY(), boss.getZ());
+    }
+
+    public static void cleanInRange(Location loc, Integer rangeX, Integer rangeZ) {
+        ActionRangeBlocks actionRangeBlocks = (location) -> {
+            Integer modY = location.getWorld().getHighestBlockYAt(location);
+
+            for(Double y = location.getY(); y <= modY; y++) {
+                Location loc2 = location.clone();
+
+                loc2.setY(y);
+                loc2.getBlock().setType(Material.AIR);
+            }
+        };
+
+        Utils.executeActionInXOfBlocks(rangeX, 1, rangeZ, loc, actionRangeBlocks);
     }
 }

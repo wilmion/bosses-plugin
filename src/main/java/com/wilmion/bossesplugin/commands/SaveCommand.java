@@ -30,6 +30,7 @@ public class SaveCommand {
         Location loc = player.getLocation().clone();
         BuildFileModel obj = new BuildFileModel();
         ArrayList<BuildFileDataModel> buildData = new ArrayList<>();
+        String path = "plugins/bosses-plugin-data/buildings/" + args[1] + ".json";
 
         ActionRangeBlocks actionRangeBlocks = (location) -> {
             BuildFileDataModel data = new BuildFileDataModel();
@@ -38,8 +39,8 @@ public class SaveCommand {
             Optional<MetadataValue> entitySpawn = Utils.getMetadataValue("entitySpawn", block.getState());
             Optional<MetadataValue> quantitySpawn = Utils.getMetadataValue("quantitySpawn", block.getState());
             Optional<MetadataValue> bossSpawn = Utils.getMetadataValue("bossSpawn", block.getState());
+            Boolean hasMetadata = entitySpawn.isPresent() || quantitySpawn.isPresent() || bossSpawn.isPresent();
 
-            data.setMaterialType(block.getType().toString());
             data.setAlterX(location.getX() - loc.getX());
             data.setAlterY(location.getY() - loc.getY());
             data.setAlterZ(location.getZ() - loc.getZ());
@@ -49,16 +50,12 @@ public class SaveCommand {
             if(quantitySpawn.isPresent()) data.setQuantitySpawn(Optional.of(quantitySpawn.get().asString()));
             if(bossSpawn.isPresent()) data.setBossSpawn(Optional.of(bossSpawn.get().asString()));
 
-            buildData.add(data);
+            if(!block.getType().isEmpty() || hasMetadata) buildData.add(data);
         };
 
         Utils.executeActionInXOfBlocks(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), loc, actionRangeBlocks);
 
-        obj.setName(args[1]);
         obj.setData(buildData);
-
-        String path = "plugins/bosses-plugin-data/buildings/" + obj.getName() + ".json";
-
         Resources.writeFile(path, obj);
 
         player.sendMessage(Component.text(ChatColor.DARK_GREEN + "Build saved."));

@@ -13,8 +13,6 @@ import java.util.Optional;
 @Accessors(chain = true)
 @NoArgsConstructor
 public class BuildFileDataModel {
-    private String materialType;
-
     private String blockData;
 
     private Double alterX;
