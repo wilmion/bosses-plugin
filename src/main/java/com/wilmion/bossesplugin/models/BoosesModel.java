@@ -100,7 +100,7 @@ public class BoosesModel {
 
         if(health > 0.0) progressBar.enableBar();
 
-        if(shooter instanceof Player && shooter != null) progressBar.addPlayer((Player) shooter);
+        if(shooter != null && shooter instanceof Player) progressBar.addPlayer((Player) shooter);
     }
 
     public static BossDataModel getMetadata(Integer id) {
