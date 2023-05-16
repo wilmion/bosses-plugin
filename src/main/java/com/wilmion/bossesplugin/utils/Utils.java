@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.utils;
 
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
+import com.wilmion.bossesplugin.models.KeepMetadata;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -32,6 +33,7 @@ public class Utils {
 
     public static void setMetadataValue(String key, Object value, BlockState blockState, Plugin plugin) {
         blockState.setMetadata(key, new FixedMetadataValue(plugin, value));
+        KeepMetadata.addBlockWithMetadata(blockState.getBlock(), key);
     }
 
     public static int getRandomInPercentage() {

@@ -90,7 +90,7 @@ public class EntityEvents implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onSeverLoad(ServerLoadEvent event) {
         KeepMetadata keepMetadata = new KeepMetadata(plugin);
         keepMetadata.keepMetadata();
     }

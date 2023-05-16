@@ -38,7 +38,8 @@ public class SpecialEntity {
         entity.setCustomNameVisible(false);
 
         if(entityData.getFollowRange().isPresent()) view.setBaseValue(entityData.getFollowRange().get());
-        if(entityData.getEquipment().isPresent()) equipEntity(entityData.getEquipment().get());
+
+        equipEntity(entityData.getEquipment());
     }
 
     public void equipEntity(Map<String, Object> data) {

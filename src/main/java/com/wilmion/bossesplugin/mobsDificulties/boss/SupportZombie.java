@@ -2,6 +2,7 @@ package com.wilmion.bossesplugin.mobsDificulties.boss;
 
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.models.BoosesModel;
+import com.wilmion.bossesplugin.models.KeepMetadata;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.utils.Utils;
 
@@ -19,7 +20,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public class SupportZombie extends BoosesModel {
     static final String idFollower = "PARENT-ID";
-    static final  String idSpecialFollower = "IS-SPECIAL-FOLLOWER-FROM-ZOMBIE-SUPPORT";
+    static final String idSpecialFollower = "IS-SPECIAL-FOLLOWER-FROM-ZOMBIE-SUPPORT";
     private int spawnedZombies = 0;
     private boolean useUltimate1 = false;
     private boolean useUltimate2 = false;
@@ -68,7 +69,7 @@ public class SupportZombie extends BoosesModel {
 
        BlockFace face = entity.getFacing();
        Location location = entity.getLocation();
-       String entityID = String.valueOf(this.entity.getEntityId());
+       String entityID = String.valueOf(entity.getUniqueId());
 
        int modX = face.getModX() == 0 ? 1 : face.getModX();
        int modZ = face.getModZ() == 0 ? 1 : face.getModZ();
@@ -87,9 +88,11 @@ public class SupportZombie extends BoosesModel {
 
        follower.addPotionEffect(fireResistence);
        follower.addPotionEffect(damageResistence);
-       follower.setMetadata(idFollower, new FixedMetadataValue(this.plugin, entityID));
+       follower.setMetadata(idFollower, new FixedMetadataValue(plugin, entityID));
        follower.setRemoveWhenFarAway(false);
        follower.setTarget(getBoss().getTarget());
+
+       KeepMetadata.addEntityWithMetadata(follower, idFollower);
 
        spawnedZombies++;
    }
@@ -197,8 +200,10 @@ public class SupportZombie extends BoosesModel {
 
         zombie.addPotionEffect(fireResistence);
         zombie.addPotionEffect(damageResistence);
-        zombie.setMetadata(idSpecialFollower, new FixedMetadataValue(this.plugin, "YEAH"));
+        zombie.setMetadata(idSpecialFollower, new FixedMetadataValue(plugin, "YEAH"));
         zombie.setTarget(getBoss().getTarget());
+
+        KeepMetadata.addEntityWithMetadata(zombie, idSpecialFollower);
     }
 
     private void teleportZombie(Location location) {

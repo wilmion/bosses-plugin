@@ -3,6 +3,7 @@ package com.wilmion.bossesplugin.mobsDificulties.boss;
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
+import com.wilmion.bossesplugin.models.KeepMetadata;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.utils.Utils;
@@ -161,6 +162,8 @@ public class MasterSkeleton extends BoosesModel {
         skeleton.addPotionEffect(damageResistance);
         skeleton.setMetadata(idMetadataMinion, new FixedMetadataValue(plugin, "true"));
 
+        KeepMetadata.addEntityWithMetadata(skeleton, idMetadataMinion);
+
         return skeleton;
     }
 
@@ -172,13 +175,14 @@ public class MasterSkeleton extends BoosesModel {
 
         horse.addPotionEffect(fireResistance);
         horse.addPotionEffect(damageResistance);
-
         horse.setMetadata(idMetadataMinion, new FixedMetadataValue(plugin, "true"));
 
         Skeleton skeleton = this.summonMinion(location);
 
         horse.addPassenger(skeleton);
         horse.setTamed(true);
+
+        KeepMetadata.addEntityWithMetadata(horse, idMetadataMinion);
     }
 
     private void useJinet(double x, double z) {

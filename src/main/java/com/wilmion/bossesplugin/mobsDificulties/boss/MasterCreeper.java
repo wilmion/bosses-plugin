@@ -3,6 +3,7 @@ package com.wilmion.bossesplugin.mobsDificulties.boss;
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
+import com.wilmion.bossesplugin.models.KeepMetadata;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.models.ProgressBar;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
@@ -89,6 +90,8 @@ public class MasterCreeper extends BoosesModel {
         minion.setTarget(boss.getTarget());
         minion.addPotionEffect(fire);
         minion.setRemoveWhenFarAway(false);
+
+        KeepMetadata.addEntityWithMetadata(minion, idMinionMetadata);
 
         if(probabilityToCharge > 30) world.spawnEntity(location, EntityType.LIGHTNING);
         minions++;

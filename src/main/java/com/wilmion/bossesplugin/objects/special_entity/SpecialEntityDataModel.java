@@ -21,5 +21,5 @@ public class SpecialEntityDataModel {
 
     private Optional<Double> followRange;
 
-    private Optional<Map<String, Object>> equipment;
+    private Map<String, Object> equipment;
 }

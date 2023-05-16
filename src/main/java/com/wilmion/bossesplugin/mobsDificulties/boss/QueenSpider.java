@@ -1,9 +1,11 @@
 package com.wilmion.bossesplugin.mobsDificulties.boss;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
+import com.wilmion.bossesplugin.models.KeepMetadata;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.utils.Utils;
@@ -74,6 +76,8 @@ public class QueenSpider extends BoosesModel {
         Spider spider = world.spawn(location, Spider.class);
         spider.setMetadata(idMetadataMinion, new FixedMetadataValue(plugin, entityID));
         spider.setTarget(getBoss().getTarget());
+
+        KeepMetadata.addEntityWithMetadata(spider, idMetadataMinion);
 
         return spider;
     }

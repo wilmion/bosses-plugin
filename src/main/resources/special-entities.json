@@ -5,7 +5,8 @@
       "entityType": "SKELETON",
       "name": "lvl 5 | Flechero del castillo Jordi",
       "followRange": 35.0,
-      "health": 40.0
+      "health": 40.0,
+      "equipment": {}
     },
     {
       "key": "JORDI_RESIDENT",
