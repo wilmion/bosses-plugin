@@ -1,7 +1,7 @@
 package com.wilmion.bossesplugin.events;
 
-import com.wilmion.bossesplugin.mobsDificulties.boss.*;
-import com.wilmion.bossesplugin.models.BoosesModel;
+import com.wilmion.bossesplugin.commands.SpawnBossCommand;
+import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
 
 import org.bukkit.ChatColor;
@@ -10,24 +10,27 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.lang.reflect.Constructor;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.function.Function;
-
 
 public class SpawnBossProbability {
     private Plugin plugin;
     private Server server;
+    private List<String> bossesName;
     private double delaySpawnBoss = 36000.0;
     public SpawnBossProbability(Plugin plugin) {
+        Map<String, Object> file = Resources.getJsonByData("commands-boss.json", Map.class);
+
         this.plugin = plugin;
         this.server = plugin.getServer();
+        this.bossesName = (List<String>) file.get("bosses");
 
         server.getScheduler().scheduleSyncRepeatingTask(plugin, this::setSpawnObserver, 100, 100);
     }
 
     private void setSpawnObserver() {
-        this.delaySpawnBoss -= 100.0;
+        delaySpawnBoss -= 100.0;
 
         if(delaySpawnBoss > 0.0) return;
 
@@ -35,8 +38,8 @@ public class SpawnBossProbability {
             int probability = Utils.getRandomInPercentage();
 
             if(probability <= 1) {
-                this.probabilityToSpawn(player);
-                this.delaySpawnBoss = 36000.0;
+                probabilityToSpawn(player);
+                delaySpawnBoss = 36000.0;
             }
         }
     }
@@ -44,43 +47,36 @@ public class SpawnBossProbability {
     private void probabilityToSpawn(Player player)  {
         Random random = new Random();
         Location location = getRandomLocationNearlyPlayer(player);
+        Integer randomIndex = random.nextInt(bossesName.size());
+        String bossName = bossesName.get(randomIndex);
 
-        Class<?>[] objects  = { SupportZombie.class, MasterSkeleton.class, QueenSpider.class, SoldierSpider.class, MasterCreeper.class};
+        SpawnBossCommand.spawnBoss(bossName, location, plugin);
+    }
+    private Location getRandomLocationNearlyPlayer(Player player) {
+        Location location = player.getLocation().clone();
+        Integer modX = (Utils.getRandomInPercentage() + 200) * getRandomMultiplier();
+        Integer modZ = (Utils.getRandomInPercentage() + 200) * getRandomMultiplier();
+        Double modY = (double) player.getWorld().getHighestBlockYAt(location);
 
-        int randomIndex = random.nextInt(objects.length);
+        location.setX(location.getX() + modX);
+        location.setZ(location.getZ() + modZ);
+        location.setY(modY);
 
-        Constructor constructor =  objects[randomIndex].getConstructors()[0];
+        Integer X = (int) location.getX();
+        Integer Y = (int) location.getY();
+        Integer Z = (int) location.getZ();
 
-        try {
-            constructor.newInstance(location, plugin);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    };
+        String messageCord = "X: " + X +" Y: "+ Y + " Z: " + Z;
+        String initial = "¿Te crees lo suficiente bueno para los retos?\nVen búscame aquí si te crees bueno y competitivo\n";
 
-    private int getRandomMultiplier() {
-        int multiplier = Utils.getRandomNumberForSpace();
+        server.broadcastMessage( ChatColor.GRAY + initial + messageCord);
 
-        return multiplier == 0? 1 : multiplier;
+        return location;
     }
 
-    private Location getRandomLocationNearlyPlayer(Player player) {
-           Location location = player.getLocation().clone();
+    private Integer getRandomMultiplier() {
+        Integer multiplier = Utils.getRandomNumberForSpace();
 
-           int modX = (Utils.getRandomInPercentage() + 200) * this.getRandomMultiplier();
-           int modZ = (Utils.getRandomInPercentage() + 200) * this.getRandomMultiplier();
-
-           location.setX(location.getX() + modX);
-           location.setZ(location.getZ() + modZ);
-
-           double modY = player.getWorld().getHighestBlockYAt(location);
-
-           location.setY(modY);
-
-           String messageCord = "X: "+location.getX()+" Y: "+location.getY() +"Z: " + location.getZ();
-
-           server.broadcastMessage(ChatColor.GREEN + "Ayudenme! Dare recompensa, Busquenme aqui => " + messageCord);
-
-           return location;
+        return multiplier == 0? 1 : multiplier;
     }
 }
