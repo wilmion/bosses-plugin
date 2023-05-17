@@ -55,7 +55,7 @@ public class MasterCreeper extends BoosesModel {
     @Override
     public void deadFunctionality() {
         super.deadFunctionality();
-        world.createExplosion(entity.getLocation(), 3f, false);
+        world.createExplosion(entity.getLocation(), 8f, false);
 
         if(Utils.getRandomInPercentage() > 50) return;
 
@@ -187,7 +187,7 @@ public class MasterCreeper extends BoosesModel {
             String idParent = String.valueOf(entity.getUniqueId());
             MasterCreeper boss = (MasterCreeper) BoosesModel.bosses.get(idParent);
 
-            boss.generateDeathExplosion();
+            if(boss != null) boss.generateDeathExplosion();
 
             ProgressBar progressBar = new ProgressBar(bossData.getMetadata());
             progressBar.disabledBar();
@@ -198,7 +198,7 @@ public class MasterCreeper extends BoosesModel {
             String idParent = (String) entity.getMetadata(idMinionMetadata).get(0).value();
 
             MasterCreeper boss = (MasterCreeper) BoosesModel.bosses.get(idParent);
-            boss.lessMinion();
+            if(boss != null) boss.lessMinion();
         }
     }
 

@@ -252,6 +252,6 @@ public class SupportZombie extends BoosesModel {
        String idParent = (String) entity.getMetadata(idFollower).get(0).value();
 
        SupportZombie boss = (SupportZombie) BoosesModel.bosses.get(idParent);
-       boss.removeSpawnedZombies(1);
+       if(boss != null) boss.removeSpawnedZombies(1);
    }
 }

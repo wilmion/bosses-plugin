@@ -123,6 +123,7 @@ public class BoosesModel {
         boolean isZombie = entity.getType() == EntityType.valueOf(bossData.getType());
         boolean isSupported = entity.hasMetadata(bossData.getMetadata());
         LivingEntity shooter = Utils.livingDamager(event.getDamager());
+        BoosesModel boss = bosses.get(entityID);
 
         double health = Utils.getHealthByDamage(event.getFinalDamage(), living.getHealth());
 
@@ -130,7 +131,7 @@ public class BoosesModel {
 
         upsertHealthBar(bossData.getName(), shooter, health, color, bossData.getHealth(), bossData.getMetadata());
 
-        lambda.ultimates(health, (T) bosses.get(entityID));
+        if(boss != null) lambda.ultimates(health, (T) boss);
 
         return false;
     }
@@ -172,6 +173,6 @@ public class BoosesModel {
 
         BoosesModel boss = BoosesModel.bosses.get(entityID);
 
-        boss.deadFunctionality();
+        if(boss != null) boss.deadFunctionality();
     }
 }

@@ -195,7 +195,7 @@ public class QueenSpider extends BoosesModel {
         String idParent = (String) entity.getMetadata(idMetadataMinion).get(0).value();
 
         QueenSpider boss = (QueenSpider) BoosesModel.bosses.get(idParent);
-        boss.lessMinions(1);
+        if(boss != null) boss.lessMinions(1);
     }
 
 }
