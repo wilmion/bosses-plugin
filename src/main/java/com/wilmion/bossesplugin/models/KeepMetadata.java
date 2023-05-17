@@ -7,23 +7,19 @@ import com.wilmion.bossesplugin.objects.LocationDataModel;
 import com.wilmion.bossesplugin.objects.metadata.BossMetadataModel;
 import com.wilmion.bossesplugin.objects.metadata.GlobalMetadataModel;
 import com.wilmion.bossesplugin.utils.Resources;
-import com.wilmion.bossesplugin.utils.Utils;
 
 import com.wilmion.bossesplugin.utils.WorldUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -32,14 +28,12 @@ public class KeepMetadata {
     public static ArrayList<Map<String, Object>> blocksWithMetadata = new ArrayList<>();
     private static String pathBoss = "plugins/bosses-plugin-data/game-data-bosses.json";
     private static String pathEntities = "plugins/bosses-plugin-data/game-data-entities.json";
-    private static String pathBlocks = "plugins/bosses-plugin-data/game-data-blocks.json";
 
     private Plugin plugin;
 
     public void save() {
         saveBosses();
         saveEntities();
-        saveBlocks();
     }
 
     private void saveBosses() {
@@ -90,36 +84,6 @@ public class KeepMetadata {
         Resources.writeFile(pathEntities, file);
     }
 
-    private void saveBlocks() {
-        Map<String, GlobalMetadataModel> file = new TreeMap<>();
-
-        for(var blocksData: blocksWithMetadata) {
-            Block block = (Block) blocksData.get("block");
-
-            GlobalMetadataModel blockMetadata = new GlobalMetadataModel();
-            ArrayList<Map<String, String>> mtd = new ArrayList();
-            List<String> keys = (List<String>) blocksData.get("metadata");
-
-            keys.forEach(key -> {
-                Map<String, String> obj = new TreeMap<>();
-                Optional<MetadataValue> mtdValue = Utils.getMetadataValue(key, block.getState());
-
-                if(mtdValue.isEmpty()) return;
-
-                obj.put("key", key);
-                obj.put("value", mtdValue.get().asString());
-
-                mtd.add(obj);
-            });
-
-            setLocationOnObject(blockMetadata, block.getLocation());
-            blockMetadata.setMetadata(mtd);
-            file.put(UUID.randomUUID().toString(), blockMetadata);
-        }
-
-        Resources.writeFile(pathBlocks, file);
-    }
-
     private void setLocationOnObject(LocationDataModel model, Location loc) {
         model.setWorldId(loc.getWorld().getUID().toString());
         model.setX(loc.getX());
@@ -130,7 +94,6 @@ public class KeepMetadata {
     public void keepMetadata() {
         keepBossMetadata();
         keepEntitiesMetadata();
-        keepBlocksMetadata();
     }
 
     @SneakyThrows
@@ -190,23 +153,6 @@ public class KeepMetadata {
         }
     }
 
-    @SneakyThrows
-    private void keepBlocksMetadata() {
-        Type type = new TypeToken<Map<String, GlobalMetadataModel>>() {}.getType();
-        Map<String, GlobalMetadataModel> file = Resources.getJsonByLocalData(pathBlocks, type);
-
-        if(file == null) return;
-
-        for(var entry: file.entrySet()) {
-            GlobalMetadataModel mtd = entry.getValue();
-            Location location = WorldUtils.getLocationByData(mtd, plugin);
-
-            for(Map<String, String> data: mtd.getMetadata()) {
-                Utils.setMetadataValue(data.get("key"), data.get("value"), location.getBlock().getState() , plugin);
-            }
-        }
-    }
-
     public static void addEntityWithMetadata(Entity entity, String... mtd) {
         Map<String, Object> data = new TreeMap<>();
 
@@ -215,30 +161,4 @@ public class KeepMetadata {
 
         entitiesWithMetadata.add(data);
     }
-
-    public static void addBlockWithMetadata(Block block, String key) {
-        Map<String, Object> data = new TreeMap<>();
-        Predicate<Map<String, Object>> filterFunc = (d) -> {
-            Block dBlock = (Block) d.get("block");
-            return dBlock.getLocation().equals(block.getLocation());
-        };
-        List<Map<String, Object>> exist = blocksWithMetadata.stream().filter(filterFunc).collect(Collectors.toList());
-
-        if(exist.stream().count() == 0) {
-            ArrayList<String> keys = new ArrayList<>();
-            keys.add(key);
-
-            data.put("block", block);
-            data.put("metadata", keys);
-
-            blocksWithMetadata.add(data);
-            return;
-        }
-
-        Map<String, Object> blockData = exist.get(0);
-        ArrayList<String> mtd = (ArrayList<String>) blockData.get("metadata");
-        mtd.add(key);
-    }
-
-
 }

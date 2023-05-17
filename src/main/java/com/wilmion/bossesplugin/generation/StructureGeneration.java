@@ -25,16 +25,17 @@ public class StructureGeneration {
     private static String path = "plugins/bosses-plugin-data/game-data-structures.json";
 
     private BuildCommand buildCommand;
-    private Boolean isJordiBuilt;
+    private Boolean isJordiBuilt = false;
     private Integer XPosGeneration = 0;
     private Integer ZPossGeneration = 0;
 
     public StructureGeneration(Plugin plugin) {
         Type type = new TypeToken<Map<String, LocationDataModel>>() {}.getType();
         Map<String, LocationDataModel> file = Resources.getJsonByLocalData(path, type);
+        Boolean isJordiBuilt = file != null && file.get("JORDI_BUILT") != null;
 
         this.buildCommand = new BuildCommand(plugin);
-        this.isJordiBuilt = file != null && file.get("JORDI_BUILT") != null;
+        this.isJordiBuilt = isJordiBuilt;
         this.generateStructure();
 
         if(!isJordiBuilt) return;
@@ -70,7 +71,7 @@ public class StructureGeneration {
     }
 
     private void generateBuild(Location location) {
-        Map<String, String> file = new TreeMap<>();
+        Map<String, LocationDataModel> file = new TreeMap<>();
 
         WorldUtils.cleanInRange(location.clone(), 120, 120);
 
@@ -78,7 +79,13 @@ public class StructureGeneration {
         location.setX(location.getX() + 10);
         location.setZ(location.getZ() + 10);
 
-        file.put("JORDI_BUILT", "exist");
+        LocationDataModel locationDataModel = new LocationDataModel();
+        locationDataModel.setWorldId(location.getWorld().getUID().toString());
+        locationDataModel.setX(location.getX());
+        locationDataModel.setY(location.getY());
+        locationDataModel.setZ(location.getZ());
+
+        file.put("JORDI_BUILT", locationDataModel);
 
         Resources.writeFile(path, file);
         buildCommand.buildStructure(location, "jordi_tower", "0deg");

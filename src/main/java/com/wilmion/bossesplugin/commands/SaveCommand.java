@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.commands;
 
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
+import com.wilmion.bossesplugin.models.BlockMetadata;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
 import com.wilmion.bossesplugin.utils.Resources;
@@ -36,9 +37,9 @@ public class SaveCommand {
             BuildFileDataModel data = new BuildFileDataModel();
             Block block = location.getBlock();
 
-            Optional<MetadataValue> entitySpawn = Utils.getMetadataValue("entitySpawn", block.getState());
-            Optional<MetadataValue> quantitySpawn = Utils.getMetadataValue("quantitySpawn", block.getState());
-            Optional<MetadataValue> bossSpawn = Utils.getMetadataValue("bossSpawn", block.getState());
+            Optional<String> entitySpawn = BlockMetadata.getBlockMetadata(block ,"entitySpawn");
+            Optional<String> quantitySpawn = BlockMetadata.getBlockMetadata(block ,"quantitySpawn");
+            Optional<String> bossSpawn = BlockMetadata.getBlockMetadata(block ,"bossSpawn");
             Boolean hasMetadata = entitySpawn.isPresent() || quantitySpawn.isPresent() || bossSpawn.isPresent();
 
             data.setAlterX(location.getX() - loc.getX());
@@ -46,9 +47,9 @@ public class SaveCommand {
             data.setAlterZ(location.getZ() - loc.getZ());
             data.setBlockData(block.getBlockData().getAsString());
 
-            if(entitySpawn.isPresent()) data.setEntitySpawn(Optional.of(entitySpawn.get().asString()));
-            if(quantitySpawn.isPresent()) data.setQuantitySpawn(Optional.of(quantitySpawn.get().asString()));
-            if(bossSpawn.isPresent()) data.setBossSpawn(Optional.of(bossSpawn.get().asString()));
+            if(entitySpawn.isPresent()) data.setEntitySpawn(Optional.of(entitySpawn.get()));
+            if(quantitySpawn.isPresent()) data.setQuantitySpawn(Optional.of(quantitySpawn.get()));
+            if(bossSpawn.isPresent()) data.setBossSpawn(Optional.of(bossSpawn.get()));
 
             if(!block.getType().isEmpty() || hasMetadata) buildData.add(data);
             return true;

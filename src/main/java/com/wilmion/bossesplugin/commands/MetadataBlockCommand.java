@@ -1,5 +1,6 @@
 package com.wilmion.bossesplugin.commands;
 
+import com.wilmion.bossesplugin.models.BlockMetadata;
 import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
 
@@ -24,6 +25,7 @@ public class MetadataBlockCommand {
     private String helpMtdShow = "/bsspl metadata-block show <Duration = 5> -> Show metadata in 20x20x20 range with duration\n";
     private String helpMtdEntitySpawn = "/bsspl metadata-block spawn-entity <NAME> <Quantity> -> Set metadata on current block of spawn entity\n";
     private String helpMtdBossSpawn = "/bsspl metadata-block boss <NAME> -> Set metadata on current block of spawn boss\n";
+    private String helpMtdDelete = "/bsspl metadata-block delete -> Delete all metadata on the block in your current position\n";
 
     public MetadataBlockCommand(Plugin plugin) {
         Map<String, Object> file = Resources.getJsonByData("special-entities.json", Map.class);
@@ -36,13 +38,14 @@ public class MetadataBlockCommand {
     }
 
     public List<String> handleCommand(Player player, String[] args) {
-        if(args.length < 2) return Arrays.asList(helpMtdEntitySpawn, helpMtdBossSpawn, helpMtdShow);
+        if(args.length < 2) return Arrays.asList(helpMtdEntitySpawn, helpMtdBossSpawn, helpMtdShow, helpMtdDelete);
 
         if(args[1].equals("spawn-entity")) return spawnEntityMetadata(player, args);
         if(args[1].equals("boss")) return bossEntityMetadata(player, args);
         if(args[1].equals("show")) return showMetadataPosition(player, args);
+        if(args[1].equals("delete")) return deleteMetadataPosition(player);
 
-        return Arrays.asList(helpMtdEntitySpawn, helpMtdBossSpawn, helpMtdShow);
+        return Arrays.asList(helpMtdEntitySpawn, helpMtdBossSpawn, helpMtdShow, helpMtdDelete);
     }
 
     private List<String> spawnEntityMetadata(Player player, String[] args) {
@@ -57,8 +60,8 @@ public class MetadataBlockCommand {
 
         Block block = player.getLocation().clone().getBlock();
 
-        Utils.setMetadataValue("entitySpawn", args[2], block.getState(), plugin);
-        Utils.setMetadataValue("quantitySpawn", args[3], block.getState(), plugin);
+        BlockMetadata.upsertBlockMetadata(block, "entitySpawn", args[2]);
+        BlockMetadata.upsertBlockMetadata(block,"quantitySpawn", args[3]);
 
         player.sendMessage(Component.text(ChatColor.DARK_GREEN + "Spawn-Entity Metadata set."));
 
@@ -77,8 +80,7 @@ public class MetadataBlockCommand {
 
         Block block = player.getLocation().clone().getBlock();
 
-        Utils.setMetadataValue("bossSpawn", args[2], block.getState(), plugin);
-
+        BlockMetadata.upsertBlockMetadata(block, "bossSpawn", args[2]);
         player.sendMessage(Component.text(ChatColor.DARK_GREEN + "Boss metadata set."));
 
         return null;
@@ -90,18 +92,27 @@ public class MetadataBlockCommand {
         Consumer<Block> callback = (block) -> {
             String result = "";
 
-            Optional<MetadataValue> entitySpawn = Utils.getMetadataValue("entitySpawn", block.getState());
-            Optional<MetadataValue> quantitySpawn = Utils.getMetadataValue("quantitySpawn", block.getState());
-            Optional<MetadataValue> bossSpawn = Utils.getMetadataValue("bossSpawn", block.getState());
+            Optional<String> entitySpawn = BlockMetadata.getBlockMetadata(block, "entitySpawn");
+            Optional<String> quantitySpawn = BlockMetadata.getBlockMetadata(block, "quantitySpawn");
+            Optional<String> bossSpawn = BlockMetadata.getBlockMetadata(block, "bossSpawn");
 
-            if(entitySpawn.isPresent()) result += "E-S : " + entitySpawn.get().asString() + " | ";
-            if(quantitySpawn.isPresent()) result += "Q-S : " + quantitySpawn.get().asString() + " | ";
-            if(bossSpawn.isPresent()) result += "B-S : " + bossSpawn.get().asString();
+            if(entitySpawn.isPresent()) result += "E-S : " + entitySpawn.get() + " | ";
+            if(quantitySpawn.isPresent()) result += "Q-S : " + quantitySpawn.get() + " | ";
+            if(bossSpawn.isPresent()) result += "B-S : " + bossSpawn.get();
 
             if(!result.equals("")) WorldUtils.displayFloatingTextByXSeconds(block.getLocation().clone(), result, duration, plugin);
         };
 
         Utils.executeActionIn3DRange(player.getLocation().clone(), 20, callback);
+        player.sendMessage(ChatColor.DARK_GREEN + "Nearly metadata Showed!.");
+
+        return null;
+    }
+
+    private List<String> deleteMetadataPosition(Player player) {
+        BlockMetadata.deleteBlock(player.getLocation().getBlock());
+
+        player.sendMessage(ChatColor.DARK_GREEN + "Metadata cleaned!");
 
         return null;
     }

@@ -2,6 +2,7 @@ package com.wilmion.bossesplugin.commands;
 
 import com.wilmion.bossesplugin.mobsDificulties.boss.SupportZombie;
 import com.wilmion.bossesplugin.mobsDificulties.special.SpecialEntity;
+import com.wilmion.bossesplugin.models.BlockMetadata;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
 import com.wilmion.bossesplugin.utils.Resources;
@@ -86,7 +87,7 @@ public class BuildCommand {
     private void setMetadataAndSpawnBosses(BuildFileDataModel info, Location loc) {
         if(info.getBossSpawn().isEmpty()) return;
 
-        Utils.setMetadataValue("bossSpawn", info.getBossSpawn().get(), loc.getBlock().getState(), plugin);
+        BlockMetadata.upsertBlockMetadata(loc.getBlock(), "bossSpawn", info.getBossSpawn().get());
 
         SpawnBossCommand.spawnBoss(info.getBossSpawn().get(), loc, plugin);
     }
@@ -94,8 +95,8 @@ public class BuildCommand {
     private void setMetadataAndSpawnSpecialEntities(Location loc, BuildFileDataModel info) {
         if(info.getEntitySpawn().isEmpty() || info.getQuantitySpawn().isEmpty()) return;
 
-        Utils.setMetadataValue("entitySpawn", info.getEntitySpawn().get(), loc.getBlock().getState(), plugin);
-        Utils.setMetadataValue("quantitySpawn", info.getQuantitySpawn().get(), loc.getBlock().getState(), plugin);
+        BlockMetadata.upsertBlockMetadata(loc.getBlock(),"entitySpawn", info.getEntitySpawn().get());
+        BlockMetadata.upsertBlockMetadata(loc.getBlock(), "quantitySpawn", info.getQuantitySpawn().get());
 
         for (int i = 0; i < Integer.parseInt(info.getQuantitySpawn().get()); i++) new SpecialEntity(loc, info.getEntitySpawn().get());
     }

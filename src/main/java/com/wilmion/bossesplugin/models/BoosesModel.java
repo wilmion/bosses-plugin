@@ -111,9 +111,12 @@ public class BoosesModel {
     }
 
     public static<T> boolean handleDamageByEntity(EntityDamageByEntityEvent event, Integer id, IUltimateLambda<T> lambda) {
+        Entity entity = event.getEntity();
+
+        if(!(entity instanceof LivingEntity)) return true;
+
         BossDataModel bossData = getMetadata(id);
         BarColor color = BarColor.valueOf(bossData.getBarColor());
-        Entity entity = event.getEntity();
         LivingEntity living = (LivingEntity) entity;
         String entityID = String.valueOf(entity.getUniqueId());
 
@@ -133,8 +136,11 @@ public class BoosesModel {
     }
 
     public static void handleDamage(EntityDamageEvent event, Integer id, Runnable action) {
-        BossDataModel bossData = getMetadata(id);
         Entity entity = event.getEntity();
+
+        if(!(entity instanceof LivingEntity)) return;
+
+        BossDataModel bossData = getMetadata(id);
         BarColor color = BarColor.valueOf(bossData.getBarColor());
 
         boolean isTypeEntity = entity.getType() == EntityType.valueOf(bossData.getType());

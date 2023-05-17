@@ -3,6 +3,7 @@ package com.wilmion.bossesplugin.events;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.wilmion.bossesplugin.generation.StructureGeneration;
 import com.wilmion.bossesplugin.mobsDificulties.*;
+import com.wilmion.bossesplugin.models.BlockMetadata;
 import com.wilmion.bossesplugin.models.KeepMetadata;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
@@ -97,6 +98,7 @@ public class EntityEvents implements Listener {
 
     @EventHandler
     public void onSeverLoad(ServerLoadEvent event) {
+        BlockMetadata.getData();
         new StructureGeneration(plugin);
         KeepMetadata keepMetadata = new KeepMetadata(plugin);
         keepMetadata.keepMetadata();

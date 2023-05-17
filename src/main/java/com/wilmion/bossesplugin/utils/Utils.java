@@ -20,24 +20,6 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 public class Utils {
-    public static Optional<MetadataValue> getMetadataValue(String key, BlockState blockState) {
-        List<MetadataValue> metadataList = blockState.getMetadata(key);
-        MetadataValue result = null;
-
-        if (metadataList != null && !metadataList.isEmpty()) {
-            for (MetadataValue metadataValue : metadataList) {
-                result = metadataValue;
-            }
-        }
-
-        return Optional.ofNullable(result);
-    }
-
-    public static void setMetadataValue(String key, Object value, BlockState blockState, Plugin plugin) {
-        blockState.setMetadata(key, new FixedMetadataValue(plugin, value));
-        KeepMetadata.addBlockWithMetadata(blockState.getBlock(), key);
-    }
-
     public static int getRandomInPercentage() {
         Random random = new Random();
 
@@ -114,6 +96,8 @@ public class Utils {
     }
 
     public static Boolean isDeadEntityOnDamage(Entity entity, double damage, EntityType MobType) {
+        if(!(entity instanceof LivingEntity)) return false;
+        
         LivingEntity livingEnt = (LivingEntity) entity;
 
         double currentHealth = getHealthByDamage(damage, livingEnt.getHealth());

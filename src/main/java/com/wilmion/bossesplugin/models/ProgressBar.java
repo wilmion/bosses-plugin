@@ -21,7 +21,7 @@ public class ProgressBar {
             this.bar = Bukkit.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
             this.bar.setVisible(false);
 
-            bars.put(id, this.bar);
+            bars.put(id, bar);
             return;
         }
 
@@ -30,33 +30,27 @@ public class ProgressBar {
     }
 
     public void setColor(BarColor color) {
-        this.bar.setColor(color);
-        bars.put(id, this.bar);
+        bar.setColor(color);
     }
 
     public void enableBar() {
-        this.bar.setVisible(true);
-        bars.put(id, this.bar);
+        bar.setVisible(true);
     }
 
     public void disabledBar() {
-        this.bar.setVisible(false);
-        bars.put(id, this.bar);
+        bar.setVisible(false);
     }
 
     public void removeAllUsers() {
-        this.bar.removeAll();
-        bars.put(id, this.bar);
+        bar.removeAll();
     }
 
     public void addPlayer(Player player) {
-        this.bar.addPlayer(player);
-        bars.put(id, this.bar);
+        bar.addPlayer(player);
     }
 
     public void setTitle(String title) {
         bar.setTitle(title);
-        bars.put(id, this.bar);
     }
 
     public void setProgress(double progress) {
@@ -64,8 +58,6 @@ public class ProgressBar {
         if(progress > 1.0) progress = 1.0;
 
         bar.setProgress(progress);
-
-        bars.put(id, this.bar);
     }
 
 }
