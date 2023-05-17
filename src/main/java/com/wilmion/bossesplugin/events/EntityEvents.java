@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.events;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+import com.wilmion.bossesplugin.generation.StructureGeneration;
 import com.wilmion.bossesplugin.mobsDificulties.*;
 import com.wilmion.bossesplugin.models.KeepMetadata;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
@@ -36,6 +37,11 @@ public class EntityEvents implements Listener {
         this.skeleton = new SkeletonDifficulty(plugin);
         this.spider = new SpiderDifficulty(plugin);
         this.witch = new WitchDifficulty(plugin);
+    }
+
+    @EventHandler
+    public void onPlayerJoinEvent(PlayerJoinEvent event) {
+        StructureGeneration.sendPlayerMessageLocation(event.getPlayer());
     }
 
     @EventHandler
@@ -91,6 +97,7 @@ public class EntityEvents implements Listener {
 
     @EventHandler
     public void onSeverLoad(ServerLoadEvent event) {
+        new StructureGeneration(plugin);
         KeepMetadata keepMetadata = new KeepMetadata(plugin);
         keepMetadata.keepMetadata();
     }

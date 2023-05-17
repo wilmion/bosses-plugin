@@ -76,7 +76,7 @@ public class Utils {
                     loc.setZ(loc.getZ() + z);
                     loc.setY(loc.getY() + y);
 
-                    actionRangeBlocks.action(loc);
+                    if(!actionRangeBlocks.action(loc)) return;
                 }
             }
         }

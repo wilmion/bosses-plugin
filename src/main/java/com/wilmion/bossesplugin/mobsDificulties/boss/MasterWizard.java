@@ -116,6 +116,7 @@ public class MasterWizard extends BoosesModel {
 
                 potion.setPotionMeta(metadata);
             }, 30);
+            return true;
         };
 
         Location location = target.getLocation().clone();

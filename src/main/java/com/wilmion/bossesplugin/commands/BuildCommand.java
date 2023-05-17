@@ -59,28 +59,31 @@ public class BuildCommand {
 
         if(!buildingsNames.stream().anyMatch(buildName::equals)) return false;
 
+        buildStructure(player.getLocation(), buildName, rotate);
+        player.sendMessage(ChatColor.DARK_GREEN + buildName + " built!");
+
+        return true;
+    }
+
+    public void buildStructure(Location location, String buildName, String rotate) {
         BuildFileModel obj = Resources.getJsonByLocalData(path + buildName + ".json", BuildFileModel.class);
 
         obj.getData().forEach((info) -> {
             setRotate(rotate, info);
 
             BlockData blockData = Bukkit.createBlockData(info.getBlockData());
-            Location loc = player.getLocation().clone();
+            Location loc = location.clone();
 
             loc.add(info.getAlterX(), info.getAlterY(), info.getAlterZ());
             loc.getBlock().setBlockData(blockData);
 
             if(loc.getBlock().getType().toString().equals("CHEST")) setChestContent(loc.getBlock());
 
-            setMetadataAndSpawnBosses(info, loc, player);
+            setMetadataAndSpawnBosses(info, loc);
             setMetadataAndSpawnSpecialEntities(loc, info);
         });
-
-        player.sendMessage(ChatColor.DARK_GREEN + buildName + " built!");
-
-        return true;
     }
-    private void setMetadataAndSpawnBosses(BuildFileDataModel info, Location loc, Player player) {
+    private void setMetadataAndSpawnBosses(BuildFileDataModel info, Location loc) {
         if(info.getBossSpawn().isEmpty()) return;
 
         Utils.setMetadataValue("bossSpawn", info.getBossSpawn().get(), loc.getBlock().getState(), plugin);

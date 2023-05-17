@@ -56,7 +56,10 @@ public class QueenSpider extends BoosesModel {
 
         super.deadFunctionality();
 
-        ActionRangeBlocks actionRange = (locationParam) -> locationParam.getBlock().setType(Material.COBWEB);
+        ActionRangeBlocks actionRange = (locationParam) -> {
+            locationParam.getBlock().setType(Material.COBWEB);
+            return true;
+        };
 
         Utils.executeActionInARangeOfBlock(4, 0, location, actionRange);
         Utils.executeActionInARangeOfBlock(4, 1, location, actionRange);
@@ -127,6 +130,7 @@ public class QueenSpider extends BoosesModel {
 
         ActionRangeBlocks actionRange = (location) -> {
             if(Utils.getRandomInPercentage() <= 80) location.getBlock().setType(Material.COBWEB);
+            return true;
         };
 
         Spider boss = getBoss();

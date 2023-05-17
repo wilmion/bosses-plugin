@@ -124,6 +124,7 @@ public class MasterCreeper extends BoosesModel {
 
         ActionRangeBlocks actionRangeBlocks = (locationSpawn) -> {
             world.spawn(locationSpawn, TNTPrimed.class);
+            return true;
         };
 
         Utils.executeActionInARangeOfBlock(3,  10, location, actionRangeBlocks);

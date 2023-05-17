@@ -51,6 +51,7 @@ public class SaveCommand {
             if(bossSpawn.isPresent()) data.setBossSpawn(Optional.of(bossSpawn.get().asString()));
 
             if(!block.getType().isEmpty() || hasMetadata) buildData.add(data);
+            return true;
         };
 
         Utils.executeActionInXOfBlocks(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), loc, actionRangeBlocks);

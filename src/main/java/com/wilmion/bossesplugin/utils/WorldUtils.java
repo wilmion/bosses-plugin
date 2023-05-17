@@ -58,6 +58,7 @@ public class WorldUtils {
                 loc2.setY(y);
                 loc2.getBlock().setType(Material.AIR);
             }
+            return true;
         };
 
         Utils.executeActionInXOfBlocks(rangeX, 1, rangeZ, loc, actionRangeBlocks);

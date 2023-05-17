@@ -87,6 +87,8 @@ public class MasterSkeleton extends BoosesModel {
             server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 world.spawnArrow(location, new Vector(0,-1,0), 8.0f, 0);
             }, 10);
+
+            return true;
         };
 
         setTemporalInvunerability();
