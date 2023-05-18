@@ -21,7 +21,7 @@ Move the output file to minecraft folder plugins.
 
 #### Natural generation (IMPORTANT!)
 
-It's important to copy this file in your server files. Download and copy the file of this [Link](https://firebasestorage.googleapis.com/v0/b/bosses-minecraft-plugin.appspot.com/o/jordi_tower.json?alt=media&token=7ff4c445-db8a-4744-b7f3-4dda4b5c187c) to **[Server_path]/plugins/bosses-plugin-data/buildings** (Create the folders if you don't have)
+It's important to copy this file in your server files. Download and copy the file of this [Link](./static/jordi_tower.json) to **[Server_path]/plugins/bosses-plugin-data/buildings** (Create the folders if you don't have)
 
 ## FEATURES V1.2
 
@@ -33,17 +33,17 @@ The plugin create a tower where located **Support Zombie** boss naturally, is a 
 
 #### The entry of the tower:
 
-![The entry of the tower](https://firebasestorage.googleapis.com/v0/b/bosses-minecraft-plugin.appspot.com/o/jordi-castle-door-preview.jpg?alt=media&token=81ea29fe-9df1-4116-99be-8e37b9355990)
+![The entry of the tower](./static/jordi-castle-door-preview.jpg)
 
 #### Support Zombie boss in the tower:
 
-![Support Zombie boss in the tower](https://firebasestorage.googleapis.com/v0/b/bosses-minecraft-plugin.appspot.com/o/jordi-castle-preview.jpg?alt=media&token=19fd0580-11ca-4b4c-9078-4b77b156bc61)
+![Support Zombie boss in the tower](./static/jordi-castle-preview.jpg)
 
 ### New Boss: Master Wizard
 
 In this update we did add a boss that represents to the **Witch** mob of minecraft.
 
-![Master Wizard boss](https://firebasestorage.googleapis.com/v0/b/bosses-minecraft-plugin.appspot.com/o/zetanna-preview.jpg?alt=media&token=b25cfa28-5a28-4e54-80f4-18f5d289645e)
+![Master Wizard boss](./static/zetanna-preview.jpg)
 
 This boss has 2 passives and 2 ultimates.
 
