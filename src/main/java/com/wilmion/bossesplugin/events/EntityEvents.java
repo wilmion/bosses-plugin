@@ -3,8 +3,8 @@ package com.wilmion.bossesplugin.events;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.wilmion.bossesplugin.generation.StructureGeneration;
 import com.wilmion.bossesplugin.mobsDificulties.*;
-import com.wilmion.bossesplugin.models.BlockMetadata;
-import com.wilmion.bossesplugin.models.KeepMetadata;
+import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
+import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
 
@@ -14,6 +14,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.server.ServerLoadEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.plugin.Plugin;
 
 public class EntityEvents implements Listener {
@@ -100,7 +101,12 @@ public class EntityEvents implements Listener {
     public void onSeverLoad(ServerLoadEvent event) {
         BlockMetadata.getData();
         new StructureGeneration(plugin);
-        KeepMetadata keepMetadata = new KeepMetadata(plugin);
-        keepMetadata.keepMetadata();
+        // KeepMetadata keepMetadata = new KeepMetadata(plugin);
+        // keepMetadata.keepMetadata();
+    }
+
+    @EventHandler
+    public void onLoadChunk(ChunkLoadEvent event) {
+        BossesMetadata.loadChunk(event);
     }
 }

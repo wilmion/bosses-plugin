@@ -17,9 +17,9 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Resources {
-    public static <T> T getJsonByData(String filename, Type classInstance) {
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY).create();
+    public static Gson gson = new GsonBuilder().registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY).create();
 
+    public static <T> T getJsonByData(String filename, Type classInstance) {
         ClassLoader classLoader = Resources.class.getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(filename);
         InputStreamReader reader = new InputStreamReader(inputStream);
@@ -40,8 +40,6 @@ public class Resources {
     }
 
     public static <T> T getJsonByLocalData(String filename, Type classInstance) {
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY).create();
-
         String data = readFile(filename);
 
         if(data == null) return null;
@@ -50,8 +48,6 @@ public class Resources {
     }
 
     public static void writeFile(String path, Object obj) {
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY).create();
-
         writeFileA(path, gson.toJson(obj));
     }
 

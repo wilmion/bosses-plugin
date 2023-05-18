@@ -1,21 +1,14 @@
 package com.wilmion.bossesplugin.utils;
 
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
-import com.wilmion.bossesplugin.models.KeepMetadata;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.*;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.plugin.Plugin;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 

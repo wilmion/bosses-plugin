@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class StructureGeneration {
     private static Location locationStructure;
-    private static String path = "plugins/bosses-plugin-data/game-data-structures.json";
+    private static String path = "plugins/bosses-plugin-data/game-data/structures.json";
 
     private BuildCommand buildCommand;
     private Boolean isJordiBuilt = false;

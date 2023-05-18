@@ -1,5 +1,6 @@
 package com.wilmion.bossesplugin.objects.metadata.block;
 
+import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,6 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class BlockMetadataModel {
-    private List<BlockMetadataDataModel> data;
+    private List<MetadataModel> data;
 }
 

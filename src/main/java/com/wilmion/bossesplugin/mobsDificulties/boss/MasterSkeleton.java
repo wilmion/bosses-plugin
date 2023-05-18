@@ -3,7 +3,8 @@ package com.wilmion.bossesplugin.mobsDificulties.boss;
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
-import com.wilmion.bossesplugin.models.KeepMetadata;
+import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
+import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.utils.Utils;
@@ -19,11 +20,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import java.util.Optional;
 
 public class MasterSkeleton extends BoosesModel {
     static String idMetadataMinion = "SKELETON_BOSS_MINION";
@@ -162,9 +164,8 @@ public class MasterSkeleton extends BoosesModel {
 
         skeleton.addPotionEffect(fireResistance);
         skeleton.addPotionEffect(damageResistance);
-        skeleton.setMetadata(idMetadataMinion, new FixedMetadataValue(plugin, "true"));
 
-        KeepMetadata.addEntityWithMetadata(skeleton, idMetadataMinion);
+        EntityScoreboard.upsertScoreboard(skeleton, idMetadataMinion, "true");
 
         return skeleton;
     }
@@ -177,14 +178,13 @@ public class MasterSkeleton extends BoosesModel {
 
         horse.addPotionEffect(fireResistance);
         horse.addPotionEffect(damageResistance);
-        horse.setMetadata(idMetadataMinion, new FixedMetadataValue(plugin, "true"));
 
         Skeleton skeleton = this.summonMinion(location);
 
         horse.addPassenger(skeleton);
         horse.setTamed(true);
 
-        KeepMetadata.addEntityWithMetadata(horse, idMetadataMinion);
+        EntityScoreboard.upsertScoreboard(horse, idMetadataMinion, "true");
     }
 
     private void useJinet(double x, double z) {
@@ -225,7 +225,7 @@ public class MasterSkeleton extends BoosesModel {
             if(health <= boss.maxHealth / 2.0) boss.useUltimate1();
         };
 
-        boolean isMinion = event.getEntity().hasMetadata(idMetadataMinion);
+        boolean isMinion = EntityScoreboard.getScoreboard(event.getEntity(), idMetadataMinion).isPresent();
         boolean continueAlth = BoosesModel.handleDamageByEntity(event, 2, ultimateLambda);
 
         return isMinion? false : continueAlth;
@@ -243,7 +243,6 @@ public class MasterSkeleton extends BoosesModel {
         BossDataModel bossData = BoosesModel.getMetadata(2);
         Entity entity = event.getEntity();
         Entity projectile = event.getProjectile();
-
         String entityID = String.valueOf(entity.getUniqueId());
 
         boolean isSkeleton = entity instanceof Skeleton;
@@ -254,9 +253,9 @@ public class MasterSkeleton extends BoosesModel {
 
         Double health = ((Skeleton) entity).getHealth();
         Arrow arrow = (Arrow) projectile;
-        MasterSkeleton boss = (MasterSkeleton) BoosesModel.bosses.get(entityID);
+        Optional<MasterSkeleton> boss = BossesMetadata.getBoss(entityID);
 
-        if(health <= bossData.getHealth() * 0.3) boss.useUltimate2(arrow);
+        if(health <= bossData.getHealth() * 0.3 && boss.isPresent()) boss.get().useUltimate2(arrow);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.wilmion.bossesplugin.commands;
 
-import com.wilmion.bossesplugin.models.BlockMetadata;
+import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
 
@@ -10,7 +10,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;

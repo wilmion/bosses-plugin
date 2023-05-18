@@ -5,9 +5,11 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
-import com.wilmion.bossesplugin.models.KeepMetadata;
+import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
+import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
+import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
 import com.wilmion.bossesplugin.utils.Utils;
 
 import org.bukkit.Location;
@@ -17,10 +19,11 @@ import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Optional;
 
 public class QueenSpider extends BoosesModel {
     private static String idMetadataMinion = "QUEEN_SPIDER_MINION_BOSS";
@@ -77,10 +80,9 @@ public class QueenSpider extends BoosesModel {
         location.getBlock().setType(Material.COBWEB);
 
         Spider spider = world.spawn(location, Spider.class);
-        spider.setMetadata(idMetadataMinion, new FixedMetadataValue(plugin, entityID));
         spider.setTarget(getBoss().getTarget());
 
-        KeepMetadata.addEntityWithMetadata(spider, idMetadataMinion);
+        EntityScoreboard.upsertScoreboard(spider, idMetadataMinion, entityID);
 
         return spider;
     }
@@ -173,7 +175,7 @@ public class QueenSpider extends BoosesModel {
             if(health <= boss.maxHealth * 0.4)  boss.useUltimate2();
         };
 
-        boolean isMinion = event.getEntity().hasMetadata(idMetadataMinion);
+        boolean isMinion = EntityScoreboard.getScoreboard(event.getEntity(), idMetadataMinion).isPresent();
         boolean continueAlth = BoosesModel.handleDamageByEntity(event, 3, lambda);
 
         return isMinion? false : continueAlth;
@@ -188,14 +190,12 @@ public class QueenSpider extends BoosesModel {
 
         Entity entity = event.getEntity();
 
-        boolean isMinion = entity.hasMetadata(idMetadataMinion);
+        Optional<MetadataModel> idParent = EntityScoreboard.getScoreboard(entity, idMetadataMinion);
 
-        if(!isMinion) return;
+        if(idParent.isEmpty()) return;
 
-        String idParent = (String) entity.getMetadata(idMetadataMinion).get(0).value();
-
-        QueenSpider boss = (QueenSpider) BoosesModel.bosses.get(idParent);
-        if(boss != null) boss.lessMinions(1);
+        Optional<QueenSpider> boss = BossesMetadata.getBoss(idParent.get().getValue());
+        if(boss.isPresent()) boss.get().lessMinions(1);
     }
 
 }

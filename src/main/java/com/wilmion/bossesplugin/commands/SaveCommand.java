@@ -1,7 +1,7 @@
 package com.wilmion.bossesplugin.commands;
 
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
-import com.wilmion.bossesplugin.models.BlockMetadata;
+import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
 import com.wilmion.bossesplugin.utils.Resources;
@@ -15,7 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;

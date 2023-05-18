@@ -2,8 +2,10 @@ package com.wilmion.bossesplugin.mobsDificulties.boss;
 
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.models.BoosesModel;
-import com.wilmion.bossesplugin.models.KeepMetadata;
+import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
+import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.models.Perk;
+import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
 import com.wilmion.bossesplugin.utils.Utils;
 
 import org.bukkit.*;
@@ -13,10 +15,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Optional;
 
 public class SupportZombie extends BoosesModel {
     static final String idFollower = "PARENT-ID";
@@ -88,11 +91,10 @@ public class SupportZombie extends BoosesModel {
 
        follower.addPotionEffect(fireResistence);
        follower.addPotionEffect(damageResistence);
-       follower.setMetadata(idFollower, new FixedMetadataValue(plugin, entityID));
        follower.setRemoveWhenFarAway(false);
        follower.setTarget(getBoss().getTarget());
 
-       KeepMetadata.addEntityWithMetadata(follower, idFollower);
+       EntityScoreboard.upsertScoreboard(follower, idFollower, entityID);
 
        spawnedZombies++;
    }
@@ -200,10 +202,9 @@ public class SupportZombie extends BoosesModel {
 
         zombie.addPotionEffect(fireResistence);
         zombie.addPotionEffect(damageResistence);
-        zombie.setMetadata(idSpecialFollower, new FixedMetadataValue(plugin, "YEAH"));
         zombie.setTarget(getBoss().getTarget());
 
-        KeepMetadata.addEntityWithMetadata(zombie, idSpecialFollower);
+        EntityScoreboard.upsertScoreboard(entity, idSpecialFollower, "YEAH");
     }
 
     private void teleportZombie(Location location) {
@@ -228,8 +229,8 @@ public class SupportZombie extends BoosesModel {
 
        Entity entity = event.getEntity();
 
-       boolean isSupportedSpecialZombie = entity.hasMetadata(idSpecialFollower);
-       boolean isFollower = entity.hasMetadata(idFollower);
+       boolean isSupportedSpecialZombie = EntityScoreboard.getScoreboard(entity, idSpecialFollower).isPresent();
+       boolean isFollower = EntityScoreboard.getScoreboard(entity, idFollower).isPresent();
 
        boolean continueAlth =  BoosesModel.handleDamageByEntity(event, 1, ultimate);
 
@@ -245,13 +246,12 @@ public class SupportZombie extends BoosesModel {
 
        Entity entity = event.getEntity();
 
-       boolean isFollower = entity.hasMetadata(idFollower);
+       Optional<MetadataModel> idParent = EntityScoreboard.getScoreboard(entity, idFollower);
 
-       if(!isFollower) return;
+       if(idParent.isEmpty()) return;
 
-       String idParent = (String) entity.getMetadata(idFollower).get(0).value();
+       Optional<SupportZombie> boss = BossesMetadata.getBoss(idParent.get().getValue());
 
-       SupportZombie boss = (SupportZombie) BoosesModel.bosses.get(idParent);
-       if(boss != null) boss.removeSpawnedZombies(1);
+       if(boss.isPresent()) boss.get().removeSpawnedZombies(1);
    }
 }

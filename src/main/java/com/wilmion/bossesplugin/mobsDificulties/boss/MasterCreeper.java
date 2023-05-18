@@ -2,11 +2,11 @@ package com.wilmion.bossesplugin.mobsDificulties.boss;
 
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
-import com.wilmion.bossesplugin.models.BoosesModel;
-import com.wilmion.bossesplugin.models.KeepMetadata;
-import com.wilmion.bossesplugin.models.Perk;
-import com.wilmion.bossesplugin.models.ProgressBar;
+import com.wilmion.bossesplugin.models.*;
+import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
+import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
+import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
 import com.wilmion.bossesplugin.utils.Utils;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
@@ -20,10 +20,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Optional;
 
 public class MasterCreeper extends BoosesModel {
     static final String idMinionMetadata = "CREEPER-MINION-MASTER-BOSS";
@@ -86,12 +87,11 @@ public class MasterCreeper extends BoosesModel {
 
         Creeper minion = world.spawn(location, Creeper.class);
 
-        minion.setMetadata(idMinionMetadata, new FixedMetadataValue(plugin, String.valueOf(entity.getUniqueId())));
         minion.setTarget(boss.getTarget());
         minion.addPotionEffect(fire);
         minion.setRemoveWhenFarAway(false);
 
-        KeepMetadata.addEntityWithMetadata(minion, idMinionMetadata);
+        EntityScoreboard.upsertScoreboard(minion, idMinionMetadata, String.valueOf(entity.getUniqueId()));
 
         if(probabilityToCharge > 30) world.spawnEntity(location, EntityType.LIGHTNING);
         minions++;
@@ -154,7 +154,7 @@ public class MasterCreeper extends BoosesModel {
             if(health <= boss.maxHealth * 0.3) boss.useUtimate2();
         };
 
-        boolean isMinion = event.getEntity().hasMetadata(idMinionMetadata);
+        boolean isMinion = EntityScoreboard.getScoreboard(event.getEntity(), idMinionMetadata).isPresent();
         boolean continueAlth = BoosesModel.handleDamageByEntity(event, 5, useUltimates);
 
         return isMinion? false : continueAlth;
@@ -180,25 +180,23 @@ public class MasterCreeper extends BoosesModel {
 
     private static void detectDeathOfMinion(Entity entity) {
         BossDataModel bossData = getMetadata(5);
-        boolean isMinion = entity.hasMetadata(idMinionMetadata);
+        Optional<MetadataModel> idParentOnMinion = EntityScoreboard.getScoreboard(entity, idMinionMetadata);
         boolean isBoss = entity.hasMetadata(bossData.getMetadata());
 
         if(isBoss) {
             String idParent = String.valueOf(entity.getUniqueId());
-            MasterCreeper boss = (MasterCreeper) BoosesModel.bosses.get(idParent);
+            Optional<MasterCreeper> boss = BossesMetadata.getBoss(idParent);
 
-            if(boss != null) boss.generateDeathExplosion();
+            if(boss.isPresent()) boss.get().generateDeathExplosion();
 
             ProgressBar progressBar = new ProgressBar(bossData.getMetadata());
             progressBar.disabledBar();
             progressBar.removeAllUsers();
         }
 
-        if(isMinion) {
-            String idParent = (String) entity.getMetadata(idMinionMetadata).get(0).value();
-
-            MasterCreeper boss = (MasterCreeper) BoosesModel.bosses.get(idParent);
-            if(boss != null) boss.lessMinion();
+        if(idParentOnMinion.isPresent()) {
+            Optional<MasterCreeper> boss = BossesMetadata.getBoss(idParentOnMinion.get().getValue());
+            if(boss.isPresent()) boss.get().lessMinion();
         }
     }
 

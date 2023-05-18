@@ -1,6 +1,8 @@
 package com.wilmion.bossesplugin.models;
 
 import com.wilmion.bossesplugin.interfaces.IUltimateLambda;
+import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
+import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.objects.boss.BossModel;
 import com.wilmion.bossesplugin.utils.Resources;
@@ -14,24 +16,20 @@ import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 public class BoosesModel {
-    public static Map<String, BoosesModel> bosses = new TreeMap<>();
-
-    protected transient Plugin plugin;
-    protected transient World world;
-    protected transient Server server;
-    protected transient LivingEntity entity;
+    public transient LivingEntity entity;
+    public transient Plugin plugin;
+    public transient World world;
+    public transient Server server;
     protected Double maxHealth;
     protected String idMetadata;
 
@@ -56,9 +54,8 @@ public class BoosesModel {
         entity.setRemoveWhenFarAway(false);
         entity.setCustomName(bossData.getName());
         entity.setCustomNameVisible(true);
-        entity.setMetadata(idMetadata, new FixedMetadataValue(this.plugin, "true"));
 
-        bosses.put(String.valueOf(entity.getUniqueId()), this);
+        BossesMetadata.upsertBoss(String.valueOf(entity.getUniqueId()), this);
 
         this.useSchedulerEvents();
         this.setMetadata();
@@ -67,8 +64,8 @@ public class BoosesModel {
 
     public void useSchedulerEvents() {}
 
-    protected void setMetadata() {
-        entity.setMetadata(idMetadata, new FixedMetadataValue(this.plugin, "true"));
+    public void setMetadata() {
+        EntityScoreboard.upsertScoreboard(entity, idMetadata, "true");
     }
 
     protected boolean isAlive() {
@@ -88,7 +85,7 @@ public class BoosesModel {
     public void deadFunctionality() {
         String entityID = String.valueOf(entity.getUniqueId());
 
-        bosses.remove(entityID);
+        BossesMetadata.deleteBoss(entityID);
         world.playSound(this.entity.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 2, 0);
     }
 
@@ -121,9 +118,9 @@ public class BoosesModel {
         String entityID = String.valueOf(entity.getUniqueId());
 
         boolean isZombie = entity.getType() == EntityType.valueOf(bossData.getType());
-        boolean isSupported = entity.hasMetadata(bossData.getMetadata());
+        boolean isSupported = EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
         LivingEntity shooter = Utils.livingDamager(event.getDamager());
-        BoosesModel boss = bosses.get(entityID);
+        Optional<BoosesModel> boss = BossesMetadata.getBoss(entityID);
 
         double health = Utils.getHealthByDamage(event.getFinalDamage(), living.getHealth());
 
@@ -131,7 +128,7 @@ public class BoosesModel {
 
         upsertHealthBar(bossData.getName(), shooter, health, color, bossData.getHealth(), bossData.getMetadata());
 
-        if(boss != null) lambda.ultimates(health, (T) boss);
+        if(boss.isPresent()) lambda.ultimates(health, (T) boss.get());
 
         return false;
     }
@@ -145,7 +142,7 @@ public class BoosesModel {
         BarColor color = BarColor.valueOf(bossData.getBarColor());
 
         boolean isTypeEntity = entity.getType() == EntityType.valueOf(bossData.getType());
-        boolean isSupportedEntity = entity.hasMetadata(bossData.getMetadata());
+        boolean isSupportedEntity = EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
 
         if(!isTypeEntity || !isSupportedEntity) return;
 
@@ -163,7 +160,7 @@ public class BoosesModel {
         Entity entity = event.getEntity();
         String entityID = String.valueOf(entity.getUniqueId());
 
-        boolean isSupported = entity.hasMetadata(bossData.getMetadata());
+        boolean isSupported =  EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
 
         if(!isSupported) return;
 
@@ -171,8 +168,8 @@ public class BoosesModel {
         progressBar.disabledBar();
         progressBar.removeAllUsers();
 
-        BoosesModel boss = BoosesModel.bosses.get(entityID);
+        Optional<BoosesModel> boss = BossesMetadata.getBoss(entityID);
 
-        if(boss != null) boss.deadFunctionality();
+        if(boss.isPresent()) boss.get().deadFunctionality();
     }
 }

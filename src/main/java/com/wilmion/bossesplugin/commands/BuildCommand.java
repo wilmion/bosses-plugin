@@ -1,8 +1,7 @@
 package com.wilmion.bossesplugin.commands;
 
-import com.wilmion.bossesplugin.mobsDificulties.boss.SupportZombie;
 import com.wilmion.bossesplugin.mobsDificulties.special.SpecialEntity;
-import com.wilmion.bossesplugin.models.BlockMetadata;
+import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
 import com.wilmion.bossesplugin.utils.Resources;
