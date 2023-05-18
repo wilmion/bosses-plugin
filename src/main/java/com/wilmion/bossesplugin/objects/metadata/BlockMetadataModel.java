@@ -1,4 +1,4 @@
-package com.wilmion.bossesplugin.objects.metadata.block;
+package com.wilmion.bossesplugin.objects.metadata;
 
 import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
 import lombok.AllArgsConstructor;

@@ -3,7 +3,7 @@ package com.wilmion.bossesplugin.models.metadata;
 import com.google.common.reflect.TypeToken;
 
 import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
-import com.wilmion.bossesplugin.objects.metadata.block.BlockMetadataModel;
+import com.wilmion.bossesplugin.objects.metadata.BlockMetadataModel;
 import com.wilmion.bossesplugin.utils.Resources;
 
 import org.bukkit.block.Block;

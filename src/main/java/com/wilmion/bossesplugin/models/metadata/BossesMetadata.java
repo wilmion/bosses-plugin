@@ -64,16 +64,12 @@ public class BossesMetadata {
     }
 
     public static void deleteBoss(String entityUUID) {
-        BoosesModel boss = bosses.get(entityUUID);
+        Map<String, BossMetadataModel> internalData = fetchData();
 
-        if(boss != null) {
-            Map<String, BossMetadataModel> internalData = fetchData();
-            internalData.remove(entityUUID);
-
-            Resources.writeFile(path, internalData);
-        }
-
+        internalData.remove(entityUUID);
         bosses.remove(entityUUID);
+
+        Resources.writeFile(path, internalData);
     }
 
     public static void saveData() {

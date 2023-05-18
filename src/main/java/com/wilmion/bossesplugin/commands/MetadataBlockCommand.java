@@ -48,7 +48,7 @@ public class MetadataBlockCommand {
     }
 
     private List<String> spawnEntityMetadata(Player player, String[] args) {
-        if(args.length < 4 && !specialEntitiesName.stream().anyMatch(args[2]::equals)) {
+        if(args.length < 4 || !specialEntitiesName.stream().anyMatch(args[2]::equals)) {
             ArrayList<String> listHelp = new ArrayList<>();
 
             listHelp.add(helpMtdEntitySpawn + "\nNAME can be:\n");

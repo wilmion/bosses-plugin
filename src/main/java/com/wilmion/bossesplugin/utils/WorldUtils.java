@@ -13,7 +13,6 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class WorldUtils {
@@ -46,6 +45,29 @@ public class WorldUtils {
     public static Location getLocationByData(LocationDataModel boss, Plugin plugin) {
         World world = plugin.getServer().getWorld(UUID.fromString(boss.getWorldId()));
         return new Location(world, boss.getX(), boss.getY(), boss.getZ());
+    }
+
+    public static Location getLocationYInNearAir(Location location, Integer maximumRange) {
+        Location result = location.clone();
+        Boolean isValid = false;
+        Integer iterations = 0;
+
+        while(!isValid && iterations < maximumRange) {
+            Location nextYLoc = result.clone();
+            nextYLoc.setY(nextYLoc.getY() + 1);
+
+            boolean currentBlockIsAir = result.getBlock().getType().isAir();
+            boolean nextBlockIsAir = result.getBlock().getType().isAir();
+
+            isValid = currentBlockIsAir && nextBlockIsAir;
+            iterations++;
+
+            if(!isValid) result.setY(result.getY() + 1);
+        }
+
+        if(!isValid) return null;
+
+        return result;
     }
 
     public static void cleanInRange(Location loc, Integer rangeX, Integer rangeZ) {

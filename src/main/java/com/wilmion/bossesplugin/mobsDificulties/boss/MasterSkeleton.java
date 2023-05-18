@@ -9,6 +9,7 @@ import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.utils.Utils;
 
+import com.wilmion.bossesplugin.utils.WorldUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -188,10 +189,12 @@ public class MasterSkeleton extends BoosesModel {
     }
 
     private void useJinet(double x, double z) {
-        Location location = getBoos().getLocation();
+        Location location = getBoos().getLocation().clone();
 
         location.setX(location.getX() + x);
         location.setZ(location.getZ() + z);
+        location = WorldUtils.getLocationYInNearAir(location, 1000);
+
         world.spawn(location, LightningStrike.class);
 
         summonMinionHorse(location);

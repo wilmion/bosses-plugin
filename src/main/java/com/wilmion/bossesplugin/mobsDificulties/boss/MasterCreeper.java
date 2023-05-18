@@ -11,6 +11,7 @@ import com.wilmion.bossesplugin.utils.Utils;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 
+import com.wilmion.bossesplugin.utils.WorldUtils;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -84,6 +85,9 @@ public class MasterCreeper extends BoosesModel {
 
         location.setX(location.getX() + x);
         location.setZ(location.getZ() + z);
+        location = WorldUtils.getLocationYInNearAir(location, 10);
+
+        if(location == null) return;
 
         Creeper minion = world.spawn(location, Creeper.class);
 
@@ -181,13 +185,15 @@ public class MasterCreeper extends BoosesModel {
     private static void detectDeathOfMinion(Entity entity) {
         BossDataModel bossData = getMetadata(5);
         Optional<MetadataModel> idParentOnMinion = EntityScoreboard.getScoreboard(entity, idMinionMetadata);
-        boolean isBoss = entity.hasMetadata(bossData.getMetadata());
+        boolean isBoss = EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
 
         if(isBoss) {
             String idParent = String.valueOf(entity.getUniqueId());
             Optional<MasterCreeper> boss = BossesMetadata.getBoss(idParent);
 
             if(boss.isPresent()) boss.get().generateDeathExplosion();
+
+            BossesMetadata.deleteBoss(idParent);
 
             ProgressBar progressBar = new ProgressBar(bossData.getMetadata());
             progressBar.disabledBar();

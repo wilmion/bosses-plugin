@@ -7,6 +7,7 @@ import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
 import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.WorldUtils;
 
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
@@ -71,7 +72,7 @@ public class SupportZombie extends BoosesModel {
        if(spawnedZombies >= 4 || !this.isAlive()) return;
 
        BlockFace face = entity.getFacing();
-       Location location = entity.getLocation();
+       Location location = entity.getLocation().clone();
        String entityID = String.valueOf(entity.getUniqueId());
 
        int modX = face.getModX() == 0 ? 1 : face.getModX();
@@ -82,6 +83,9 @@ public class SupportZombie extends BoosesModel {
 
        location.setX(location.getX() + greaterValOnX);
        location.setZ(location.getZ() + greaterValOnZ);
+       location = WorldUtils.getLocationYInNearAir(location, 10);
+
+       if(location == null) return;
 
        world.spawn(location, LightningStrike.class);
        Zombie follower = world.spawn(location, Zombie.class);
@@ -108,8 +112,6 @@ public class SupportZombie extends BoosesModel {
 
        if(target == null || !(target instanceof LivingEntity) || useUltimate1) return;
 
-       this.useUltimate1 = true;
-
        int modX = face.getModX();
        int modZ = face.getModZ();
 
@@ -118,8 +120,12 @@ public class SupportZombie extends BoosesModel {
 
        location.setX(location.getX() + greaterValOnX);
        location.setZ(location.getZ() + greaterValOnZ);
+       location = WorldUtils.getLocationYInNearAir(location, 10);
+
+       if(location == null) return;
 
        this.teleportZombie(location);
+       this.useUltimate1 = true;
 
        int newXGreaterVal = modX * 3;
        int newZGreaterVal = modZ * 3;
@@ -171,6 +177,7 @@ public class SupportZombie extends BoosesModel {
 
            location.setX(location.getX() + xMultiplier);
            location.setZ(location.getZ() + zMultiplier);
+           location.setY(WorldUtils.getLocationYInNearAir(location, 1000).getY());
 
            this.teleportZombie(location);
            this.setTemporalInvunerability();
