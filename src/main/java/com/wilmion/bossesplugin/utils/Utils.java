@@ -36,7 +36,7 @@ public class Utils {
                 location.setZ(location.getZ() + z);
                 location.setY(location.getY() + modY);
 
-                lambda.action(location);
+                if(!lambda.action(location)) return;
             }
         }
     }

@@ -4,13 +4,13 @@ import com.wilmion.bossesplugin.objects.special_entity.SpecialEntityDataModel;
 import com.wilmion.bossesplugin.objects.special_entity.SpecialEntityModel;
 import com.wilmion.bossesplugin.utils.Resources;
 
+import lombok.Getter;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Getter
 public class SpecialEntity {
     private LivingEntity living;
 
@@ -38,11 +39,12 @@ public class SpecialEntity {
         entity.setCustomNameVisible(false);
 
         if(entityData.getFollowRange().isPresent()) view.setBaseValue(entityData.getFollowRange().get());
+        if(entityData.getPassenger().isPresent()) setPassenger(location, entityData.getPassenger().get());
 
         equipEntity(entityData.getEquipment());
     }
 
-    public void equipEntity(Map<String, Object> data) {
+    private void equipEntity(Map<String, Object> data) {
         EntityEquipment equipment = living.getEquipment();
 
         if(data.get("helmet") != null) {
@@ -65,6 +67,13 @@ public class SpecialEntity {
             ItemStack sword = convertEquipmentDataToItemStack((Map<String, Object>) data.get("sword"));
             equipment.setItemInMainHand(sword);
         }
+    }
+
+    private void setPassenger(Location location, String type) {
+        SpecialEntity entity = new SpecialEntity(location, type);
+        Mob mob = (Mob) living;
+
+        mob.addPassenger(entity.getLiving());
     }
 
     private ItemStack convertEquipmentDataToItemStack(Map<String, Object> mtd) {

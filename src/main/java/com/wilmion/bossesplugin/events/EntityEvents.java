@@ -8,6 +8,7 @@ import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
 
+import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
@@ -50,6 +51,11 @@ public class EntityEvents implements Listener {
     public void onMovePlayer(PlayerMoveEvent event) {
         playerExp.onMovePlayerEvent(event);
         playerDifficulty.onMovePlayerDifficultyEvent(event);
+    }
+
+    @EventHandler
+    public void onEntityMove(EntityMoveEvent event) {
+        spider.onEntityMoveSpiderEvent(event);
     }
 
     @EventHandler

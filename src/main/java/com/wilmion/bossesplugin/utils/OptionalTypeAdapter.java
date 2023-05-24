@@ -43,8 +43,15 @@ public class OptionalTypeAdapter <E> extends TypeAdapter<Optional<E>> {
     @Override
     public Optional<E> read(JsonReader in) throws IOException {
         final JsonToken peek = in.peek();
+
         if(peek != JsonToken.NULL){
-            return Optional.ofNullable(adapter.read(in));
+            E value = null;
+
+            try {
+                value = adapter.read(in);
+            } catch (Error e) { }
+
+            return Optional.ofNullable(value);
         }
 
         in.nextNull();

@@ -27,7 +27,6 @@
       "name": "Guardia supremo de Jordi",
       "health": 45.0,
       "followRange": 8.0,
-      "noAI": true,
       "equipment": {
         "helmet": {
           "type": "NETHERITE_HELMET",
@@ -119,6 +118,142 @@
         },
         "sword": {
           "type": "IRON_SWORD"
+        }
+      }
+    },
+    {
+      "key": "SPIDER_RESIDENT",
+      "entityType": "SPIDER",
+      "name": "Hijo(a) de la reina",
+      "health": 60.0,
+      "followRange": 5.0,
+      "equipment": {}
+    },
+    {
+      "key": "CAVE_SPIDER_RESIDENT",
+      "entityType": "CAVE_SPIDER",
+      "name": "Hijo(a) de la reina",
+      "health": 40.0,
+      "followRange": 5.0,
+      "equipment": {}
+    },
+    {
+      "key": "JINET_SPIDER_LVL1",
+      "entityType": "SPIDER",
+      "name": "Descendiente de la reina",
+      "health": 70.0,
+      "followRange": 20.0,
+      "passenger": "WARRIOR_SKELETON_LVL1",
+      "equipment": {}
+    },
+    {
+      "key": "JINET_SPIDER_LVL3",
+      "entityType": "SPIDER",
+      "name": "Descendiente de la reina",
+      "health": 70.0,
+      "followRange": 20.0,
+      "passenger": "WARRIOR_SKELETON_LVL3",
+      "equipment": {}
+    },
+    {
+      "key": "JINET_SPIDER_LVL4",
+      "entityType": "CAVE_SPIDER",
+      "name": "Descendiente de la reina",
+      "health": 50.0,
+      "followRange": 20.0,
+      "passenger": "WARRIOR_SKELETON_LVL4",
+      "equipment": {}
+    },
+    {
+      "key": "JINET_SPIDER_LVL2",
+      "entityType": "CAVE_SPIDER",
+      "name": "Descendiente de la reina",
+      "health": 50.0,
+      "followRange": 20.0,
+      "passenger": "WARRIOR_SKELETON_LVL2",
+      "equipment": {}
+    },
+    {
+      "key": "WARRIOR_SKELETON_LVL4",
+      "entityType": "SKELETON",
+      "name": "Guerrero de Ann | lvl 4",
+      "health": 50.0,
+      "followRange": 15.0,
+      "equipment": {
+        "helmet": {
+          "type": "DIAMOND_HELMET"
+        },
+        "chestplate": {
+          "type": "DIAMOND_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "DIAMOND_LEGGINGS"
+        },
+        "boots": {
+          "type": "DIAMOND_BOOTS"
+        },
+        "sword": {
+          "type": "DIAMOND_SWORD"
+        }
+      }
+    },
+    {
+      "key": "WARRIOR_SKELETON_LVL3",
+      "entityType": "SKELETON",
+      "name": "Guerrero de Ann | lvl 3",
+      "health": 45.0,
+      "followRange": 15.0,
+      "equipment": {
+        "helmet": {
+          "type": "IRON_HELMET"
+        },
+        "chestplate": {
+          "type": "IRON_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "IRON_LEGGINGS"
+        },
+        "boots": {
+          "type": "IRON_BOOTS"
+        },
+        "sword": {
+          "type": "IRON_SWORD"
+        }
+      }
+    },
+    {
+      "key": "WARRIOR_SKELETON_LVL2",
+      "entityType": "SKELETON",
+      "name": "Guerrero de Ann | lvl 2",
+      "health": 40.0,
+      "followRange": 15.0,
+      "equipment": {
+        "helmet": {
+          "type": "GOLDEN_HELMET"
+        },
+        "chestplate": {
+          "type": "GOLDEN_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "GOLDEN_LEGGINGS"
+        },
+        "boots": {
+          "type": "GOLDEN_BOOTS"
+        },
+        "sword": {
+          "type": "IRON_AXE"
+        }
+      }
+    },
+    {
+      "key": "WARRIOR_SKELETON_LVL1",
+      "entityType": "SKELETON",
+      "name": "Guerrero de Ann | lvl 1",
+      "health": 35.0,
+      "followRange": 15.0,
+      "equipment": {
+        "sword": {
+          "type": "NETHERITE_AXE"
         }
       }
     }
