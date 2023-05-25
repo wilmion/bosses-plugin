@@ -47,6 +47,14 @@
       "type": "WITCH",
       "health": 150.0,
       "barColor": "WHITE"
+    },
+    {
+      "id": 7,
+      "name": "ATTICUS EL DIMENSIONAL",
+      "metadata": "ENDERMAN-EXPERT-BOSS",
+      "type": "ENDERMAN",
+      "health": 190.0,
+      "barColor": "RED"
     }
   ]
 }

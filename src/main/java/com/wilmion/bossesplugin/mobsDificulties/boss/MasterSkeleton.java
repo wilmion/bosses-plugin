@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 
 import java.util.Optional;
@@ -250,7 +251,7 @@ public class MasterSkeleton extends BoosesModel {
 
         boolean isSkeleton = entity instanceof Skeleton;
         boolean isArrow = projectile instanceof Arrow;
-        boolean isBoss = entity.hasMetadata(bossData.getMetadata());
+        boolean isBoss = EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
 
         if(!isSkeleton || !isArrow || !isBoss) return;
 

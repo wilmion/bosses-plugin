@@ -30,7 +30,7 @@ public class WitchDifficulty extends MobDifficulty {
     public void onDamageByEntityWitchEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
 
-        Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.CREEPER);
+        Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.WITCH);
         Boolean isValidCause = Utils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
         Boolean isContinueBoss = MasterWizard.handleDamageByEntity(event);
 
@@ -46,6 +46,4 @@ public class WitchDifficulty extends MobDifficulty {
     public void onDeathWitchEvent(EntityDeathEvent event) {
         MasterWizard.handleDead(event);
     }
-
-
 }

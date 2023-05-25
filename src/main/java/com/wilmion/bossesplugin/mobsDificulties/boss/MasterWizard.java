@@ -107,13 +107,11 @@ public class MasterWizard extends BoosesModel {
         ActionRangeBlocks action = (location) -> {
             server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 ThrownPotion potion = world.spawn(location, ThrownPotion.class);
-
                 PotionData potionData = new PotionData(PotionType.POISON, false, true);
-
                 PotionMeta metadata = potion.getPotionMeta();
+
                 metadata.setBasePotionData(potionData);
                 metadata.addCustomEffect(new PotionEffect(PotionEffectType.POISON, 6000, 3), true);
-
                 potion.setPotionMeta(metadata);
             }, 30);
             return true;

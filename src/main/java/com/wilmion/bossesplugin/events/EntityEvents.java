@@ -29,6 +29,8 @@ public class EntityEvents implements Listener {
     SpiderDifficulty spider;
     WitchDifficulty witch;
 
+    EndermanDifficulty enderman;
+
     public EntityEvents(Plugin plugin) {
         this.plugin = plugin;
 
@@ -40,6 +42,7 @@ public class EntityEvents implements Listener {
         this.skeleton = new SkeletonDifficulty(plugin);
         this.spider = new SpiderDifficulty(plugin);
         this.witch = new WitchDifficulty(plugin);
+        this.enderman = new EndermanDifficulty(plugin);
     }
 
     @EventHandler
@@ -76,12 +79,18 @@ public class EntityEvents implements Listener {
     }
 
     @EventHandler
+    public void onTeleport(EntityTeleportEvent event) {
+        enderman.onTeleportEndermanEvent(event);
+    }
+
+    @EventHandler
     public void onDamage(EntityDamageEvent event) {
         zombie.onDamageZombieEvent(event);
         skeleton.onDamageSkeletonEvent(event);
         spider.onDamageSpiderEvent(event);
         creeper.onDamageCreeperEvent(event);
         witch.onDamageWitchEvent(event);
+        enderman.onDamageEndermanEvent(event);
     }
 
     @EventHandler
@@ -92,6 +101,7 @@ public class EntityEvents implements Listener {
         spider.OnDamageByEntitySpiderEvent(event);
         creeper.onDamageByEntityCrepperEvent(event);
         witch.onDamageByEntityWitchEvent(event);
+        enderman.onDamageByEntityEndermanEvent(event);
     }
 
     @EventHandler
@@ -101,14 +111,13 @@ public class EntityEvents implements Listener {
         spider.OnDeadSpiderEvent(event);
         creeper.onDeathCreeperEvent(event);
         witch.onDeathWitchEvent(event);
+        enderman.onDeathEndermanEvent(event);
     }
 
     @EventHandler
     public void onSeverLoad(ServerLoadEvent event) {
         BlockMetadata.getData();
         new StructureGeneration(plugin);
-        // KeepMetadata keepMetadata = new KeepMetadata(plugin);
-        // keepMetadata.keepMetadata();
     }
 
     @EventHandler

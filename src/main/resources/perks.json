@@ -111,6 +111,30 @@
           "level": 3
         }
       ]
+    },
+    {
+      "id": 7,
+      "name": "PERLA ULTRADIMENSIONAL",
+      "material": "ENDER_PEARL",
+      "colorName": "DARK_PURPLE",
+      "effects": [
+        {
+          "name": "LUCK",
+          "level": 3
+        },
+        {
+          "name": "SPEED",
+          "level": 2
+        },
+        {
+          "name": "DAMAGE_RESISTANCE",
+          "level": 3
+        },
+        {
+          "name": "INCREASE_DAMAGE",
+          "level": 2
+        }
+      ]
     }
   ]
 }
