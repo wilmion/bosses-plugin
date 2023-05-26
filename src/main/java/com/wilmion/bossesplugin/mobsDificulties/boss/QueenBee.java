@@ -206,35 +206,42 @@ public class QueenBee extends BoosesModel {
         LivingEntity target = (LivingEntity) entity;
         Bee minion = (Bee) event.getDamager();
 
-        if(!potionName.equals("DAMAGE")) {
-            PotionEffect effect = new PotionEffect(PotionEffectType.getByName(potionName), 60,0);
-            target.addPotionEffect(effect);
-        } else target.damage(6);
-
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             minion.setTarget(target);
             minion.setHasStung(false);
             minion.setAge(0);
             minion.setAgeLock(true);
-        }, 20);
+        }, 10);
+
+        if(event.getFinalDamage() == 0.0) return;
+
+        if(!potionName.equals("DAMAGE")) {
+            PotionEffect effect = new PotionEffect(PotionEffectType.getByName(potionName), 60,0);
+            target.addPotionEffect(effect);
+        } else target.damage(6);
     }
     private static void handleDamageByBoss(EntityDamageByEntityEvent event) {
-        Optional<QueenBee> boss = BossesMetadata.getBoss(event.getDamager().getUniqueId().toString());
         Entity entity = event.getEntity();
         Plugin plugin = BossesMetadata.plugin;
 
-        if(boss.isEmpty() || !(entity instanceof LivingEntity)) return;
+        if(!(entity instanceof LivingEntity) || !(event.getDamager() instanceof Bee)) return;
+
+        Optional<QueenBee> boss = BossesMetadata.getBoss(event.getDamager().getUniqueId().toString());
+
+        if(boss.isEmpty()) return;
 
         LivingEntity target = (LivingEntity) entity;
         Bee bossEntity = (Bee) event.getDamager();
 
-        boss.get().fatalAttack(target);
-        boss.get().gonna(target);
-
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             bossEntity.setTarget(target);
             bossEntity.setHasStung(false);
-        }, 20);
+        }, 10);
+
+        if(event.getFinalDamage() == 0.0) return;
+
+        boss.get().fatalAttack(target);
+        boss.get().gonna(target);
     }
 
     /* == NATIVE ==*/
