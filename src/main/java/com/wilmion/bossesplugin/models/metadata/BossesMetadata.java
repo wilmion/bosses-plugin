@@ -24,7 +24,7 @@ import java.util.TreeMap;
 public class BossesMetadata {
     public static Map<String, BoosesModel> bosses = new TreeMap<>();
     private static String path = "plugins/bosses-plugin-data/game-data/bosses.json";
-    private static Plugin plugin;
+    public static Plugin plugin;
 
     public BossesMetadata(Plugin pl) {
         plugin = pl;
@@ -44,16 +44,19 @@ public class BossesMetadata {
 
         Optional<BoosesModel> bossLoaded = loadBoss(entityUUID);
 
-        return bossLoaded.isEmpty() ? Optional.ofNullable(null) : Optional.of((T) bossLoaded.get());
+        return bossLoaded.isEmpty() ? Optional.empty() : Optional.of((T) bossLoaded.get());
     }
 
     public static Optional<BoosesModel> loadBoss(String entityUUID) {
         Map<String, BossMetadataModel> internalData = fetchData();
         BossMetadataModel dataBoss = internalData.get(entityUUID);
 
-        if(dataBoss == null) return Optional.ofNullable(null);
+        if(dataBoss == null) return Optional.empty();
 
         BoosesModel boss = renderBoss(dataBoss, entityUUID);
+
+        if(boss.entity == null) return Optional.empty();
+
         upsertBoss(entityUUID, boss);
 
         return Optional.ofNullable(bosses.get(entityUUID));
@@ -79,6 +82,8 @@ public class BossesMetadata {
             BoosesModel boss = entry.getValue();
             BossMetadataModel bossMetadataModel = new BossMetadataModel();
             Location loc = boss.entity.getLocation().clone();
+
+            if(boss.entity == null || !boss.entity.isValid()) continue;
 
             bossMetadataModel.setWorldId(loc.getWorld().getUID().toString());
             bossMetadataModel.setX(loc.getX());
@@ -113,7 +118,7 @@ public class BossesMetadata {
         boss.plugin = plugin;
         boss.server = plugin.getServer();
 
-        boss.useSchedulerEvents();
+        if(entity != null) boss.useSchedulerEvents();
 
         return boss;
     }

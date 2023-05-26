@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.potion.PotionType;
 
 import java.util.Collection;
 import java.util.List;

@@ -28,8 +28,8 @@ public class EntityEvents implements Listener {
     SkeletonDifficulty skeleton;
     SpiderDifficulty spider;
     WitchDifficulty witch;
-
     EndermanDifficulty enderman;
+    BeeDifficulty bee;
 
     public EntityEvents(Plugin plugin) {
         this.plugin = plugin;
@@ -43,6 +43,7 @@ public class EntityEvents implements Listener {
         this.spider = new SpiderDifficulty(plugin);
         this.witch = new WitchDifficulty(plugin);
         this.enderman = new EndermanDifficulty(plugin);
+        this.bee = new BeeDifficulty(plugin);
     }
 
     @EventHandler
@@ -66,6 +67,7 @@ public class EntityEvents implements Listener {
         creeper.onEntityKnockbackByEntityCreeperEvent(event);
         witch.onEntityKnockbackByEntityWitchEvent(event);
         spider.onEntityKnockbackByEntitySpiderEvent(event);
+        bee.onEntityKnockbackByEntityBeeEvent(event);
     }
 
     @EventHandler
@@ -91,6 +93,7 @@ public class EntityEvents implements Listener {
         creeper.onDamageCreeperEvent(event);
         witch.onDamageWitchEvent(event);
         enderman.onDamageEndermanEvent(event);
+        bee.onDamageBeeEvent(event);
     }
 
     @EventHandler
@@ -102,6 +105,7 @@ public class EntityEvents implements Listener {
         creeper.onDamageByEntityCrepperEvent(event);
         witch.onDamageByEntityWitchEvent(event);
         enderman.onDamageByEntityEndermanEvent(event);
+        bee.onDamageByEntityBeeEvent(event);
     }
 
     @EventHandler
@@ -112,6 +116,7 @@ public class EntityEvents implements Listener {
         creeper.onDeathCreeperEvent(event);
         witch.onDeathWitchEvent(event);
         enderman.onDeathEndermanEvent(event);
+        bee.onDeathBeeEvent(event);
     }
 
     @EventHandler

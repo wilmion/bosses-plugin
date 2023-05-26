@@ -32,6 +32,7 @@ import org.bukkit.util.Consumer;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 public class ExpertEnderman extends BoosesModel {
     private static String metadataMinion = "MINION-EXPERT-ENDERMAN";
@@ -61,20 +62,22 @@ public class ExpertEnderman extends BoosesModel {
             Runnable runnable = () -> {
                 if(index == 0 || index == 5) world.spawn(location, LightningStrike.class);
                 if(index == 6) Perk.generatePerk( 7, location, plugin);
-                else world.playSound(location, Sound.ENTITY_ENDERMAN_HURT, 2, 0);
+                else world.playSound(location, Sound.ENTITY_ENDERMAN_HURT, 4, 0);
             };
 
-            server.getScheduler().scheduleSyncDelayedTask(plugin, runnable, 30 * i);
+            server.getScheduler().scheduleSyncDelayedTask(plugin, runnable, 5 * i);
         }
     }
 
     @Override
     protected void equipBoss() {
+        PotionEffect fireReduce = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 999999999, 10);
         PotionEffect damage = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 999999999, 1);
         PotionEffect reduceDamage = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999999, 2);
 
         getEnderman().addPotionEffect(damage);
         getEnderman().addPotionEffect(reduceDamage);
+        getEnderman().addPotionEffect(fireReduce);
     }
 
     public void cancelTeleportsThatNotAttacks(String cause) {
@@ -212,27 +215,16 @@ public class ExpertEnderman extends BoosesModel {
     /* === Ultimate === */
 
     private void executeInPositions(Consumer<Location> consumer, List<Integer[]> posAvailable, Entity target) {
-        Random random = new Random();
-
-        for (int i = 0; i < posAvailable.size(); i++) {
-            Integer index = random.nextInt(posAvailable.size());
-            Integer[] dataPos = posAvailable.get(index);
-            Location loc = target.getLocation().clone();
-
-            loc.add(dataPos[0], 0, dataPos[1]);
-            loc = WorldUtils.getLocationYInNearAir(loc, 9999);
-            posAvailable.remove(index);
-
-            Location finalLoc = loc;
-            Runnable action = () -> {
+        BiConsumer<Location, Integer> action = (loc, index) -> {
+            server.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 setTemporalInvunerability();
-                getEnderman().teleport(finalLoc);
-                world.playSound(finalLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 2, 0);
-                consumer.accept(finalLoc);
-            };
+                getEnderman().teleport(loc);
+                world.playSound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, 2, 0);
+                consumer.accept(loc);
+            },index * 10);
+        };
 
-            server.getScheduler().scheduleSyncDelayedTask(plugin, action, i * 10);
-        }
+        Utils.executeActionInPosition(posAvailable, target.getLocation(), action);
     }
 
     public void shadows() {

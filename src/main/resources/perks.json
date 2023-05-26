@@ -135,6 +135,30 @@
           "level": 2
         }
       ]
+    },
+    {
+      "id": 8,
+      "name": "PANAL DE LA ESPERANZA",
+      "material": "HONEYCOMB",
+      "colorName": "GOLD",
+      "effects": [
+        {
+          "name": "LUCK",
+          "level": 2
+        },
+        {
+          "name": "REGENERATION",
+          "level": 2
+        },
+        {
+          "name": "DAMAGE_RESISTANCE",
+          "level": 2
+        },
+        {
+          "name": "FIRE_RESISTANCE",
+          "level": 3
+        }
+      ]
     }
   ]
 }

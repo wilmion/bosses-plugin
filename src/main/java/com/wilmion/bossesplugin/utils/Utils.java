@@ -6,11 +6,15 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 
+import java.util.List;
 import java.util.Random;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Utils {
     public static int getRandomInPercentage() {
@@ -25,6 +29,22 @@ public class Utils {
         Random random = new Random();
 
         return random.nextInt(3) - 1;
+    }
+
+    public static void executeActionInPosition(List<Integer[]> posAvailable, Location target, BiConsumer<Location, Integer> lambda) {
+        Random random = new Random();
+
+        for (int i = 0; i < posAvailable.size(); i++) {
+            Integer index = random.nextInt(posAvailable.size());
+            Integer[] dataPos = posAvailable.get(index);
+            Location loc = target.clone();
+
+            loc.add(dataPos[0], 0, dataPos[1]);
+            loc = WorldUtils.getLocationYInNearAir(loc, 9999);
+            posAvailable.remove(index);
+
+            lambda.accept(loc, i);
+        }
     }
 
     public static void executeActionInARangeOfBlock(int range, int modY, Location locationParam, ActionRangeBlocks lambda) {

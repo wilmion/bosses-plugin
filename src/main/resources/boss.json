@@ -55,6 +55,14 @@
       "type": "ENDERMAN",
       "health": 190.0,
       "barColor": "RED"
+    },
+    {
+      "id": 8,
+      "name": "MILENIA LA REINA",
+      "metadata": "BEE-QUEEN-BOSS",
+      "type": "BEE",
+      "health": 500.0,
+      "barColor": "YELLOW"
     }
   ]
 }
