@@ -6,6 +6,8 @@ import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
 import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.entities.ArmorStandUtils;
+import com.wilmion.bossesplugin.utils.entities.FrameUtils;
 
 import com.google.common.reflect.TypeToken;
 
@@ -25,6 +27,7 @@ import org.bukkit.plugin.Plugin;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -59,7 +62,7 @@ public class BuildCommand {
 
         if(!buildingsNames.stream().anyMatch(buildName::equals)) return false;
 
-        buildStructure(player.getLocation(), buildName, rotate);
+        buildStructure(player.getLocation().getBlock().getLocation(), buildName, rotate);
         player.sendMessage(ChatColor.DARK_GREEN + buildName + " built!");
 
         return true;
@@ -79,6 +82,7 @@ public class BuildCommand {
 
             if(loc.getBlock().getType().toString().equals("CHEST")) setChestContent(loc.getBlock());
 
+            buildEntities(info, loc, location);
             setMetadataAndSpawnBosses(info, loc);
             setMetadataAndSpawnSpecialEntities(loc, info);
         });
@@ -132,6 +136,15 @@ public class BuildCommand {
 
             chest.getInventory().setItem(i, new ItemStack(Material.valueOf(items.get(index))));
         }
+    }
 
+    private void buildEntities(BuildFileDataModel dataModel, Location location, Location playerLoc) {
+        Optional<String> dataEntities = dataModel.getEntityData();
+
+        if(dataEntities.isEmpty()) return;
+
+        ArmorStandUtils.spawnArmorStand(dataEntities.get(), playerLoc);
+
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> FrameUtils.spawnItemFrame(dataEntities.get(), playerLoc), 40);
     }
 }

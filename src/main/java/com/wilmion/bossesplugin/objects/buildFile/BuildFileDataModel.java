@@ -21,9 +21,11 @@ public class BuildFileDataModel {
 
     private Double alterZ;
 
-    private Optional<String> entitySpawn = Optional.ofNullable(null);
+    private Optional<String> entityData = Optional.empty();
 
-    private Optional<String> quantitySpawn = Optional.ofNullable(null);
+    private Optional<String> entitySpawn = Optional.empty();
 
-    private Optional<String> bossSpawn = Optional.ofNullable(null);
+    private Optional<String> quantitySpawn = Optional.empty();
+
+    private Optional<String> bossSpawn = Optional.empty();
 }
