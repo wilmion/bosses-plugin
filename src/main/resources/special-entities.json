@@ -122,6 +122,22 @@
       }
     },
     {
+      "key": "JORDI_REPRESENTATION",
+      "entityType": "ZOMBIE",
+      "name": "Representante de relaciones diplomaticos de Jordi",
+      "health": 20.0,
+      "followRange": 10.0,
+      "equipment": {
+        "helmet": {
+          "type": "NETHERITE_HELMET",
+          "unbreakable": true
+        },
+        "sword": {
+          "type": "PAPER"
+        }
+      }
+    },
+    {
       "key": "SPIDER_RESIDENT",
       "entityType": "SPIDER",
       "name": "Hijo(a) de la reina",
@@ -181,7 +197,8 @@
       "followRange": 15.0,
       "equipment": {
         "helmet": {
-          "type": "DIAMOND_HELMET"
+          "type": "DIAMOND_HELMET",
+          "unbreakable": true
         },
         "chestplate": {
           "type": "DIAMOND_CHESTPLATE"
@@ -205,7 +222,8 @@
       "followRange": 15.0,
       "equipment": {
         "helmet": {
-          "type": "IRON_HELMET"
+          "type": "IRON_HELMET",
+          "unbreakable": true
         },
         "chestplate": {
           "type": "IRON_CHESTPLATE"
@@ -229,7 +247,8 @@
       "followRange": 15.0,
       "equipment": {
         "helmet": {
-          "type": "GOLDEN_HELMET"
+          "type": "GOLDEN_HELMET",
+          "unbreakable": true
         },
         "chestplate": {
           "type": "GOLDEN_CHESTPLATE"
@@ -252,10 +271,110 @@
       "health": 35.0,
       "followRange": 15.0,
       "equipment": {
+        "helmet": {
+          "type": "LEATHER_HELMET",
+          "unbreakable": true
+        },
         "sword": {
           "type": "NETHERITE_AXE"
         }
       }
+    },
+    {
+      "key": "ARCHER_SKELETON_LVL3",
+      "entityType": "SKELETON",
+      "name": "Arquero de Ann | lvl 3",
+      "health": 80.0,
+      "equipment": {
+        "helmet": {
+          "type": "NETHERITE_HELMET",
+          "unbreakable": true
+        },
+        "chestplate": {
+          "type": "NETHERITE_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "NETHERITE_LEGGINGS"
+        },
+        "boots": {
+          "type": "NETHERITE_BOOTS"
+        }
+      }
+    },
+    {
+      "key": "ARCHER_SKELETON_LVL2",
+      "entityType": "SKELETON",
+      "name": "Arquero de Ann | lvl 2",
+      "health": 26.0,
+      "equipment": {
+        "helmet": {
+          "type": "IRON_HELMET",
+          "unbreakable": true
+        },
+        "chestplate": {
+          "type": "IRON_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "IRON_LEGGINGS"
+        },
+        "boots": {
+          "type": "IRON_BOOTS"
+        }
+      }
+    },
+    {
+      "key": "ARCHER_SKELETON_LVL1",
+      "entityType": "SKELETON",
+      "name": "Arquero de Ann | lvl 1",
+      "health": 22.0,
+      "equipment": {
+        "helmet": {
+          "type": "LEATHER_HELMET",
+          "unbreakable": true
+        },
+        "chestplate": {
+          "type": "LEATHER_CHESTPLATE"
+        },
+        "leggings": {
+          "type": "LEATHER_LEGGINGS"
+        },
+        "boots": {
+          "type": "LEATHER_BOOTS"
+        }
+      }
+    },
+    {
+      "key": "RESIDENT_SKELETON",
+      "entityType": "SKELETON",
+      "name": "Residente de Ann",
+      "health": 15.0,
+      "equipment": {
+        "helmet": {
+          "type": "LEATHER_HELMET",
+          "unbreakable": true
+        },
+        "sword": {
+          "type": null
+        }
+      }
+    },
+    {
+      "key": "JINET_SKELETON_LVL2",
+      "entityType": "SKELETON_HORSE",
+      "name": "Jinete del apocalipsis",
+      "health": 40.0,
+      "followRange": 20.0,
+      "passenger": "WARRIOR_SKELETON_LVL3",
+      "equipment": {}
+    },
+    {
+      "key": "JINET_SKELETON_LVL3",
+      "entityType": "SKELETON_HORSE",
+      "name": "Jinete del apocalipsis",
+      "health": 40.0,
+      "followRange": 20.0,
+      "passenger": "WARRIOR_SKELETON_LVL4",
+      "equipment": {}
     }
   ]
 }

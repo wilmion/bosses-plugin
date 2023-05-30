@@ -7,15 +7,20 @@ import com.wilmion.bossesplugin.mobsDificulties.boss.MasterSkeleton;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.event.entity.*;
 import org.bukkit.plugin.Plugin;
 
 public class SkeletonDifficulty extends MobDifficulty {
     public SkeletonDifficulty(Plugin plugin) {
         super(plugin);
+    }
+
+    public void onChangeTargetSkeletonEvent(EntityTargetEvent event) {
+        Boolean isSkeleton = event.getEntity() instanceof Skeleton;
+        Boolean isTargetSkeleton = event.getTarget() instanceof Skeleton;
+
+        if(isSkeleton && isTargetSkeleton) event.setCancelled(true);
     }
 
     public void onShootSkeletonEvent(EntityShootBowEvent event) {

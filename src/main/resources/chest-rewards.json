@@ -1,3 +1,11 @@
 {
-  "items": ["GOLDEN_APPLE", "NETHERITE_HELMET", "DIAMOND_HELMET", "NETHERITE_SWORD", "DIAMOND", "NETHERITE_INGOT"]
+  "items": [
+    "_ARROW",
+    "_SWORD",
+    "_AXE",
+    "_HELMET",
+    "_CHESTPLATE",
+    "_LEGGINGS",
+    "_BOOTS"
+  ]
 }

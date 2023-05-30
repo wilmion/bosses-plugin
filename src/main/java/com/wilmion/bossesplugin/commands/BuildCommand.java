@@ -22,13 +22,12 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Getter
@@ -124,17 +123,23 @@ public class BuildCommand {
 
     private void setChestContent(Block block) {
         Chest chest = (Chest) block.getState();
+        Random random = new Random();
 
         Map<String, Object> data = Resources.getJsonByData("chest-rewards.json", Map.class);
-        List<String> items = (List<String>) data.get("items");
-        Random random = new Random();
+        List<String> itemsEndWith = (List<String>) data.get("items");
+
+        Predicate<Material> isFood = Material::isEdible;
+        Predicate<Material> isEquipment = material -> itemsEndWith.stream().anyMatch(m -> material.name().endsWith(m)) ;
+
+        List<Predicate<Material>> filters = Arrays.asList(isFood, isEquipment);
+        List<Material> items = Arrays.stream(Material.values()).filter(filters.stream().reduce(Predicate::or).orElse(material -> false)).collect(Collectors.toList());
 
         for (int i = 0; i < chest.getInventory().getSize(); i++) {
             if(Utils.getRandomInPercentage() > 10) continue;
 
             Integer index = random.nextInt(items.size());
 
-            chest.getInventory().setItem(i, new ItemStack(Material.valueOf(items.get(index))));
+            chest.getInventory().setItem(i, new ItemStack(items.get(index)));
         }
     }
 

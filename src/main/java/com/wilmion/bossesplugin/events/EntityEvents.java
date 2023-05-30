@@ -58,6 +58,11 @@ public class EntityEvents implements Listener {
     }
 
     @EventHandler
+    public void onTarget(EntityTargetEvent event) {
+        skeleton.onChangeTargetSkeletonEvent(event);
+    }
+
+    @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
         spider.onEntityMoveSpiderEvent(event);
     }

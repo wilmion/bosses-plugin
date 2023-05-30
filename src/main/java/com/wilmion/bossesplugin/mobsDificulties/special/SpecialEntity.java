@@ -74,9 +74,12 @@ public class SpecialEntity {
         Mob mob = (Mob) living;
 
         mob.addPassenger(entity.getLiving());
+        if(living instanceof Tameable) ((Tameable) living).setTamed(true);
     }
 
     private ItemStack convertEquipmentDataToItemStack(Map<String, Object> mtd) {
+        if(mtd.get("type") == null) return null;
+
         ItemStack item  = new ItemStack(Material.valueOf((String) mtd.get("type")));
         ItemMeta meta = item.getItemMeta();
 

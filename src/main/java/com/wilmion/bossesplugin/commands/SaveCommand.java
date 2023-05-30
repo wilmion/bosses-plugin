@@ -87,6 +87,8 @@ public class SaveCommand {
 
             ArmorStandUtils armorStandUtils = new ArmorStandUtils(armorStand);
             String data = armorStandUtils.saveArmorStand(playerLoc);
+
+            savedEntitiesUUID.add(armorStand.getUniqueId().toString());
             dataModel.setEntityData(Optional.of(data));
             return;
         }

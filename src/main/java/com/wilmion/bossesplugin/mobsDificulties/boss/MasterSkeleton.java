@@ -111,7 +111,9 @@ public class MasterSkeleton extends BoosesModel {
     }
 
     private void usePassive() {
-        if(!isAlive()) return;
+        Entity target = getBoos().getTarget();
+
+        if(!isAlive() || target == null) return;
 
         setTemporalInvunerability();
         lightingPassive(2, 0);
