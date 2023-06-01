@@ -3,11 +3,12 @@ package com.wilmion.bossesplugin.generation;
 import com.google.common.reflect.TypeToken;
 
 import com.wilmion.bossesplugin.commands.BuildCommand;
-import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
+import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.objects.LocationDataModel;
 import com.wilmion.bossesplugin.utils.*;
 
 import net.kyori.adventure.text.Component;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,98 +17,94 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class StructureGeneration {
-    private static Location locationStructure;
     private static String path = "plugins/bosses-plugin-data/game-data/structures.json";
-
-    private BuildCommand buildCommand;
-    private Boolean isJordiBuilt = false;
-    private Integer XPosGeneration = 0;
-    private Integer ZPossGeneration = 0;
+    private static List<String> textToShow = new ArrayList<>();
+    public static Integer[] posGeneration = {0,0,0,0};
 
     public StructureGeneration(Plugin plugin) {
-        Type type = new TypeToken<Map<String, LocationDataModel>>() {}.getType();
-        Map<String, LocationDataModel> file = Resources.getJsonByLocalData(path, type);
-        Boolean isJordiBuilt = file != null && file.get("JORDI_BUILT") != null;
+        Logger logger = plugin.getLogger();
 
-        this.buildCommand = new BuildCommand(plugin);
-        this.isJordiBuilt = isJordiBuilt;
-        this.generateStructure();
+        logger.info("Preparing building of bosses... \uD83D\uDD28");
 
-        if(!isJordiBuilt) return;
+        new JordiStructureGeneration(plugin);
+        new AnnStructureGeneration(plugin);
+        new QueenSpiderStructureGeneration(plugin);
 
-        locationStructure = WorldUtils.getLocationByData(file.get("JORDI_BUILT"), plugin);
+        logger.info("All builds finish! \uD83D\uDC77");
     }
 
-    public void generateStructure() {
-        if(isJordiBuilt) return;
-
-        locationStructure = getLocationIteration();
-
-        if(!verifyRange(locationStructure.clone())) locationStructure = getLocationIteration();
-
-        generateBuild(locationStructure);
-        isJordiBuilt = true;
+    public static void sendPlayerMessageLocation(Player player) {
+        textToShow.forEach(t -> player.sendMessage(Component.text(ChatColor.BOLD + t)));
     }
 
-    private Boolean verifyRange(Location location) {
-        AtomicReference<Boolean> isValid = new AtomicReference<>(true);
-        location.setY(location.getY() - 2);
+    public static Location getLocationStructure(Integer modifierY) {
+        World world = Bukkit.getWorlds().get(0);
+        Random random = new Random();
+        Integer seaLevel = world.getSeaLevel() - modifierY;
+        Integer maxX = posGeneration[1];
+        Integer maxZ = posGeneration[3];
+        Integer minX = posGeneration[0];
+        Integer minZ = posGeneration[2];
+        Integer randomX = random.nextInt(maxX - minX + 1) + minX;
+        Integer randomZ = random.nextInt(maxZ - minZ + 1) + minZ;
 
-        ActionRangeBlocks rangeBlocks = (loc) -> {
-            Boolean isAir = loc.getBlock().getType().toString().equals("AIR");
-
-            if(isAir) isValid.set(false);
-            return isAir;
-        };
-
-        Utils.executeActionInXOfBlocks(120, 1, 120, location, rangeBlocks);
-
-        return isValid.get();
+        return new Location(world, randomX, seaLevel, randomZ);
     }
 
-    private void generateBuild(Location location) {
-        Map<String, LocationDataModel> file = new TreeMap<>();
+    public static Location getLocationStructure() {
+        return getLocationStructure(1);
+    }
 
-        WorldUtils.cleanInRange(location.clone(), 120, 120);
-
+    public static void generateBuild(Location location, String name, BuildCommand buildCommand) {
         location.setY(location.getY() - 1);
         location.setX(location.getX() + 10);
         location.setZ(location.getZ() + 10);
 
+        buildCommand.buildStructure(location, name, "0deg");
+        saveStructure(name, location);
+    }
+
+    public static Optional<Location> getLocationStructureWhenIsBuilt(String name) {
+        Type type = new TypeToken<Map<String, LocationDataModel>>() {}.getType();
+        Map<String, LocationDataModel> file = Resources.getJsonByLocalData(path, type);
+        Boolean exist = file != null && file.get(name) != null;
+
+        if(!exist) return Optional.empty();
+
+        Location loc = WorldUtils.getLocationByData(file.get(name), BossesMetadata.plugin);
+
+        return Optional.of(loc);
+    }
+
+    public static void addTextLocationToShow(String aperture, Location location) {
+        Integer X = (int) location.getX();
+        Integer Y = (int) location.getY();
+        Integer Z = (int) location.getZ();
+
+        String messageCord = "X: " + X +" Y: "+ Y + " Z: " + Z;
+        String msg = aperture + "\n" + messageCord;
+
+        textToShow.add(msg);
+    }
+
+    private static void saveStructure(String name, Location location) {
+        Type type = new TypeToken<Map<String, LocationDataModel>>() {}.getType();
+        Map<String, LocationDataModel> file = Resources.getJsonByLocalData(path, type);
         LocationDataModel locationDataModel = new LocationDataModel();
+
+        if(file == null) file = new TreeMap<>();
+
         locationDataModel.setWorldId(location.getWorld().getUID().toString());
         locationDataModel.setX(location.getX());
         locationDataModel.setY(location.getY());
         locationDataModel.setZ(location.getZ());
 
-        file.put("JORDI_BUILT", locationDataModel);
+        file.put(name, locationDataModel);
 
         Resources.writeFile(path, file);
-        buildCommand.buildStructure(location, "jordi_tower", "0deg");
-    }
-
-    private Location getLocationIteration() {
-        World world = Bukkit.getWorlds().get(0);
-        Integer seaLevel = world.getSeaLevel() - 1;
-
-        return new Location(world, XPosGeneration++, seaLevel, ZPossGeneration++);
-    }
-
-    public static void sendPlayerMessageLocation(Player player) {
-        String content = "Mi imperio es enormemente vasto, no hay rival que se le compare, ¡Absolutamente nadie!\nMi imperio se extiende por:\n[LOCATION]";
-
-        Integer X = (int) locationStructure.getX();
-        Integer Y = (int) locationStructure.getY();
-        Integer Z = (int) locationStructure.getZ();
-
-        String messageCord = "X: " + X +" Y: "+ Y + " Z: " + Z;
-        String msg = content.replace("[LOCATION]", messageCord);
-
-        player.sendMessage(Component.text(ChatColor.BOLD + msg));
     }
 }
