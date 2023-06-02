@@ -1,7 +1,5 @@
 package com.wilmion.bossesplugin.objects.metadata;
 
-import com.wilmion.bossesplugin.objects.LocationDataModel;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +9,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Data
 @Accessors(chain = true)
-public class BossMetadataModel extends LocationDataModel {
+public class BossMetadataModel {
     private String nameOfClass;
     private String classData;
 }

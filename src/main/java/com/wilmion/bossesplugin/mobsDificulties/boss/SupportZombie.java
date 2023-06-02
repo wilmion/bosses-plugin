@@ -10,11 +10,14 @@ import com.wilmion.bossesplugin.utils.Utils;
 import com.wilmion.bossesplugin.utils.WorldUtils;
 
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -89,7 +92,7 @@ public class SupportZombie extends BoosesModel {
        if(location == null) return;
 
        world.spawn(location, LightningStrike.class);
-       Zombie follower = world.spawn(location, Zombie.class);
+       Monster follower = (Monster) world.spawnEntity(location, EntityType.valueOf(entity.getType().name()));
 
        PotionEffect fireResistence = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 2000, 10);
        PotionEffect damageResistence = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 40,12);
@@ -197,7 +200,7 @@ public class SupportZombie extends BoosesModel {
 
     private void generateSpecialFollower(Location location) {
         world.spawn(location, LightningStrike.class);
-        Zombie zombie = world.spawn(location, Zombie.class);
+        Monster zombie = (Monster) world.spawnEntity(location, EntityType.valueOf(entity.getType().name()));
 
         zombie.getEquipment().setHelmet(new ItemStack(Material.IRON_HELMET));
         zombie.getEquipment().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
@@ -227,6 +230,33 @@ public class SupportZombie extends BoosesModel {
 
     public void removeSpawnedZombies(int quantity) {
         this.spawnedZombies -= quantity;
+    }
+
+    public static void handleTransformEntity(EntityTransformEvent event) {
+        Entity currentEntity = event.getEntity();
+        Entity newEntity = event.getTransformedEntity();
+        String currentUniqueUUID = currentEntity.getUniqueId().toString();
+        Boolean convertToDrowned = currentEntity instanceof Zombie && newEntity.getType().equals(EntityType.DROWNED);
+
+        if(!convertToDrowned) return;
+
+        Optional<SupportZombie> bossModel = BossesMetadata.getBoss(currentUniqueUUID);
+        Zombie boss = (Zombie) currentEntity;
+        Drowned drowned = (Drowned) newEntity;
+
+        if(bossModel.isEmpty()) return;
+
+        AttributeInstance healthAttribute = drowned.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        healthAttribute.setBaseValue(bossModel.get().maxHealth);
+
+        drowned.setHealth(boss.getHealth());
+        drowned.setRemoveWhenFarAway(false);
+
+        BossesMetadata.deleteBoss(currentUniqueUUID);
+        bossModel.get().entity = drowned;
+        bossModel.get().spawnedZombies = 0;
+        bossModel.get().setMetadata();
+        BossesMetadata.upsertBoss(newEntity.getUniqueId().toString(), bossModel.get());
     }
 
     public static boolean handleDamageByEntity(EntityDamageByEntityEvent event) {

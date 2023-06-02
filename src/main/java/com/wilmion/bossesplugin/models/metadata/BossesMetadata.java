@@ -1,16 +1,17 @@
 package com.wilmion.bossesplugin.models.metadata;
 
 import com.wilmion.bossesplugin.models.BoosesModel;
+import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.objects.metadata.BossMetadataModel;
 import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.Resources;
-import com.wilmion.bossesplugin.utils.WorldUtils;
 
 import com.google.common.reflect.TypeToken;
 
 import lombok.SneakyThrows;
 
-import org.bukkit.Location;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
@@ -31,13 +32,9 @@ public class BossesMetadata {
         if(boss != null) return Optional.of((T) boss);
 
         return Optional.empty();
-
-        // Optional<BoosesModel> bossLoaded = loadBoss(entityUUID);
-
-        // return bossLoaded.isEmpty() ? Optional.empty() : Optional.of((T) bossLoaded.get());
     }
 
-    public static Optional<BoosesModel> loadBoss(LivingEntity entity) {
+    public static Optional<BoosesModel> loadBoss(LivingEntity entity, BossDataModel bossDataModel) {
         String entityUUID = entity.getUniqueId().toString();
         BoosesModel boosesModel = bosses.get(entityUUID);
 
@@ -76,14 +73,7 @@ public class BossesMetadata {
         for(var entry: bosses.entrySet()) {
             BoosesModel boss = entry.getValue();
             BossMetadataModel bossMetadataModel = new BossMetadataModel();
-            Location loc = boss.entity.getLocation().clone();
 
-            // if(boss.entity == null || !boss.entity.isValid()) continue;
-
-            bossMetadataModel.setWorldId(loc.getWorld().getUID().toString());
-            bossMetadataModel.setX(loc.getX());
-            bossMetadataModel.setY(loc.getY());
-            bossMetadataModel.setZ(loc.getZ());
             bossMetadataModel.setNameOfClass(boss.getClass().getName());
             bossMetadataModel.setClassData(Resources.gson.toJson(boss));
 
@@ -102,13 +92,11 @@ public class BossesMetadata {
 
     @SneakyThrows
     private static BoosesModel renderBoss(BossMetadataModel bossMetadataModel, LivingEntity entity) {
-        Location location = WorldUtils.getLocationByData(bossMetadataModel);
-
         Class<? extends BoosesModel> ClassEntity = (Class<? extends BoosesModel>) Class.forName(bossMetadataModel.getNameOfClass());
         BoosesModel boss = Resources.gson.fromJson(bossMetadataModel.getClassData(), ClassEntity);
 
         boss.entity = entity;
-        boss.world = location.getWorld();
+        boss.world = entity.getLocation().getWorld();
         boss.plugin = plugin;
         boss.server = plugin.getServer();
 

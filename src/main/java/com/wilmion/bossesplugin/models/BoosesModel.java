@@ -46,6 +46,8 @@ public class BoosesModel {
         this.server = plugin.getServer();
         this.entity = (LivingEntity) world.spawnEntity(location, EntityType.valueOf(bossData.getType()));
 
+        BossesMetadata.upsertBoss(String.valueOf(entity.getUniqueId()), this);
+
         setTemporalInvunerability();
 
         world.spawn(location, LightningStrike.class);
@@ -57,8 +59,6 @@ public class BoosesModel {
         entity.setRemoveWhenFarAway(false);
         entity.setCustomName(bossData.getName());
         entity.setCustomNameVisible(true);
-
-        BossesMetadata.upsertBoss(String.valueOf(entity.getUniqueId()), this);
 
         this.useSchedulerEvents();
         this.setMetadata();
@@ -120,14 +120,13 @@ public class BoosesModel {
         LivingEntity living = (LivingEntity) entity;
         String entityID = String.valueOf(entity.getUniqueId());
 
-        boolean isZombie = entity.getType() == EntityType.valueOf(bossData.getType());
-        boolean isSupported = EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
+        boolean isBoss = EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
         LivingEntity shooter = Utils.livingDamager(event.getDamager());
         Optional<BoosesModel> boss = BossesMetadata.getBoss(entityID);
 
         double health = Utils.getHealthByDamage(event.getFinalDamage(), living.getHealth());
 
-        if (!isZombie || !isSupported) return true;
+        if (!isBoss) return true;
 
         upsertHealthBar(bossData.getName(), shooter, health, color, bossData.getHealth(), bossData.getMetadata());
 
@@ -144,13 +143,12 @@ public class BoosesModel {
         BossDataModel bossData = getMetadata(id);
         BarColor color = BarColor.valueOf(bossData.getBarColor());
 
-        boolean isTypeEntity = entity.getType() == EntityType.valueOf(bossData.getType());
-        boolean isSupportedEntity = EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
+        boolean isBoss = EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
 
-        if(!isTypeEntity || !isSupportedEntity) return;
+        if(!isBoss) return;
 
         LivingEntity bossEntity = (LivingEntity) entity;
-        Optional<BoosesModel> boss = BossesMetadata.loadBoss(bossEntity);
+        Optional<BoosesModel> boss = BossesMetadata.loadBoss(bossEntity, bossData);
 
         if(boss.isPresent()) boss.get().entity = bossEntity;
 

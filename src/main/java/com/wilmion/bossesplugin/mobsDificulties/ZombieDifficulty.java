@@ -11,10 +11,15 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityTransformEvent;
 
 public class ZombieDifficulty extends MobDifficulty  {
     public ZombieDifficulty() {
         super();
+    }
+
+    public void onTransformZombieEvent(EntityTransformEvent event) {
+        SupportZombie.handleTransformEntity(event);
     }
 
     public void onDeathZombieEvent(EntityDeathEvent event) {
@@ -40,7 +45,6 @@ public class ZombieDifficulty extends MobDifficulty  {
         if(!originalZombie.isAdult()) return;
 
         int probability = Utils.getRandomInPercentage();
-
 
         if(probability <= 1) new SupportZombie(location);
     }

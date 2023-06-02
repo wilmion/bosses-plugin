@@ -4,12 +4,12 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 
 import com.wilmion.bossesplugin.generation.StructureGeneration;
 import com.wilmion.bossesplugin.mobsDificulties.*;
-import com.wilmion.bossesplugin.models.BoosesModel;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
 
 import io.papermc.paper.event.entity.EntityMoveEvent;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
@@ -18,28 +18,15 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.server.ServerLoadEvent;
 
 public class EntityEvents implements Listener {
-    PlayerDifficulty playerDifficulty;
-    PlayerExp playerExp;
-    ZombieDifficulty zombie;
-    CreeperDifficulty creeper;
-    SkeletonDifficulty skeleton;
-    SpiderDifficulty spider;
-    WitchDifficulty witch;
-    EndermanDifficulty enderman;
-    BeeDifficulty bee;
-
-    public EntityEvents() {
-        this.playerDifficulty = new PlayerDifficulty();
-        this.playerExp = new PlayerExp();
-
-        this.zombie = new ZombieDifficulty();
-        this.creeper = new CreeperDifficulty();
-        this.skeleton = new SkeletonDifficulty();
-        this.spider = new SpiderDifficulty();
-        this.witch = new WitchDifficulty();
-        this.enderman = new EndermanDifficulty();
-        this.bee = new BeeDifficulty();
-    }
+    PlayerDifficulty playerDifficulty = new PlayerDifficulty();
+    PlayerExp playerExp = new PlayerExp();
+    ZombieDifficulty zombie = new ZombieDifficulty();
+    CreeperDifficulty creeper = new CreeperDifficulty();
+    SkeletonDifficulty skeleton = new SkeletonDifficulty();
+    SpiderDifficulty spider = new SpiderDifficulty();
+    WitchDifficulty witch = new WitchDifficulty();
+    EndermanDifficulty enderman = new EndermanDifficulty();
+    BeeDifficulty bee = new BeeDifficulty();
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
@@ -60,6 +47,11 @@ public class EntityEvents implements Listener {
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
         spider.onEntityMoveSpiderEvent(event);
+    }
+
+    @EventHandler
+    public void onTransformEntity(EntityTransformEvent event) {
+        zombie.onTransformZombieEvent(event);
     }
 
     @EventHandler
@@ -123,5 +115,6 @@ public class EntityEvents implements Listener {
     public void onSeverLoad(ServerLoadEvent event) {
         BlockMetadata.getData();
         new StructureGeneration();
+        PlayerDifficulty.watchDifficulty();
     }
 }
