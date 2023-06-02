@@ -1,5 +1,6 @@
 package com.wilmion.bossesplugin.commands;
 
+import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.Resources;
 
 import lombok.Getter;
@@ -15,14 +16,11 @@ import java.util.Map;
 
 @Getter
 public class SpawnBossCommand {
-    private Plugin plugin;
-
     private List<String> bossesName;
 
-    public SpawnBossCommand(Plugin plugin) {
+    public SpawnBossCommand() {
         Map<String, Object> file = Resources.getJsonByData("commands-boss.json", Map.class);
 
-        this.plugin = plugin;
         this.bossesName = (List<String>) file.get("bosses");
     }
 
@@ -36,7 +34,7 @@ public class SpawnBossCommand {
 
         if(!match) return false;
 
-        spawnBoss(bossType, location, plugin);
+        spawnBoss(bossType, location);
 
         return true;
     }
@@ -58,11 +56,11 @@ public class SpawnBossCommand {
     }
 
     @SneakyThrows
-    public static void spawnBoss(String bossType, Location location, Plugin plugin) {
+    public static void spawnBoss(String bossType, Location location) {
         String constructorName = convertBossCommandToConstructorName(bossType);
 
         Class<?> ClassEntity = Class.forName("com.wilmion.bossesplugin.mobsDificulties.boss." + constructorName);
-        Constructor<?> constructor = ClassEntity.getConstructor(Location.class, Plugin.class);
-        constructor.newInstance(location, plugin);
+        Constructor<?> constructor = ClassEntity.getConstructor(Location.class);
+        constructor.newInstance(location);
     }
 }

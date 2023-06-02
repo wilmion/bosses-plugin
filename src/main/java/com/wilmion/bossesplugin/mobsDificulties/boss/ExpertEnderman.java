@@ -23,7 +23,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -39,8 +38,8 @@ public class ExpertEnderman extends BoosesModel {
     private Boolean usedUltimate = false;
     private Boolean usedUltimate2 = false;
 
-    public ExpertEnderman(Location location, Plugin plugin) {
-        super(location, plugin, 7);
+    public ExpertEnderman(Location location) {
+        super(location, 7);
     }
 
     private Enderman getEnderman() {
@@ -61,7 +60,7 @@ public class ExpertEnderman extends BoosesModel {
             Integer index = i;
             Runnable runnable = () -> {
                 if(index == 0 || index == 5) world.spawn(location, LightningStrike.class);
-                if(index == 6) Perk.generatePerk( 7, location, plugin);
+                if(index == 6) Perk.generatePerk( 7, location);
                 else world.playSound(location, Sound.ENTITY_ENDERMAN_HURT, 4, 0);
             };
 

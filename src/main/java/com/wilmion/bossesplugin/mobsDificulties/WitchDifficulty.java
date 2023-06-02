@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.mobsDificulties;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+
 import com.wilmion.bossesplugin.mobsDificulties.boss.MasterWizard;
 import com.wilmion.bossesplugin.models.MobDifficulty;
 import com.wilmion.bossesplugin.utils.Utils;
@@ -10,13 +11,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.plugin.Plugin;
-
 
 public class WitchDifficulty extends MobDifficulty {
 
-    public WitchDifficulty(Plugin plugin) {
-        super(plugin);
+    public WitchDifficulty() {
+        super();
     }
 
     public void onEntityKnockbackByEntityWitchEvent(EntityKnockbackByEntityEvent event) {
@@ -38,9 +37,7 @@ public class WitchDifficulty extends MobDifficulty {
 
         int probability = Utils.getRandomInPercentage();
 
-        if(probability <= 1) {
-            new MasterWizard(entity.getLocation(), plugin);
-        }
+        if(probability <= 1) new MasterWizard(entity.getLocation());
     }
 
     public void onDeathWitchEvent(EntityDeathEvent event) {

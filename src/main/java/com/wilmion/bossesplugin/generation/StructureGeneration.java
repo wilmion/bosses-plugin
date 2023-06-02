@@ -25,14 +25,15 @@ public class StructureGeneration {
     private static List<String> textToShow = new ArrayList<>();
     public static Integer[] posGeneration = {0,0,0,0};
 
-    public StructureGeneration(Plugin plugin) {
+    public StructureGeneration() {
+        Plugin plugin = PluginUtils.getPlugin();
         Logger logger = plugin.getLogger();
 
-        logger.info("Preparing building of bosses... \uD83D\uDD28");
+        logger.info("Checking all buildings of bosses... \uD83D\uDD28");
 
-        new JordiStructureGeneration(plugin);
-        new AnnStructureGeneration(plugin);
-        new QueenSpiderStructureGeneration(plugin);
+        new JordiStructureGeneration();
+        new AnnStructureGeneration();
+        new QueenSpiderStructureGeneration();
 
         logger.info("All builds finish! \uD83D\uDC77");
     }
@@ -75,7 +76,7 @@ public class StructureGeneration {
 
         if(!exist) return Optional.empty();
 
-        Location loc = WorldUtils.getLocationByData(file.get(name), BossesMetadata.plugin);
+        Location loc = WorldUtils.getLocationByData(file.get(name));
 
         return Optional.of(loc);
     }

@@ -30,8 +30,8 @@ public class QueenSpider extends BoosesModel {
     private int minions = 0;
     private boolean ultimate2Used = false;
 
-    public QueenSpider(Location location, Plugin plugin) {
-        super(location, plugin, 3);
+    public QueenSpider(Location location) {
+        super(location, 3);
     }
 
     private Spider getBoss() {
@@ -67,7 +67,7 @@ public class QueenSpider extends BoosesModel {
         Utils.executeActionInARangeOfBlock(4, 0, location, actionRange);
         Utils.executeActionInARangeOfBlock(4, 1, location, actionRange);
 
-        Perk.generatePerk(3, location, plugin);
+        Perk.generatePerk(3, location);
     }
 
     public void lessMinions(int n) {
@@ -88,10 +88,11 @@ public class QueenSpider extends BoosesModel {
     }
 
     private void usePassive() {
-        if(!isAlive() || minions >= 8) return;
-
         Spider boss = getBoss();
+        Entity target = boss.getTarget();
         BlockFace face = boss.getFacing();
+
+        if(!isAlive() || minions >= 8 || target == null) return;
 
         int x = 2 * face.getModX();
         int z = 2 * face.getModZ();

@@ -16,15 +16,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.*;
 
 public class MasterWizard extends BoosesModel {
     private boolean useUltimate1 = false;
     private boolean useUltimate2 = false;
 
-    public MasterWizard(Location location, Plugin plugin) {
-        super(location, plugin, 6);
+    public MasterWizard(Location location) {
+        super(location, 6);
     }
 
     private Witch getWitch() {
@@ -47,7 +46,7 @@ public class MasterWizard extends BoosesModel {
 
         if(Utils.getRandomInPercentage() > 50) return;
 
-        server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(6, getWitch().getLocation(), plugin), 20);
+        server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(6, getWitch().getLocation()), 20);
     }
 
     /* === Passive Skills === */

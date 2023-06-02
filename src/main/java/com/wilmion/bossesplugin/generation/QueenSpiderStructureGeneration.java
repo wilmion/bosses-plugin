@@ -2,11 +2,11 @@ package com.wilmion.bossesplugin.generation;
 
 import com.wilmion.bossesplugin.commands.BuildCommand;
 import com.wilmion.bossesplugin.utils.AreaUtils;
+import com.wilmion.bossesplugin.utils.PluginUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -15,12 +15,12 @@ public class QueenSpiderStructureGeneration {
     private BuildCommand buildCommand;
     private String aperture = "Se rumorea que algo acecha en las profundidades \uD83D\uDD77\uFE0F, está cerca de:";
 
-    public QueenSpiderStructureGeneration(Plugin plugin) {
+    public QueenSpiderStructureGeneration() {
         Optional<Location> annLocationBuilt = StructureGeneration.getLocationStructureWhenIsBuilt("spider-base");
 
-        this.buildCommand = new BuildCommand(plugin);
+        this.buildCommand = new BuildCommand();
 
-        if(annLocationBuilt.isEmpty()) generate(plugin.getLogger());
+        if(annLocationBuilt.isEmpty()) generate(PluginUtils.getPlugin().getLogger());
         else StructureGeneration.addTextLocationToShow(aperture, annLocationBuilt.get());
     }
 

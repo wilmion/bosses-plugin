@@ -21,7 +21,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -32,8 +31,8 @@ public class MasterCreeper extends BoosesModel {
     private int minions = 0;
     private boolean usedUltimate1 = false;
 
-    public MasterCreeper(Location location, Plugin plugin) {
-        super(location, plugin, 5);
+    public MasterCreeper(Location location) {
+        super(location, 5);
     }
 
     private Creeper getBoss() {
@@ -61,7 +60,7 @@ public class MasterCreeper extends BoosesModel {
 
         if(Utils.getRandomInPercentage() > 50) return;
 
-        server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(5, entity.getLocation(), plugin), 40);
+        server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(5, entity.getLocation()), 40);
     }
 
     private void usePassive() {

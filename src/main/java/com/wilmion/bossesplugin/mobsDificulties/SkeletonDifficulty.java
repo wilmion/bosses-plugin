@@ -9,11 +9,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.event.entity.*;
-import org.bukkit.plugin.Plugin;
 
 public class SkeletonDifficulty extends MobDifficulty {
-    public SkeletonDifficulty(Plugin plugin) {
-        super(plugin);
+    public SkeletonDifficulty() {
+        super();
     }
 
     public void onChangeTargetSkeletonEvent(EntityTargetEvent event) {
@@ -51,8 +50,7 @@ public class SkeletonDifficulty extends MobDifficulty {
 
         Location location = entity.getLocation();
 
-        if(probability <= 1) new MasterSkeleton(location, this.plugin);
-
+        if(probability <= 1) new MasterSkeleton(location);
     }
 
 }

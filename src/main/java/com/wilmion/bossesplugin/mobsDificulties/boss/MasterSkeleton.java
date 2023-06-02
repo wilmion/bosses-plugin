@@ -21,10 +21,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 
 import java.util.Optional;
@@ -33,8 +31,8 @@ public class MasterSkeleton extends BoosesModel {
     static String idMetadataMinion = "SKELETON_BOSS_MINION";
     private boolean useUltimate1 = false;
 
-    public MasterSkeleton(Location location, Plugin plugin) {
-        super(location, plugin, 2);
+    public MasterSkeleton(Location location) {
+        super(location, 2);
     }
 
     private Skeleton getBoos() {
@@ -78,7 +76,7 @@ public class MasterSkeleton extends BoosesModel {
             world.createExplosion(location, 2F, false);
         }, 30);
 
-        if(probability <= 50) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(2, location, plugin), 60);
+        if(probability <= 50) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(2, location), 60);
     }
 
     private void useATQE1() {

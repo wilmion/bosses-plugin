@@ -13,11 +13,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.plugin.Plugin;
 
 public class CreeperDifficulty extends MobDifficulty {
-    public CreeperDifficulty(Plugin plugin) {
-        super(plugin);
+    public CreeperDifficulty() {
+        super();
     }
 
     public void onEntityKnockbackByEntityCreeperEvent(EntityKnockbackByEntityEvent event) {
@@ -48,7 +47,7 @@ public class CreeperDifficulty extends MobDifficulty {
         int probability = Utils.getRandomInPercentage();
 
         if(probability <= 1) {
-            new MasterCreeper(entity.getLocation(), plugin);
+            new MasterCreeper(entity.getLocation());
             return;
         }
 

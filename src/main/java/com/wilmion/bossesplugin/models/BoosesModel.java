@@ -5,8 +5,11 @@ import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.objects.boss.BossModel;
+import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
+
+import io.papermc.paper.event.entity.EntityMoveEvent;
 
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -33,12 +36,12 @@ public class BoosesModel {
     protected Double maxHealth;
     protected String idMetadata;
 
-    public BoosesModel(Location location, Plugin plugin, Integer id) {
+    public BoosesModel(Location location, Integer id) {
         BossDataModel bossData = getMetadata(id);
 
         this.maxHealth = bossData.getHealth();
         this.idMetadata = bossData.getMetadata();
-        this.plugin = plugin;
+        this.plugin = PluginUtils.getPlugin();
         this.world = location.getWorld();
         this.server = plugin.getServer();
         this.entity = (LivingEntity) world.spawnEntity(location, EntityType.valueOf(bossData.getType()));
@@ -147,6 +150,9 @@ public class BoosesModel {
         if(!isTypeEntity || !isSupportedEntity) return;
 
         LivingEntity bossEntity = (LivingEntity) entity;
+        Optional<BoosesModel> boss = BossesMetadata.loadBoss(bossEntity);
+
+        if(boss.isPresent()) boss.get().entity = bossEntity;
 
         action.run();
 

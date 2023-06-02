@@ -4,6 +4,7 @@ import com.wilmion.bossesplugin.mobsDificulties.special.SpecialEntity;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
+import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
 import com.wilmion.bossesplugin.utils.entities.ArmorStandUtils;
@@ -22,7 +23,6 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Type;
@@ -40,8 +40,8 @@ public class BuildCommand {
 
     private Type buildType = new TypeToken<Map<String, List<BuildFileModel>>>() {}.getType();
 
-    public BuildCommand(Plugin plugin) {
-        this.plugin = plugin;
+    public BuildCommand() {
+        this.plugin = PluginUtils.getPlugin();
         this.reloadBuildingsNames();
     }
 
@@ -91,7 +91,7 @@ public class BuildCommand {
 
         BlockMetadata.upsertBlockMetadata(loc.getBlock(), "bossSpawn", info.getBossSpawn().get());
 
-        SpawnBossCommand.spawnBoss(info.getBossSpawn().get(), loc, plugin);
+        SpawnBossCommand.spawnBoss(info.getBossSpawn().get(), loc);
     }
 
     private void setMetadataAndSpawnSpecialEntities(Location loc, BuildFileDataModel info) {

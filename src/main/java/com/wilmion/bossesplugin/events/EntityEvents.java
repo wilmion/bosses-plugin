@@ -1,10 +1,11 @@
 package com.wilmion.bossesplugin.events;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+
 import com.wilmion.bossesplugin.generation.StructureGeneration;
 import com.wilmion.bossesplugin.mobsDificulties.*;
+import com.wilmion.bossesplugin.models.BoosesModel;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
-import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
 
@@ -15,12 +16,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.server.ServerLoadEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.plugin.Plugin;
 
 public class EntityEvents implements Listener {
-    Plugin plugin;
-
     PlayerDifficulty playerDifficulty;
     PlayerExp playerExp;
     ZombieDifficulty zombie;
@@ -31,19 +28,17 @@ public class EntityEvents implements Listener {
     EndermanDifficulty enderman;
     BeeDifficulty bee;
 
-    public EntityEvents(Plugin plugin) {
-        this.plugin = plugin;
+    public EntityEvents() {
+        this.playerDifficulty = new PlayerDifficulty();
+        this.playerExp = new PlayerExp();
 
-        this.playerDifficulty = new PlayerDifficulty(plugin);
-        this.playerExp = new PlayerExp(plugin);
-
-        this.zombie = new ZombieDifficulty(plugin);
-        this.creeper = new CreeperDifficulty(plugin);
-        this.skeleton = new SkeletonDifficulty(plugin);
-        this.spider = new SpiderDifficulty(plugin);
-        this.witch = new WitchDifficulty(plugin);
-        this.enderman = new EndermanDifficulty(plugin);
-        this.bee = new BeeDifficulty(plugin);
+        this.zombie = new ZombieDifficulty();
+        this.creeper = new CreeperDifficulty();
+        this.skeleton = new SkeletonDifficulty();
+        this.spider = new SpiderDifficulty();
+        this.witch = new WitchDifficulty();
+        this.enderman = new EndermanDifficulty();
+        this.bee = new BeeDifficulty();
     }
 
     @EventHandler
@@ -127,11 +122,6 @@ public class EntityEvents implements Listener {
     @EventHandler
     public void onSeverLoad(ServerLoadEvent event) {
         BlockMetadata.getData();
-        new StructureGeneration(plugin);
-    }
-
-    @EventHandler
-    public void onLoadChunk(ChunkLoadEvent event) {
-        BossesMetadata.loadChunk(event);
+        new StructureGeneration();
     }
 }

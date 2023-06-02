@@ -4,12 +4,11 @@ import com.wilmion.bossesplugin.models.MobDifficulty;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.plugin.Plugin;
 
 public class PlayerDifficulty extends MobDifficulty {
 
-    public PlayerDifficulty(Plugin plugin) {
-        super(plugin);
+    public PlayerDifficulty() {
+        super();
     }
 
     public void onMovePlayerDifficultyEvent(PlayerMoveEvent event) {

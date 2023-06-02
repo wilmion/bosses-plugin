@@ -2,10 +2,10 @@ package com.wilmion.bossesplugin.generation;
 
 import com.wilmion.bossesplugin.commands.BuildCommand;
 import com.wilmion.bossesplugin.utils.AreaUtils;
+import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.WorldUtils;
 
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -15,12 +15,12 @@ public class JordiStructureGeneration {
     private Integer cleanRange = 120;
     private String aperture = "¡Hay algo extraño y putrefacto! \uD83E\uDDDF, está cerca de:";
 
-    public JordiStructureGeneration(Plugin plugin) {
+    public JordiStructureGeneration() {
         Optional<Location> jordiLocationBuilt = StructureGeneration.getLocationStructureWhenIsBuilt("jordi_tower");
 
-        this.buildCommand = new BuildCommand(plugin);
+        this.buildCommand = new BuildCommand();
 
-        if(jordiLocationBuilt.isEmpty()) generate(plugin.getLogger());
+        if(jordiLocationBuilt.isEmpty()) generate(PluginUtils.getPlugin().getLogger());
         else StructureGeneration.addTextLocationToShow(aperture, jordiLocationBuilt.get());
     }
 

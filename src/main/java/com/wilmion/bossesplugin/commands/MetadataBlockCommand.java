@@ -10,14 +10,12 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class MetadataBlockCommand {
-    private Plugin plugin;
     private List<String> specialEntitiesName;
     private List<String> bossesNames;
 
@@ -26,13 +24,12 @@ public class MetadataBlockCommand {
     private String helpMtdBossSpawn = "/bsspl metadata-block boss <NAME> -> Set metadata on current block of spawn boss\n";
     private String helpMtdDelete = "/bsspl metadata-block delete -> Delete all metadata on the block in your current position\n";
 
-    public MetadataBlockCommand(Plugin plugin) {
+    public MetadataBlockCommand() {
         Map<String, Object> file = Resources.getJsonByData("special-entities.json", Map.class);
         Map<String, Object> bossesFile = Resources.getJsonByData("commands-boss.json", Map.class);
         List<Map<String, Object>> entities = (List<Map<String, Object>>) file.get("entities");
 
         this.specialEntitiesName = entities.stream().map(entity -> (String) entity.get("key")).collect(Collectors.toList());
-        this.plugin = plugin;
         this.bossesNames = (List<String>) bossesFile.get("bosses");
     }
 
@@ -99,7 +96,7 @@ public class MetadataBlockCommand {
             if(quantitySpawn.isPresent()) result += "Q-S : " + quantitySpawn.get() + " | ";
             if(bossSpawn.isPresent()) result += "B-S : " + bossSpawn.get();
 
-            if(!result.equals("")) WorldUtils.displayFloatingTextByXSeconds(block.getLocation().clone(), result, duration, plugin);
+            if(!result.equals("")) WorldUtils.displayFloatingTextByXSeconds(block.getLocation().clone(), result, duration);
         };
 
         Utils.executeActionIn3DRange(player.getLocation().clone(), 20, callback);

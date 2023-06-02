@@ -12,11 +12,10 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.plugin.Plugin;
 
 public class PlayerExp extends MobDifficulty {
-    public PlayerExp(Plugin plugin) {
-        super(plugin);
+    public PlayerExp() {
+        super();
     }
 
     public void onMovePlayerEvent(PlayerMoveEvent event) {

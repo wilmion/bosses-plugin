@@ -13,7 +13,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,8 +21,6 @@ import java.util.*;
 import java.util.function.Function;
 
 public class CommandManager implements CommandExecutor {
-    private Plugin plugin;
-
     private Type type = new TypeToken<Map<String, List<CommandDataModel>>>() {}.getType();
 
     private Map<String, List<CommandDataModel>> allHelp;
@@ -37,13 +34,12 @@ public class CommandManager implements CommandExecutor {
 
     private MetadataBlockCommand metadataBlockCommand;
 
-    public CommandManager(Plugin plugin) {
-        this.plugin = plugin;
+    public CommandManager() {
         this.allHelp = Resources.getJsonByData("commands-help.json", type);
-        this.spawnBossCommand = new SpawnBossCommand(plugin);
-        this.buildCommand = new BuildCommand(plugin);
-        this.saveCommand = new SaveCommand(plugin);
-        this.metadataBlockCommand = new MetadataBlockCommand(plugin);
+        this.spawnBossCommand = new SpawnBossCommand();
+        this.buildCommand = new BuildCommand();
+        this.saveCommand = new SaveCommand();
+        this.metadataBlockCommand = new MetadataBlockCommand();
     }
 
     @Override

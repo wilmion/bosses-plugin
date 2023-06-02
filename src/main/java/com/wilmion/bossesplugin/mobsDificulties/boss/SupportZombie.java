@@ -16,7 +16,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -29,8 +28,8 @@ public class SupportZombie extends BoosesModel {
     private boolean useUltimate1 = false;
     private boolean useUltimate2 = false;
 
-    public SupportZombie(Location location, Plugin plugin) {
-       super(location, plugin, 1);
+    public SupportZombie(Location location) {
+       super(location, 1);
    }
 
     private Zombie getBoss() {
@@ -64,12 +63,14 @@ public class SupportZombie extends BoosesModel {
         world.spawn(location, TNTPrimed.class);
 
         if (Utils.getRandomInPercentage() <= 50) {
-            server.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> Perk.generatePerk(1, location, plugin), 100);
+            server.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> Perk.generatePerk(1, location), 100);
         }
     }
 
     private void usePassive() {
-       if(spawnedZombies >= 4 || !this.isAlive()) return;
+       Entity target = getBoss().getTarget();
+
+       if(spawnedZombies >= 4 || !this.isAlive() || target == null) return;
 
        BlockFace face = entity.getFacing();
        Location location = entity.getLocation().clone();

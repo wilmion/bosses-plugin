@@ -11,11 +11,10 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.plugin.Plugin;
 
 public class ZombieDifficulty extends MobDifficulty  {
-    public ZombieDifficulty(Plugin plugin) {
-        super(plugin);
+    public ZombieDifficulty() {
+        super();
     }
 
     public void onDeathZombieEvent(EntityDeathEvent event) {
@@ -43,7 +42,7 @@ public class ZombieDifficulty extends MobDifficulty  {
         int probability = Utils.getRandomInPercentage();
 
 
-        if(probability <= 1) new SupportZombie(location, this.plugin);
+        if(probability <= 1) new SupportZombie(location);
     }
 
     public void onDamageZombieEvent(EntityDamageEvent event) {

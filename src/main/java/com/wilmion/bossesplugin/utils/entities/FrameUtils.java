@@ -3,9 +3,7 @@ package com.wilmion.bossesplugin.utils.entities;
 import com.wilmion.bossesplugin.utils.LocationUtils;
 
 import org.bukkit.*;
-
 import org.bukkit.entity.ItemFrame;
-
 
 import java.util.Optional;
 

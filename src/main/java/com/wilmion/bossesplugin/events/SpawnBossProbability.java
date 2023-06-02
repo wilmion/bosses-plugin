@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.events;
 
 import com.wilmion.bossesplugin.commands.SpawnBossCommand;
+import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
 
@@ -20,10 +21,10 @@ public class SpawnBossProbability {
     private List<String> bossesName;
     public static double delaySpawnBoss = 36000.0;
 
-    public SpawnBossProbability(Plugin plugin) {
+    public SpawnBossProbability() {
         Map<String, Object> file = Resources.getJsonByData("commands-boss.json", Map.class);
 
-        this.plugin = plugin;
+        this.plugin = PluginUtils.getPlugin();
         this.server = plugin.getServer();
         this.bossesName = (List<String>) file.get("bosses");
 
@@ -52,7 +53,7 @@ public class SpawnBossProbability {
         String content = "¿Te crees lo suficiente bueno para los retos?\nVen búscame aquí si te crees bueno y competitivo\n[LOCATION]";
 
         showMsg(location, content, ChatColor.GRAY);
-        SpawnBossCommand.spawnBoss(bossName, location, plugin);
+        SpawnBossCommand.spawnBoss(bossName, location);
         delaySpawnBoss = 36000.0;
     }
 

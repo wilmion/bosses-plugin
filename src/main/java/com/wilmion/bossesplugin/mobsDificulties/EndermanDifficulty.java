@@ -1,21 +1,20 @@
 package com.wilmion.bossesplugin.mobsDificulties;
 
 import com.wilmion.bossesplugin.mobsDificulties.boss.ExpertEnderman;
-
 import com.wilmion.bossesplugin.models.MobDifficulty;
 import com.wilmion.bossesplugin.utils.Utils;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
-import org.bukkit.plugin.Plugin;
 
 
 public class EndermanDifficulty extends MobDifficulty {
-    public EndermanDifficulty(Plugin plugin) {
-        super(plugin);
+    public EndermanDifficulty() {
+        super();
     }
 
     public void onTeleportEndermanEvent(EntityTeleportEvent event) {
@@ -37,9 +36,7 @@ public class EndermanDifficulty extends MobDifficulty {
 
         int probability = Utils.getRandomInPercentage();
 
-        if(probability <= 1) {
-            new ExpertEnderman(entity.getLocation(), plugin);
-        }
+        if(probability <= 1) new ExpertEnderman(entity.getLocation());
     }
 
     public void onDeathEndermanEvent(EntityDeathEvent event) {

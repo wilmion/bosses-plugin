@@ -12,13 +12,12 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class SoldierSpider extends BoosesModel {
-    public SoldierSpider(Location location, Plugin plugin) {
-        super(location, plugin, 4);
+    public SoldierSpider(Location location) {
+        super(location, 4);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class SoldierSpider extends BoosesModel {
 
         int probability = Utils.getRandomInPercentage();
 
-        if(probability >= 50.0) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(4, location, plugin), 20);
+        if(probability >= 50.0) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(4, location), 20);
     }
 
     private CaveSpider getBoss() {

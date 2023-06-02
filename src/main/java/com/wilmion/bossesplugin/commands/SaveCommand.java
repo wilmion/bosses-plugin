@@ -30,8 +30,6 @@ import java.util.Optional;
 public class SaveCommand {
     private static List<String> savedEntitiesUUID = new ArrayList<>();
 
-    private Plugin plugin;
-
     public Boolean handleCommand(Player player, String[] args) {
         if(args.length < 5) return false;
 

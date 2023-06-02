@@ -2,10 +2,10 @@ package com.wilmion.bossesplugin.generation;
 
 import com.wilmion.bossesplugin.commands.BuildCommand;
 import com.wilmion.bossesplugin.utils.AreaUtils;
+import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.WorldUtils;
 
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -14,12 +14,12 @@ public class AnnStructureGeneration {
     private BuildCommand buildCommand;
     private String aperture ="Hay algo ominoso y esquelético por aquí \uD83D\uDC80, está cerca de:";
 
-    public AnnStructureGeneration(Plugin plugin) {
+    public AnnStructureGeneration() {
         Optional<Location> annLocationBuilt = StructureGeneration.getLocationStructureWhenIsBuilt("ann-tower");
 
-        this.buildCommand = new BuildCommand(plugin);
+        this.buildCommand = new BuildCommand();
 
-        if(annLocationBuilt.isEmpty()) generate(plugin.getLogger());
+        if(annLocationBuilt.isEmpty()) generate(PluginUtils.getPlugin().getLogger());
         else StructureGeneration.addTextLocationToShow(aperture, annLocationBuilt.get());
     }
 

@@ -9,6 +9,7 @@ import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
+import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.Utils;
 import com.wilmion.bossesplugin.utils.WorldUtils;
 
@@ -37,8 +38,8 @@ public class QueenBee extends BoosesModel {
     protected Integer minions = 0;
     private boolean usedUltimate1 = false;
 
-    public QueenBee(Location location, Plugin plugin) {
-        super(location, plugin, 8);
+    public QueenBee(Location location) {
+        super(location, 8);
     }
 
     private Bee getBee() {
@@ -78,7 +79,7 @@ public class QueenBee extends BoosesModel {
         for (int i = 0; i < 4; i++) {
             Integer index = i;
             Runnable action = () -> {
-                if(index == 3) Perk.generatePerk(8, getBee().getLocation(), plugin);
+                if(index == 3) Perk.generatePerk(8, getBee().getLocation());
                 else world.spawn(location, LightningStrike.class);
             };
 
@@ -198,7 +199,7 @@ public class QueenBee extends BoosesModel {
         String[] potionEffects = { "DAMAGE" , "POISON", "SLOW", "WEAKNESS", "HUNGER"};
         Random random = new Random();
         Entity entity = event.getEntity();
-        Plugin plugin = BossesMetadata.plugin;
+        Plugin plugin = PluginUtils.getPlugin();
 
         if(!isMinion || !(entity instanceof LivingEntity)) return;
 
@@ -222,7 +223,7 @@ public class QueenBee extends BoosesModel {
     }
     private static void handleDamageByBoss(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
-        Plugin plugin = BossesMetadata.plugin;
+        Plugin plugin = PluginUtils.getPlugin();
 
         if(!(entity instanceof LivingEntity) || !(event.getDamager() instanceof Bee)) return;
 

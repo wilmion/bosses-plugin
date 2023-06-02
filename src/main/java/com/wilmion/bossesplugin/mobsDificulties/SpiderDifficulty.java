@@ -17,15 +17,14 @@ import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SpiderDifficulty extends MobDifficulty {
-    public SpiderDifficulty(Plugin plugin) {
-        super(plugin);
+    public SpiderDifficulty() {
+        super();
     }
 
     public void onEntityMoveSpiderEvent(EntityMoveEvent event) {
@@ -88,12 +87,10 @@ public class SpiderDifficulty extends MobDifficulty {
         Location location = entity.getLocation();
 
         if(probability <= 1) {
-            new QueenSpider(location, this.plugin);
+            new QueenSpider(location);
             return;
         }
 
-        if(probability > 1 && probability < 10) {
-            new SoldierSpider(location, this.plugin);
-        }
+        if(probability > 1 && probability < 10) new SoldierSpider(location);
     }
 }
