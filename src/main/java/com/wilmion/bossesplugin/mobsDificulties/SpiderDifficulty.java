@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.mobsDificulties;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 
 import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.mobsDificulties.boss.QueenSpider;
@@ -35,23 +36,9 @@ public class SpiderDifficulty extends MobDifficulty {
         Monster monster = (Monster) entity;
         List<Entity> entities = monster.getPassengers();
 
-        if(entities.stream().count() == 0l) return;
+        if(entities.stream().count() == 0l || !monster.isClimbing() || monster.getTarget() != null) return;
 
-        for (int i = 1; i <= 2; i++) {
-            AtomicReference<Boolean> isSolid = new AtomicReference<>(false);
-
-            ActionRangeBlocks action = (location) -> {
-                if(!isSolid.get()) isSolid.set(location.getBlock().getType().isSolid());
-                return !isSolid.get();
-            };
-
-            Utils.executeActionInARangeOfBlock(1, i, monster.getLocation().clone(), action);
-
-            if (!isSolid.get()) continue;
-
-            monster.setVelocity(new Vector(0, -1, 0));
-            return;
-        }
+        monster.setVelocity(new Vector(0, -1, 0));
     }
 
     public void onEntityKnockbackByEntitySpiderEvent(EntityKnockbackByEntityEvent event) {

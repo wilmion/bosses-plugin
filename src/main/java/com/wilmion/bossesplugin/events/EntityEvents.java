@@ -2,6 +2,7 @@ package com.wilmion.bossesplugin.events;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 
+import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.wilmion.bossesplugin.generation.StructureGeneration;
 import com.wilmion.bossesplugin.mobsDificulties.*;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
@@ -45,7 +46,7 @@ public class EntityEvents implements Listener {
     }
 
     @EventHandler
-    public void onEntityMove(EntityMoveEvent event) {
+    public void onEntityMoveEvent(EntityMoveEvent event) {
         spider.onEntityMoveSpiderEvent(event);
     }
 
