@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Getter
 public class BuildCommand {
-    private String path = "plugins/bosses-plugin-data/buildings/";
+    public static String path = "plugins/bosses-plugin-data/buildings/";
 
     private Plugin plugin;
 
@@ -42,10 +42,11 @@ public class BuildCommand {
 
     public BuildCommand() {
         this.plugin = PluginUtils.getPlugin();
+        Resources.createDirsIfNotExist(path);
         this.reloadBuildingsNames();
     }
 
-    private void reloadBuildingsNames() {
+    public void reloadBuildingsNames() {
         List<String> files = Resources.getJsonFilesInDirectory(path);
 
         this.buildingsNames = files.stream().map(file -> file.replace(".json", "")).collect(Collectors.toList());

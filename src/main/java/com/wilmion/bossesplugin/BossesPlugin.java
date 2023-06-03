@@ -5,8 +5,8 @@ import com.wilmion.bossesplugin.events.EntityEvents;
 import com.wilmion.bossesplugin.events.ObserverPlayer;
 import com.wilmion.bossesplugin.events.SpawnBossProbability;
 import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
-
 import com.wilmion.bossesplugin.utils.PluginUtils;
+
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 

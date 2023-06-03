@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.generation;
 
 import com.wilmion.bossesplugin.commands.BuildCommand;
+import com.wilmion.bossesplugin.enums.StructureEnum;
 import com.wilmion.bossesplugin.utils.AreaUtils;
 import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.WorldUtils;
@@ -11,12 +12,13 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 public class JordiStructureGeneration {
+    private String structure = StructureEnum.JORDI_TOWER.getDescription();
     private BuildCommand buildCommand;
     private Integer cleanRange = 120;
     private String aperture = "¡Hay algo extraño y putrefacto! \uD83E\uDDDF, está cerca de:";
 
     public JordiStructureGeneration() {
-        Optional<Location> jordiLocationBuilt = StructureGeneration.getLocationStructureWhenIsBuilt("jordi_tower");
+        Optional<Location> jordiLocationBuilt = StructureGeneration.getLocationStructureWhenIsBuilt(structure);
 
         this.buildCommand = new BuildCommand();
 
@@ -33,7 +35,7 @@ public class JordiStructureGeneration {
 
         WorldUtils.cleanInRange(location.clone(), cleanRange,  cleanRange);
         AreaUtils.createSpiral(location, cleanRange);
-        StructureGeneration.generateBuild(location, "jordi_tower", buildCommand);
+        StructureGeneration.generateBuild(location, structure, buildCommand);
         StructureGeneration.addTextLocationToShow(aperture, location);
 
         logger.info("Jordi Tower built \uD83E\uDDDF");

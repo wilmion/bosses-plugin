@@ -6,7 +6,7 @@
 
     <groupId>com.wilmion</groupId>
     <artifactId>bossesplugin</artifactId>
-    <version>1.0-DEV</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
 
     <name>Bosses Plugin</name>
@@ -78,6 +78,5 @@
             <version>1.18.26</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 </project>

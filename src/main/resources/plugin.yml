@@ -3,9 +3,8 @@ version: '${project.version}'
 main: com.wilmion.bossesplugin.BossesPlugin
 api-version: 1.19
 authors: [ Wilmion ]
-description: Este es un plugin bien alaraco,
+description: Plugin de jefes en los mods naturales para una mayor dificultad,
 commands:
   bsspl:
-    description: core comands for the Bosses Plugin
+    description: Core comands for the Bosses Plugin
     usage: /<command> subCommand <args>
-

@@ -2,12 +2,12 @@ package com.wilmion.bossesplugin.events;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 
-import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.wilmion.bossesplugin.generation.StructureGeneration;
 import com.wilmion.bossesplugin.mobsDificulties.*;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
+import com.wilmion.bossesplugin.utils.PluginUtils;
 
 import io.papermc.paper.event.entity.EntityMoveEvent;
 
@@ -116,6 +116,7 @@ public class EntityEvents implements Listener {
     public void onSeverLoad(ServerLoadEvent event) {
         BlockMetadata.getData();
         new StructureGeneration();
-        PlayerDifficulty.watchDifficulty();
+
+        if (PluginUtils.getPlugin().isEnabled()) PlayerDifficulty.watchDifficulty();
     }
 }

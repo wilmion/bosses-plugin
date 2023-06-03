@@ -1,6 +1,7 @@
 package com.wilmion.bossesplugin.generation;
 
 import com.wilmion.bossesplugin.commands.BuildCommand;
+import com.wilmion.bossesplugin.enums.StructureEnum;
 import com.wilmion.bossesplugin.utils.AreaUtils;
 import com.wilmion.bossesplugin.utils.PluginUtils;
 
@@ -12,11 +13,13 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 public class QueenSpiderStructureGeneration {
+    private String structureBase = StructureEnum.SPIDER_BASE.getDescription();
+    private String structureEntry = StructureEnum.SPIDER_ENTRY.getDescription();
     private BuildCommand buildCommand;
     private String aperture = "Se rumorea que algo acecha en las profundidades \uD83D\uDD77\uFE0F, está cerca de:";
 
     public QueenSpiderStructureGeneration() {
-        Optional<Location> annLocationBuilt = StructureGeneration.getLocationStructureWhenIsBuilt("spider-base");
+        Optional<Location> annLocationBuilt = StructureGeneration.getLocationStructureWhenIsBuilt(structureBase);
 
         this.buildCommand = new BuildCommand();
 
@@ -32,7 +35,7 @@ public class QueenSpiderStructureGeneration {
         Location location = StructureGeneration.getLocationStructure(40);
 
         AreaUtils.cleanWithLimit(100, 13, 100, location.clone().add(10, 0, 10));
-        StructureGeneration.generateBuild(location, "spider-base", buildCommand);
+        StructureGeneration.generateBuild(location, structureBase, buildCommand);
         StructureGeneration.addTextLocationToShow(aperture, location);
         generateLadderToTheGround(location);
 
@@ -53,7 +56,7 @@ public class QueenSpiderStructureGeneration {
             hasGround = maxY.doubleValue() <= finalLoc.getY() + 1;
 
             AreaUtils.cleanWithLimit(6, 6, 2, finalLoc);
-            buildCommand.buildStructure(finalLoc, "spider-entry", "0deg");
+            buildCommand.buildStructure(finalLoc, structureEntry, "0deg");
             iterations++;
 
             if(!hasGround) continue;

@@ -3,6 +3,7 @@ package com.wilmion.bossesplugin.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import com.wilmion.bossesplugin.commands.BuildCommand;
 import lombok.SneakyThrows;
 
 import java.io.*;
@@ -46,6 +47,22 @@ public class Resources {
 
     public static void writeFile(String path, Object obj) {
         writeFileA(path, gson.toJson(obj));
+    }
+
+    public static void deleteFile(String path) {
+        File file = new File(path);
+
+        if (!file.exists()) return;
+
+        file.delete();
+    }
+
+    public static void createDirsIfNotExist(String path) {
+        File directory = new File(path);
+
+        if(directory.exists()) return;
+
+        directory.mkdirs();
     }
 
     private static String readFile(String path) {

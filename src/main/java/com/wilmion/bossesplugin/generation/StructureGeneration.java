@@ -28,6 +28,9 @@ public class StructureGeneration {
     public StructureGeneration() {
         Plugin plugin = PluginUtils.getPlugin();
         Logger logger = plugin.getLogger();
+        StructureDownload structureDownload = new StructureDownload();
+
+        if(!structureDownload.getValid()) return;
 
         logger.info("Checking all buildings of bosses... \uD83D\uDD28");
 
