@@ -7,25 +7,20 @@ import lombok.experimental.Accessors;
 
 import java.util.Optional;
 
-
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
 public class BuildFileDataModel {
-    private String blockData;
+    private String b; // Block Data
 
-    private Double alterX;
+    private String l; // l=alterX:alterY:alterZ
 
-    private Double alterY;
+    private Optional<String> eD = Optional.empty(); //entityData
 
-    private Double alterZ;
+    private Optional<String> eS = Optional.empty(); // entitySpawn
 
-    private Optional<String> entityData = Optional.empty();
+    private Optional<String> qS = Optional.empty(); // quantitySpawn
 
-    private Optional<String> entitySpawn = Optional.empty();
-
-    private Optional<String> quantitySpawn = Optional.empty();
-
-    private Optional<String> bossSpawn = Optional.empty();
+    private Optional<String> bS = Optional.empty(); // bossSpawn
 }

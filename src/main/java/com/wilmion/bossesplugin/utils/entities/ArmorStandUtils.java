@@ -6,15 +6,15 @@ import lombok.AllArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.EntityEquipment;
 
 import java.util.Optional;
 
 @AllArgsConstructor
 public class ArmorStandUtils {
-    private ArmorStand armorStand;
-
-    public String saveArmorStand(Location pivot) {
+    public static String saveArmorStand(Entity entity, Location pivot) {
+        ArmorStand armorStand = (ArmorStand) entity;
         StringBuilder dataBuilder = new StringBuilder();
         EntityEquipment equipment = armorStand.getEquipment();
         String locString = LocationUtils.convertLocationAsString(armorStand.getLocation(), pivot);

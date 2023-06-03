@@ -4,6 +4,7 @@ import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
+import com.wilmion.bossesplugin.utils.ConstructionUtils;
 import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
 import com.wilmion.bossesplugin.utils.entities.ArmorStandUtils;
@@ -16,10 +17,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.entity.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,16 +47,14 @@ public class SaveCommand {
             Optional<String> entitySpawn = BlockMetadata.getBlockMetadata(block ,"entitySpawn");
             Optional<String> quantitySpawn = BlockMetadata.getBlockMetadata(block ,"quantitySpawn");
             Optional<String> bossSpawn = BlockMetadata.getBlockMetadata(block ,"bossSpawn");
-            Boolean hasMetadata = entitySpawn.isPresent() || quantitySpawn.isPresent() || bossSpawn.isPresent() || data.getEntityData().isPresent();
+            Boolean hasMetadata = entitySpawn.isPresent() || quantitySpawn.isPresent() || bossSpawn.isPresent() || data.getED().isPresent();
 
-            data.setAlterX(location.getX() - loc.getX());
-            data.setAlterY(location.getY() - loc.getY());
-            data.setAlterZ(location.getZ() - loc.getZ());
-            data.setBlockData(block.getBlockData().getAsString());
+            data.setL(ConstructionUtils.convertLocationToAlters(location, loc));
+            data.setB(block.getBlockData().getAsString());
 
-            if(entitySpawn.isPresent()) data.setEntitySpawn(Optional.of(entitySpawn.get()));
-            if(quantitySpawn.isPresent()) data.setQuantitySpawn(Optional.of(quantitySpawn.get()));
-            if(bossSpawn.isPresent()) data.setBossSpawn(Optional.of(bossSpawn.get()));
+            if(entitySpawn.isPresent()) data.setES(Optional.of(entitySpawn.get()));
+            if(quantitySpawn.isPresent()) data.setQS(Optional.of(quantitySpawn.get()));
+            if(bossSpawn.isPresent()) data.setBS(Optional.of(bossSpawn.get()));
 
             if(!block.getType().isEmpty() || hasMetadata) buildData.add(data);
             return true;
@@ -75,32 +71,23 @@ public class SaveCommand {
     }
 
     private void getStaticEntities(Location location, BuildFileDataModel dataModel, Location playerLoc) {
-        Collection<ArmorStand> armorStands = location.getNearbyEntitiesByType(ArmorStand.class, 1);
-        Collection<ItemFrame> itemsFrames = location.getNearbyEntitiesByType(ItemFrame.class, 1);
+        Collection<Entity> nearbyEntities = location.getNearbyEntitiesByType(Entity.class, 1);
 
-        for(ArmorStand armorStand: armorStands) {
-            Boolean isExist = savedEntitiesUUID.stream().anyMatch(e -> e.equals(armorStand.getUniqueId().toString()));
+        for(Entity entity: nearbyEntities) {
+            String UUID = entity.getUniqueId().toString();
+            Boolean isExist = savedEntitiesUUID.stream().anyMatch(e -> e.equals(UUID));
+            String name = entity.getType().name();
+            Boolean isValidEntity = name.equals("ARMOR_STAND") || name.equals("ITEM_FRAME");
 
-            if(isExist) continue;
+            if(isExist || !isValidEntity) continue;
 
-            ArmorStandUtils armorStandUtils = new ArmorStandUtils(armorStand);
-            String data = armorStandUtils.saveArmorStand(playerLoc);
+            String data;
 
-            savedEntitiesUUID.add(armorStand.getUniqueId().toString());
-            dataModel.setEntityData(Optional.of(data));
-            return;
-        }
+            if(name.equals("ARMOR_STAND")) data = ArmorStandUtils.saveArmorStand(entity, playerLoc);
+            else data = FrameUtils.saveFrame(entity , playerLoc);
 
-        for (ItemFrame itemFrame: itemsFrames) {
-            Boolean isExist = savedEntitiesUUID.stream().anyMatch(e -> e.equals(itemFrame.getUniqueId().toString()));
-
-            if(isExist) continue;
-
-            String data = FrameUtils.saveFrame(itemFrame, playerLoc);
-
-            savedEntitiesUUID.add(itemFrame.getUniqueId().toString());
-            dataModel.setEntityData(Optional.of(data));
-            return;
+            dataModel.setED(Optional.of(data));
+            savedEntitiesUUID.add(UUID);
         }
     }
 }

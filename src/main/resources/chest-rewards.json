@@ -2,6 +2,19 @@
   "items": [
     "_ARROW",
     "_SWORD",
+    "IRON_AXE",
+    "DIAMOND_HELMET",
+    "DIAMOND_CHESTPLATE",
+    "DIAMOND_LEGGINGS",
+    "DIAMOND_BOOTS",
+    "NETHERITE_HELMET",
+    "NETHERITE_CHESTPLATE",
+    "NETHERITE_LEGGINGS",
+    "NETHERITE_BOOTS",
+    "ENCHANTED_BOOK"
+  ],
+  "items_to_enchant": [
+    "_SWORD",
     "_AXE",
     "_HELMET",
     "_CHESTPLATE",

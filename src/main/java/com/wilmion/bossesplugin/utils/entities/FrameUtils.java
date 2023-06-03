@@ -3,12 +3,14 @@ package com.wilmion.bossesplugin.utils.entities;
 import com.wilmion.bossesplugin.utils.LocationUtils;
 
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 
 import java.util.Optional;
 
 public class FrameUtils {
-    public static String saveFrame(ItemFrame itemFrame, Location playerLoc) {
+    public static String saveFrame(Entity entity, Location playerLoc) {
+        ItemFrame itemFrame = (ItemFrame) entity;
         StringBuilder dataBuilder = new StringBuilder();
         String locString = LocationUtils.convertLocationAsString(itemFrame.getLocation(), playerLoc);
 

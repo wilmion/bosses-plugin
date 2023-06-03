@@ -4,6 +4,7 @@ import com.wilmion.bossesplugin.mobsDificulties.special.SpecialEntity;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
+import com.wilmion.bossesplugin.utils.ConstructionUtils;
 import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.Resources;
 import com.wilmion.bossesplugin.utils.Utils;
@@ -12,6 +13,8 @@ import com.wilmion.bossesplugin.utils.entities.FrameUtils;
 
 import com.google.common.reflect.TypeToken;
 
+import com.wilmion.bossesplugin.utils.material.EnchantmentUtils;
+import com.wilmion.bossesplugin.utils.material.EquipmentUtils;
 import lombok.Getter;
 
 import org.bukkit.Bukkit;
@@ -71,53 +74,54 @@ public class BuildCommand {
         BuildFileModel obj = Resources.getJsonByLocalData(path + buildName + ".json", BuildFileModel.class);
 
         obj.getData().forEach((info) -> {
-            setRotate(rotate, info);
+            Double[] alters = ConstructionUtils.getAlters(info.getL());
 
-            BlockData blockData = Bukkit.createBlockData(info.getBlockData());
+            setRotate(rotate, alters);
+
+            BlockData blockData = Bukkit.createBlockData(info.getB());
             Location loc = location.clone();
 
-            loc.add(info.getAlterX(), info.getAlterY(), info.getAlterZ());
+            loc.add(alters[0], alters[1], alters[2]);
             loc.getBlock().setBlockData(blockData);
 
             if(loc.getBlock().getType().toString().equals("CHEST")) setChestContent(loc.getBlock());
 
-            buildEntities(info, loc, location);
+            buildEntities(info, location);
             setMetadataAndSpawnBosses(info, loc);
             setMetadataAndSpawnSpecialEntities(loc, info);
         });
     }
     private void setMetadataAndSpawnBosses(BuildFileDataModel info, Location loc) {
-        if(info.getBossSpawn().isEmpty()) return;
+        if(info.getBS().isEmpty()) return;
 
-        BlockMetadata.upsertBlockMetadata(loc.getBlock(), "bossSpawn", info.getBossSpawn().get());
-
-        SpawnBossCommand.spawnBoss(info.getBossSpawn().get(), loc);
+        BlockMetadata.upsertBlockMetadata(loc.getBlock(), "bossSpawn", info.getBS().get());
+        SpawnBossCommand.spawnBoss(info.getBS().get(), loc);
     }
 
     private void setMetadataAndSpawnSpecialEntities(Location loc, BuildFileDataModel info) {
-        if(info.getEntitySpawn().isEmpty() || info.getQuantitySpawn().isEmpty()) return;
+        if(info.getES().isEmpty() || info.getQS().isEmpty()) return;
 
-        BlockMetadata.upsertBlockMetadata(loc.getBlock(),"entitySpawn", info.getEntitySpawn().get());
-        BlockMetadata.upsertBlockMetadata(loc.getBlock(), "quantitySpawn", info.getQuantitySpawn().get());
+        BlockMetadata.upsertBlockMetadata(loc.getBlock(),"entitySpawn", info.getES().get());
+        BlockMetadata.upsertBlockMetadata(loc.getBlock(), "quantitySpawn", info.getQS().get());
 
-        for (int i = 0; i < Integer.parseInt(info.getQuantitySpawn().get()); i++) new SpecialEntity(loc, info.getEntitySpawn().get());
+        for (int i = 0; i < Integer.parseInt(info.getQS().get()); i++) new SpecialEntity(loc, info.getES().get());
     }
 
-    private void setRotate(String rotate, BuildFileDataModel info) {
-        if (rotate.equals("180deg")) info.setAlterX(info.getAlterX() * -1);
+    private void setRotate(String rotate, Double[] alters) {
+        if (rotate.equals("180deg")) alters[0] = alters[0] * -1;
         if (rotate.equals("90deg")) {
-            double newX = info.getAlterZ();
-            double newZ = info.getAlterX();
+            double newX = alters[2];
+            double newZ = alters[0];
 
-            info.setAlterX(newX);
-            info.setAlterZ(newZ);
+            alters[0] = newX;
+            alters[2] = newZ;
         }
         if (rotate.equals("270deg")) {
-            double newX = info.getAlterZ();
-            double newZ = info.getAlterX() * -1;
+            double newX = alters[2];
+            double newZ = alters[0] * -1;
 
-            info.setAlterX(newX);
-            info.setAlterZ(newZ);
+            alters[0] = newX;
+            alters[2] = newZ;
         }
     }
 
@@ -127,24 +131,33 @@ public class BuildCommand {
 
         Map<String, Object> data = Resources.getJsonByData("chest-rewards.json", Map.class);
         List<String> itemsEndWith = (List<String>) data.get("items");
-
-        Predicate<Material> isFood = Material::isEdible;
-        Predicate<Material> isEquipment = material -> itemsEndWith.stream().anyMatch(m -> material.name().endsWith(m)) ;
-
-        List<Predicate<Material>> filters = Arrays.asList(isFood, isEquipment);
-        List<Material> items = Arrays.stream(Material.values()).filter(filters.stream().reduce(Predicate::or).orElse(material -> false)).collect(Collectors.toList());
+        List<String> itemsToEnchant = (List<String>) data.get("items_to_enchant");
+        
+        Predicate<Material> filter = material -> itemsEndWith.stream().anyMatch(m -> material.name().endsWith(m) || material.isEdible()) ;
+        List<Material> items = Arrays.stream(Material.values()).filter(filter).collect(Collectors.toList());
 
         for (int i = 0; i < chest.getInventory().getSize(); i++) {
-            if(Utils.getRandomInPercentage() > 10) continue;
+            if(Utils.getRandomInPercentage() > 30) continue;
 
+            ItemStack item;
             Integer index = random.nextInt(items.size());
+            Material material = items.get(index);
+            Integer quantity = random.nextInt(material.getMaxStackSize()) + 1;
+            Boolean isEnchantment = itemsToEnchant.stream().anyMatch(e -> material.name().endsWith(e));
 
-            chest.getInventory().setItem(i, new ItemStack(items.get(index)));
+
+            if(material.name().equals("ENCHANTED_BOOK")) item = EnchantmentUtils.getRandomEnchantmentBook();
+            else if(material.name().equals("ENCHANTED_GOLDEN_APPLE")) continue;
+            else item = new ItemStack(material, quantity);
+            
+            if(isEnchantment && random.nextBoolean()) item = EquipmentUtils.enchantmentToItemStack(item);
+
+            chest.getInventory().setItem(i, item);
         }
     }
 
-    private void buildEntities(BuildFileDataModel dataModel, Location location, Location playerLoc) {
-        Optional<String> dataEntities = dataModel.getEntityData();
+    private void buildEntities(BuildFileDataModel dataModel, Location playerLoc) {
+        Optional<String> dataEntities = dataModel.getED();
 
         if(dataEntities.isEmpty()) return;
 
