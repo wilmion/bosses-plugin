@@ -1,13 +1,12 @@
 package com.wilmion.bossesplugin.mobsDificulties;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
-import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 
-import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.mobsDificulties.boss.QueenSpider;
 import com.wilmion.bossesplugin.mobsDificulties.boss.SoldierSpider;
 import com.wilmion.bossesplugin.models.MobDifficulty;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.EventUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import io.papermc.paper.event.entity.EntityMoveEvent;
 
@@ -21,7 +20,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.util.Vector;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SpiderDifficulty extends MobDifficulty {
     public SpiderDifficulty() {
@@ -60,8 +58,8 @@ public class SpiderDifficulty extends MobDifficulty {
         world = entity.getWorld();
         server = entity.getServer();
 
-        Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.SPIDER);
-        Boolean isAttack = Utils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
+        Boolean isDead = EventUtils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.SPIDER);
+        Boolean isAttack = EventUtils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
 
         Boolean isContinueSoldierBoss = SoldierSpider.handleDamageByEntity(event);
         Boolean isContinueQueenBoss = QueenSpider.handleDamageByEntity(event);
@@ -69,7 +67,7 @@ public class SpiderDifficulty extends MobDifficulty {
 
         if(!isDead || !isAttack || !isContinueSoldierBoss || !isContinueQueenBoss) return;
 
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         Location location = entity.getLocation();
 

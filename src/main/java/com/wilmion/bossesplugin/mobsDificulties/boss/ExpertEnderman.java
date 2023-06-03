@@ -6,7 +6,8 @@ import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.AreaUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 import com.wilmion.bossesplugin.utils.WorldUtils;
 
 import org.bukkit.Bukkit;
@@ -122,7 +123,7 @@ public class ExpertEnderman extends BoosesModel {
 
     public void traceOfTheExpert() {
         LivingEntity target = getEnderman().getTarget();
-        Integer probability = Utils.getRandomInPercentage();
+        Integer probability = RandomUtils.getRandomInPercentage();
 
         if(!isAlive() || target == null || probability > 50) return;
 
@@ -200,12 +201,12 @@ public class ExpertEnderman extends BoosesModel {
 
     private void revenge() {
         LivingEntity target = getEnderman().getTarget();
-        Integer probability = Utils.getRandomInPercentage();
+        Integer probability = RandomUtils.getRandomInPercentage();
 
         if(!isAlive() || target == null || getEnderman().getHealth() > maxHealth * 0.8) return;
         if(probability > 90) return;
 
-        Integer action = Utils.getRandomInPercentage();
+        Integer action = RandomUtils.getRandomInPercentage();
 
         if(action < 30) revengeTNT(target);
         else revengePotion(target);
@@ -223,7 +224,7 @@ public class ExpertEnderman extends BoosesModel {
             },index * 10);
         };
 
-        Utils.executeActionInPosition(posAvailable, target.getLocation(), action);
+        AreaUtils.executeActionInPosition(posAvailable, target.getLocation(), action);
     }
 
     public void shadows() {
@@ -286,7 +287,7 @@ public class ExpertEnderman extends BoosesModel {
         IUltimateLambda<ExpertEnderman> handleDamageActions = (health, boss) -> {
             boss.cancelTeleportsThatNotAttacks(event.getCause().name());
 
-            if(Utils.getRandomInPercentage() <= 80) boss.sweetOrTrick();
+            if(RandomUtils.getRandomInPercentage() <= 80) boss.sweetOrTrick();
             if(health <= boss.maxHealth * 0.5) boss.shadows();
             if(health <= boss.maxHealth * 0.2) boss.yourFinal();
         };

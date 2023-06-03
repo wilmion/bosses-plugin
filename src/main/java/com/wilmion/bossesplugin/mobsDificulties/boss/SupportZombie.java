@@ -6,7 +6,7 @@ import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 import com.wilmion.bossesplugin.utils.WorldUtils;
 
 import org.bukkit.*;
@@ -65,7 +65,7 @@ public class SupportZombie extends BoosesModel {
         world.spawn(location, TNTPrimed.class);
         world.spawn(location, TNTPrimed.class);
 
-        if (Utils.getRandomInPercentage() <= 50) {
+        if (RandomUtils.getRandomInPercentage() <= 50) {
             server.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> Perk.generatePerk(1, location), 100);
         }
     }
@@ -224,7 +224,7 @@ public class SupportZombie extends BoosesModel {
     }
 
     private int getRandomDirection() {
-        int randomNumber = Utils.getRandomInPercentage();
+        int randomNumber = RandomUtils.getRandomInPercentage();
         return randomNumber % 2 == 0? 1 : -1;
     }
 

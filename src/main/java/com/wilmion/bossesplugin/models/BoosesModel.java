@@ -5,11 +5,9 @@ import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.objects.boss.BossModel;
+import com.wilmion.bossesplugin.utils.EventUtils;
 import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.Resources;
-import com.wilmion.bossesplugin.utils.Utils;
-
-import io.papermc.paper.event.entity.EntityMoveEvent;
 
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -121,10 +119,10 @@ public class BoosesModel {
         String entityID = String.valueOf(entity.getUniqueId());
 
         boolean isBoss = EntityScoreboard.getScoreboard(entity, bossData.getMetadata()).isPresent();
-        LivingEntity shooter = Utils.livingDamager(event.getDamager());
+        LivingEntity shooter = EventUtils.livingDamager(event.getDamager());
         Optional<BoosesModel> boss = BossesMetadata.getBoss(entityID);
 
-        double health = Utils.getHealthByDamage(event.getFinalDamage(), living.getHealth());
+        double health = EventUtils.getHealthByDamage(event.getFinalDamage(), living.getHealth());
 
         if (!isBoss) return true;
 
@@ -154,7 +152,7 @@ public class BoosesModel {
 
         action.run();
 
-        double health = Utils.getHealthByDamage(event.getFinalDamage(), bossEntity.getHealth());
+        double health = EventUtils.getHealthByDamage(event.getFinalDamage(), bossEntity.getHealth());
 
         upsertHealthBar(bossData.getName(), null, health, color, bossData.getHealth(), bossData.getMetadata());
     }

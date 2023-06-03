@@ -3,7 +3,7 @@ package com.wilmion.bossesplugin.mobsDificulties.boss;
 import com.wilmion.bossesplugin.models.BoosesModel;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import org.bukkit.Location;
 import org.bukkit.entity.CaveSpider;
@@ -47,7 +47,7 @@ public class SoldierSpider extends BoosesModel {
 
         world.createExplosion(location, 5f , false);
 
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         if(probability >= 50.0) server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(4, location), 20);
     }
@@ -64,7 +64,7 @@ public class SoldierSpider extends BoosesModel {
         CaveSpider boss = getBoss();
         PotionEffect invisible = new PotionEffect(PotionEffectType.INVISIBILITY, 100, 1);
 
-        if(Utils.getRandomInPercentage() <= 50.0) boss.addPotionEffect(invisible);
+        if(RandomUtils.getRandomInPercentage() <= 50.0) boss.addPotionEffect(invisible);
     }
 
     public void useUltimate1() {
@@ -108,7 +108,7 @@ public class SoldierSpider extends BoosesModel {
 
         LivingEntity living = (LivingEntity) entity;
 
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         PotionEffect slow = new PotionEffect(PotionEffectType.SLOW, 200, 2);
         PotionEffect weakness = new PotionEffect(PotionEffectType.WEAKNESS, 30, 1);

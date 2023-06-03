@@ -10,7 +10,8 @@ import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.AreaUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,7 +20,6 @@ import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -64,8 +64,8 @@ public class QueenSpider extends BoosesModel {
             return true;
         };
 
-        Utils.executeActionInARangeOfBlock(4, 0, location, actionRange);
-        Utils.executeActionInARangeOfBlock(4, 1, location, actionRange);
+        AreaUtils.executeActionInARangeOfBlock(4, 0, location, actionRange);
+        AreaUtils.executeActionInARangeOfBlock(4, 1, location, actionRange);
 
         Perk.generatePerk(3, location);
     }
@@ -97,8 +97,8 @@ public class QueenSpider extends BoosesModel {
         int x = 2 * face.getModX();
         int z = 2 * face.getModZ();
 
-        if(face.getModX() != 0) z *= Utils.getRandomNumberForSpace();
-        else x = Utils.getRandomNumberForSpace();
+        if(face.getModX() != 0) z *= RandomUtils.getRandomNumberForSpace();
+        else x = RandomUtils.getRandomNumberForSpace();
 
         Location location = boss.getLocation().clone();
 
@@ -132,14 +132,14 @@ public class QueenSpider extends BoosesModel {
         ultimate2Used = true;
 
         ActionRangeBlocks actionRange = (location) -> {
-            if(Utils.getRandomInPercentage() <= 80) location.getBlock().setType(Material.COBWEB);
+            if(RandomUtils.getRandomInPercentage() <= 80) location.getBlock().setType(Material.COBWEB);
             return true;
         };
 
         Spider boss = getBoss();
         BlockFace face = boss.getFacing();
 
-        Utils.executeActionInARangeOfBlock(3, 0, boss.getLocation(), actionRange);
+        AreaUtils.executeActionInARangeOfBlock(3, 0, boss.getLocation(), actionRange);
 
         for(int i = -1; i <= 1; i++) {
             int x = 0;

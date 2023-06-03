@@ -9,9 +9,7 @@ import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
-import com.wilmion.bossesplugin.utils.PluginUtils;
-import com.wilmion.bossesplugin.utils.Utils;
-import com.wilmion.bossesplugin.utils.WorldUtils;
+import com.wilmion.bossesplugin.utils.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -126,7 +124,7 @@ public class QueenBee extends BoosesModel {
     /* === Special Attack === */
 
     public void fatalAttack(LivingEntity target) {
-        Integer probability = Utils.getRandomInPercentage();
+        Integer probability = RandomUtils.getRandomInPercentage();
 
         if(probability > 30 || getBee().getHealth() > maxHealth * 0.8) return;
 
@@ -176,7 +174,7 @@ public class QueenBee extends BoosesModel {
             }, index * 10);
         };
 
-        Utils.executeActionInPosition(posAvailable, target.getLocation(), consumer);
+        AreaUtils.executeActionInPosition(posAvailable, target.getLocation(), consumer);
     }
 
     public void gonna(LivingEntity target) {

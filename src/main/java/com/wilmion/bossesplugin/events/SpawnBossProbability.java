@@ -2,8 +2,8 @@ package com.wilmion.bossesplugin.events;
 
 import com.wilmion.bossesplugin.commands.SpawnBossCommand;
 import com.wilmion.bossesplugin.utils.PluginUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 import com.wilmion.bossesplugin.utils.Resources;
-import com.wilmion.bossesplugin.utils.Utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -36,7 +36,7 @@ public class SpawnBossProbability {
         if(delaySpawnBoss > 0.0) return;
 
         for(Player player: server.getOnlinePlayers()) {
-            int probability = Utils.getRandomInPercentage();
+            int probability = RandomUtils.getRandomInPercentage();
 
             if(probability <= 1) {
                 spawnBoss(player);
@@ -69,8 +69,8 @@ public class SpawnBossProbability {
     }
     public static Location getRandomLocationNearlyPlayer(Player player) {
         Location location = player.getLocation().clone();
-        Integer modX = (Utils.getRandomInPercentage() + 200) * getRandomMultiplier();
-        Integer modZ = (Utils.getRandomInPercentage() + 200) * getRandomMultiplier();
+        Integer modX = (RandomUtils.getRandomInPercentage() + 200) * getRandomMultiplier();
+        Integer modZ = (RandomUtils.getRandomInPercentage() + 200) * getRandomMultiplier();
         Double modY = (double) player.getWorld().getHighestBlockYAt(location);
 
         location.setX(location.getX() + modX);
@@ -81,7 +81,7 @@ public class SpawnBossProbability {
     }
 
     private static Integer getRandomMultiplier() {
-        Integer multiplier = Utils.getRandomNumberForSpace();
+        Integer multiplier = RandomUtils.getRandomNumberForSpace();
 
         return multiplier == 0? 1 : multiplier;
     }

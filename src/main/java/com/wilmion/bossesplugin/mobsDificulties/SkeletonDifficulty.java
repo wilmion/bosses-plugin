@@ -1,7 +1,8 @@
 package com.wilmion.bossesplugin.mobsDificulties;
 
 import com.wilmion.bossesplugin.models.MobDifficulty;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.EventUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 import com.wilmion.bossesplugin.mobsDificulties.boss.MasterSkeleton;
 
 import org.bukkit.Location;
@@ -39,14 +40,14 @@ public class SkeletonDifficulty extends MobDifficulty {
         world = entity.getWorld();
         server = entity.getServer();
 
-        Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.SKELETON);
-        Boolean isAttack = Utils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
+        Boolean isDead = EventUtils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.SKELETON);
+        Boolean isAttack = EventUtils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
 
         Boolean isContinueBoss = MasterSkeleton.handleDamageByEntity(event);
 
         if(!isDead || !isAttack || !isContinueBoss) return;
 
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         Location location = entity.getLocation();
 

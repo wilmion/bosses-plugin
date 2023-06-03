@@ -4,10 +4,7 @@ import com.wilmion.bossesplugin.mobsDificulties.special.SpecialEntity;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
-import com.wilmion.bossesplugin.utils.ConstructionUtils;
-import com.wilmion.bossesplugin.utils.PluginUtils;
-import com.wilmion.bossesplugin.utils.Resources;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.*;
 import com.wilmion.bossesplugin.utils.entities.ArmorStandUtils;
 import com.wilmion.bossesplugin.utils.entities.FrameUtils;
 
@@ -137,7 +134,7 @@ public class BuildCommand {
         List<Material> items = Arrays.stream(Material.values()).filter(filter).collect(Collectors.toList());
 
         for (int i = 0; i < chest.getInventory().getSize(); i++) {
-            if(Utils.getRandomInPercentage() > 30) continue;
+            if(RandomUtils.getRandomInPercentage() > 30) continue;
 
             ItemStack item;
             Integer index = random.nextInt(items.size());

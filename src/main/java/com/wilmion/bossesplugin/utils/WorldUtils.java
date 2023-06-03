@@ -5,10 +5,8 @@ import com.wilmion.bossesplugin.objects.LocationDataModel;
 
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-import java.util.List;
 import java.util.UUID;
 
 public class WorldUtils {
@@ -65,6 +63,6 @@ public class WorldUtils {
             return true;
         };
 
-        Utils.executeActionInXOfBlocks(rangeX, 1, rangeZ, loc, actionRangeBlocks);
+        AreaUtils.executeActionInXOfBlocks(rangeX, 1, rangeZ, loc, actionRangeBlocks);
     }
 }

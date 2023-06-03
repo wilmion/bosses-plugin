@@ -4,9 +4,9 @@ import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileDataModel;
 import com.wilmion.bossesplugin.objects.buildFile.BuildFileModel;
+import com.wilmion.bossesplugin.utils.AreaUtils;
 import com.wilmion.bossesplugin.utils.ConstructionUtils;
 import com.wilmion.bossesplugin.utils.Resources;
-import com.wilmion.bossesplugin.utils.Utils;
 import com.wilmion.bossesplugin.utils.entities.ArmorStandUtils;
 import com.wilmion.bossesplugin.utils.entities.FrameUtils;
 
@@ -60,7 +60,7 @@ public class SaveCommand {
             return true;
         };
 
-        Utils.executeActionInXOfBlocks(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), loc, actionRangeBlocks);
+        AreaUtils.executeActionInXOfBlocks(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), loc, actionRangeBlocks);
 
         obj.setData(buildData);
         Resources.writeFile(path, obj);

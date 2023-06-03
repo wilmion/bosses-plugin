@@ -7,7 +7,8 @@ import com.wilmion.bossesplugin.interfaces.utils.ActionRangeBlocks;
 import com.wilmion.bossesplugin.models.BoosesModel;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.AreaUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -44,7 +45,7 @@ public class MasterWizard extends BoosesModel {
         world.spawn(getWitch().getLocation(), LightningStrike.class);
         world.createExplosion(getWitch().getLocation(), 2f, false);
 
-        if(Utils.getRandomInPercentage() > 50) return;
+        if(RandomUtils.getRandomInPercentage() > 50) return;
 
         server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(6, getWitch().getLocation()), 20);
     }
@@ -118,7 +119,7 @@ public class MasterWizard extends BoosesModel {
 
         Location location = target.getLocation().clone();
 
-        Utils.executeActionInARangeOfBlock(4, 30, location, action);
+        AreaUtils.executeActionInARangeOfBlock(4, 30, location, action);
     }
 
     public void useWizardGonnaUltimate() {

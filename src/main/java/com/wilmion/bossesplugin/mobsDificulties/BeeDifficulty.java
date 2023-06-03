@@ -4,7 +4,8 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 
 import com.wilmion.bossesplugin.mobsDificulties.boss.QueenBee;
 import com.wilmion.bossesplugin.models.MobDifficulty;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.EventUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -30,13 +31,13 @@ public class BeeDifficulty extends MobDifficulty {
     public void onDamageByEntityBeeEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
 
-        Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.BEE);
-        Boolean isValidCause = Utils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
+        Boolean isDead = EventUtils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.BEE);
+        Boolean isValidCause = EventUtils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
         Boolean isContinueBoss = QueenBee.handleDamageByEntity(event);
 
         if(!isDead || !isValidCause || !isContinueBoss) return;
 
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         if(probability <= 1) new QueenBee(entity.getLocation());
     }

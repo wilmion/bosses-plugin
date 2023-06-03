@@ -4,7 +4,8 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 
 import com.wilmion.bossesplugin.mobsDificulties.boss.MasterCreeper;
 import com.wilmion.bossesplugin.models.MobDifficulty;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.EventUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -38,13 +39,13 @@ public class CreeperDifficulty extends MobDifficulty {
     public void onDamageByEntityCrepperEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
 
-        Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.CREEPER);
-        Boolean isValidCause = Utils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
+        Boolean isDead = EventUtils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.CREEPER);
+        Boolean isValidCause = EventUtils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
         Boolean isContinueBoss = MasterCreeper.handleDamageByEntity(event);
 
         if(!isDead || !isValidCause || !isContinueBoss) return;
 
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         if(probability <= 1) {
             new MasterCreeper(entity.getLocation());

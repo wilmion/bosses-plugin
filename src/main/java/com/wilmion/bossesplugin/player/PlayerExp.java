@@ -3,7 +3,8 @@ package com.wilmion.bossesplugin.player;
 import com.wilmion.bossesplugin.models.MobDifficulty;
 import com.wilmion.bossesplugin.models.UserDataLevel;
 import com.wilmion.bossesplugin.models.ProgressBar;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.EventUtils;
+import com.wilmion.bossesplugin.utils.PlayerUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -36,9 +37,9 @@ public class PlayerExp extends MobDifficulty {
 
         Entity damagerEntity = event.getDamager();
         LivingEntity livingEntity = (LivingEntity) entity;
-        double health = Utils.getHealthByDamage(event.getFinalDamage(), livingEntity.getHealth());
+        double health = EventUtils.getHealthByDamage(event.getFinalDamage(), livingEntity.getHealth());
 
-        damagerEntity = Utils.livingDamager(damagerEntity, Player.class);
+        damagerEntity = EventUtils.livingDamager(damagerEntity, Player.class);
 
         Boolean isDead = health <= 0.00;
 
@@ -58,7 +59,7 @@ public class PlayerExp extends MobDifficulty {
             Integer level = userData.getLevel();
             String title = ChatColor.BLUE + "Bien hecho! Subiste a nivel " + level;
 
-            Utils.setTitleOnPlayer(player, title, "<=> Crecez en vida <=>");
+            PlayerUtils.setTitleOnPlayer(player, title, "<=> Crecez en vida <=>");
 
             player.playSound(player.getLocation(),Sound.ENTITY_WITHER_SKELETON_HURT, 1 , 0 );
         };

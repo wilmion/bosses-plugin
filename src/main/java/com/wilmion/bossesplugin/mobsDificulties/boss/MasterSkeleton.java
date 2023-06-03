@@ -7,7 +7,8 @@ import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.AreaUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import com.wilmion.bossesplugin.utils.WorldUtils;
 import org.bukkit.Location;
@@ -66,7 +67,7 @@ public class MasterSkeleton extends BoosesModel {
         super.deadFunctionality();
         Location location = entity.getLocation();
 
-        Integer probability = Utils.getRandomInPercentage();
+        Integer probability = RandomUtils.getRandomInPercentage();
 
         world.spawn(location, LightningStrike.class);
         world.createExplosion(location, 2F, false);
@@ -81,7 +82,7 @@ public class MasterSkeleton extends BoosesModel {
 
     private void useATQE1() {
         Entity target = getBoos().getTarget();
-        Integer probability = Utils.getRandomInPercentage();
+        Integer probability = RandomUtils.getRandomInPercentage();
 
         if(target == null || !this.isAlive() || probability <= 40) return;
 
@@ -94,7 +95,7 @@ public class MasterSkeleton extends BoosesModel {
         };
 
         setTemporalInvunerability();
-        Utils.executeActionInARangeOfBlock(3, 30, target.getLocation(), action);
+        AreaUtils.executeActionInARangeOfBlock(3, 30, target.getLocation(), action);
     }
 
     private void useATQE2() {
@@ -141,7 +142,7 @@ public class MasterSkeleton extends BoosesModel {
     }
 
     public void useUltimate2(Arrow arrow) {
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         PotionEffect potion = new PotionEffect(PotionEffectType.POISON, 160 , 2);
         PotionEffect weakness = new PotionEffect(PotionEffectType.WEAKNESS, 100, 2);

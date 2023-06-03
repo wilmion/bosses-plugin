@@ -2,7 +2,8 @@ package com.wilmion.bossesplugin.mobsDificulties;
 
 import com.wilmion.bossesplugin.mobsDificulties.boss.SupportZombie;
 import com.wilmion.bossesplugin.models.MobDifficulty;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.EventUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -31,8 +32,8 @@ public class ZombieDifficulty extends MobDifficulty  {
         world = entity.getWorld();
         server = entity.getServer();
 
-        Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getFinalDamage(), EntityType.ZOMBIE);
-        Boolean isAttack = Utils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
+        Boolean isDead = EventUtils.isDeadEntityOnDamage(entity, event.getFinalDamage(), EntityType.ZOMBIE);
+        Boolean isAttack = EventUtils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
 
         boolean continueToAlgthSZ = SupportZombie.handleDamageByEntity(event);
 
@@ -44,7 +45,7 @@ public class ZombieDifficulty extends MobDifficulty  {
 
         if(!originalZombie.isAdult()) return;
 
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         if(probability <= 1) new SupportZombie(location);
     }

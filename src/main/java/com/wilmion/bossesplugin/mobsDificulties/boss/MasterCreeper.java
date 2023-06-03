@@ -7,11 +7,10 @@ import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.models.metadata.EntityScoreboard;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.*;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 
-import com.wilmion.bossesplugin.utils.WorldUtils;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -58,7 +57,7 @@ public class MasterCreeper extends BoosesModel {
         super.deadFunctionality();
         world.createExplosion(entity.getLocation(), 8f, false);
 
-        if(Utils.getRandomInPercentage() > 50) return;
+        if(RandomUtils.getRandomInPercentage() > 50) return;
 
         server.getScheduler().scheduleSyncDelayedTask(plugin, () -> Perk.generatePerk(5, entity.getLocation()), 40);
     }
@@ -72,13 +71,13 @@ public class MasterCreeper extends BoosesModel {
         BlockFace face = boss.getFacing();
         PotionEffect fire = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999, 1);
 
-        int probabilityToCharge = Utils.getRandomInPercentage();
+        int probabilityToCharge = RandomUtils.getRandomInPercentage();
 
         int x = 2 * face.getModX();
         int z = 2 * face.getModZ();
 
-        if(face.getModX() != 0) z *= Utils.getRandomNumberForSpace();
-        else x = Utils.getRandomNumberForSpace();
+        if(face.getModX() != 0) z *= RandomUtils.getRandomNumberForSpace();
+        else x = RandomUtils.getRandomNumberForSpace();
 
         Location location = boss.getLocation().clone();
 
@@ -130,7 +129,7 @@ public class MasterCreeper extends BoosesModel {
             return true;
         };
 
-        Utils.executeActionInARangeOfBlock(3,  10, location, actionRangeBlocks);
+        AreaUtils.executeActionInARangeOfBlock(3,  10, location, actionRangeBlocks);
     }
 
     public void lessMinion() {
@@ -173,7 +172,7 @@ public class MasterCreeper extends BoosesModel {
     }
 
     private static void detectInvunerabilityToExplosions(EntityDamageEvent event) {
-        boolean isExplosion = Utils.isDamageType(event.getCause().name(), "ENTITY_EXPLOSION");
+        boolean isExplosion = EventUtils.isDamageType(event.getCause().name(), "ENTITY_EXPLOSION");
 
         if(!isExplosion) return;
 

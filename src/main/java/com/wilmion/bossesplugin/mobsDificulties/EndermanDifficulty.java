@@ -2,7 +2,8 @@ package com.wilmion.bossesplugin.mobsDificulties;
 
 import com.wilmion.bossesplugin.mobsDificulties.boss.ExpertEnderman;
 import com.wilmion.bossesplugin.models.MobDifficulty;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.EventUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -28,13 +29,13 @@ public class EndermanDifficulty extends MobDifficulty {
     public void onDamageByEntityEndermanEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
 
-        Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.ENDERMAN);
-        Boolean isValidCause = Utils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
+        Boolean isDead = EventUtils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.ENDERMAN);
+        Boolean isValidCause = EventUtils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
         Boolean isContinueBoss = ExpertEnderman.handleDamageByEntity(event);
 
         if(!isDead || !isValidCause || !isContinueBoss) return;
 
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         if(probability <= 1) new ExpertEnderman(entity.getLocation());
     }

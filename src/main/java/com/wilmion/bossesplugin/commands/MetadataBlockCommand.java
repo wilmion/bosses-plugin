@@ -1,8 +1,8 @@
 package com.wilmion.bossesplugin.commands;
 
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
+import com.wilmion.bossesplugin.utils.AreaUtils;
 import com.wilmion.bossesplugin.utils.Resources;
-import com.wilmion.bossesplugin.utils.Utils;
 
 import com.wilmion.bossesplugin.utils.WorldUtils;
 import net.kyori.adventure.text.Component;
@@ -99,7 +99,7 @@ public class MetadataBlockCommand {
             if(!result.equals("")) WorldUtils.displayFloatingTextByXSeconds(block.getLocation().clone(), result, duration);
         };
 
-        Utils.executeActionIn3DRange(player.getLocation().clone(), 20, callback);
+        AreaUtils.executeActionIn3DRange(player.getLocation().clone(), 20, callback);
         player.sendMessage(ChatColor.DARK_GREEN + "Nearly metadata Showed!.");
 
         return null;

@@ -4,7 +4,8 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 
 import com.wilmion.bossesplugin.mobsDificulties.boss.MasterWizard;
 import com.wilmion.bossesplugin.models.MobDifficulty;
-import com.wilmion.bossesplugin.utils.Utils;
+import com.wilmion.bossesplugin.utils.EventUtils;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -29,13 +30,13 @@ public class WitchDifficulty extends MobDifficulty {
     public void onDamageByEntityWitchEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
 
-        Boolean isDead = Utils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.WITCH);
-        Boolean isValidCause = Utils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
+        Boolean isDead = EventUtils.isDeadEntityOnDamage(entity, event.getDamage(), EntityType.WITCH);
+        Boolean isValidCause = EventUtils.isDamageType(event.getCause().name(), "ENTITY_ATTACK");
         Boolean isContinueBoss = MasterWizard.handleDamageByEntity(event);
 
         if(!isDead || !isValidCause || !isContinueBoss) return;
 
-        int probability = Utils.getRandomInPercentage();
+        int probability = RandomUtils.getRandomInPercentage();
 
         if(probability <= 1) new MasterWizard(entity.getLocation());
     }
