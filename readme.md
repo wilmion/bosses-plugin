@@ -15,12 +15,46 @@ _BossesPlugin_ is a minecraft plugin that it increment the mobs difficulties in 
 
 ## Installation
 
-Move the output file to minecraft folder plugins.
+Move this [file](./static/bosses-plugin.jar) to minecraft folder plugins.
 
 ## FEATURES V1.3
 It's the v1.3 of **Bosses Plugin**, and it have a some updates
 
+### Ann Tower
 
+In this version the Ann tower is a tower where the Master Skeleton is located, this tower has multiple rewards but also is hard to defeat the tower.
+
+#### Entry of Ann tower
+
+![The entry of the tower](./static/entry-ann-tower.jpg)
+
+#### Ann Castle
+
+![The castle](./static/ann_castle.jpg)
+
+### Spider Base
+
+The spider base is a base where the Queen spider and Soldier spider are located, it located inside on the caves, this base has a multiple rewards but is hard to defeat the base.
+
+#### Entry of the Spider base
+
+![The entry of the base](./static/entry-spider-base.jpg)
+
+#### Center of the Spider Base
+
+![The center of the base](./static/spider_base.jpg)
+
+### New Boss: Expert Enderman
+
+In this update we did add a boss that represents to the **Enderman** mob of minecraft.
+
+![Expert Enderman boss](./static/atticus_preview.jpg)
+
+### New Boss: Queen Bee
+
+In this update we did add a boss that represents to the **Bee** mob of minecraft.
+
+![Queen Bee boss](./static/milenia_preview.jpg)
 
 ## FEATURES V1.2
 
