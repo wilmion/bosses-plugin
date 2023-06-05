@@ -6,7 +6,11 @@
       "name": "lvl 5 | Flechero del castillo Jordi",
       "followRange": 35.0,
       "health": 40.0,
-      "equipment": {}
+      "equipment": {
+        "sword": {
+          "type": "BOW"
+        }
+      }
     },
     {
       "key": "JORDI_RESIDENT",
@@ -129,7 +133,7 @@
       "followRange": 10.0,
       "equipment": {
         "helmet": {
-          "type": "NETHERITE_HELMET",
+          "type": "IRON_HELMET",
           "unbreakable": true
         },
         "sword": {
@@ -284,20 +288,24 @@
       "key": "ARCHER_SKELETON_LVL3",
       "entityType": "SKELETON",
       "name": "Arquero de Ann | lvl 3",
-      "health": 80.0,
+      "health": 60.0,
+      "followRange": 80.0,
       "equipment": {
         "helmet": {
-          "type": "NETHERITE_HELMET",
+          "type": "LEATHER_HELMET",
           "unbreakable": true
         },
         "chestplate": {
-          "type": "NETHERITE_CHESTPLATE"
+          "type": "DIAMOND_CHESTPLATE"
         },
         "leggings": {
-          "type": "NETHERITE_LEGGINGS"
+          "type": "IRON_LEGGINGS"
         },
         "boots": {
-          "type": "NETHERITE_BOOTS"
+          "type": "IRON_BOOTS"
+        },
+        "sword": {
+          "type": "BOW"
         }
       }
     },
@@ -308,7 +316,7 @@
       "health": 26.0,
       "equipment": {
         "helmet": {
-          "type": "IRON_HELMET",
+          "type": "LEATHER_HELMET",
           "unbreakable": true
         },
         "chestplate": {
@@ -319,6 +327,9 @@
         },
         "boots": {
           "type": "IRON_BOOTS"
+        },
+        "sword": {
+          "type": "BOW"
         }
       }
     },
@@ -340,6 +351,9 @@
         },
         "boots": {
           "type": "LEATHER_BOOTS"
+        },
+        "sword": {
+          "type": "BOW"
         }
       }
     },

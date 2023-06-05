@@ -1,9 +1,9 @@
 package com.wilmion.bossesplugin.events;
 
 import com.wilmion.bossesplugin.commands.SpawnBossCommand;
+import com.wilmion.bossesplugin.enums.BossEnum;
 import com.wilmion.bossesplugin.utils.PluginUtils;
 import com.wilmion.bossesplugin.utils.RandomUtils;
-import com.wilmion.bossesplugin.utils.Resources;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,21 +12,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class SpawnBossProbability {
     private Plugin plugin;
     private Server server;
-    private List<String> bossesName;
+    private List<String> bossesName = BossEnum.getKeys();
     public static double delaySpawnBoss = 36000.0;
 
     public SpawnBossProbability() {
-        Map<String, Object> file = Resources.getJsonByData("commands-boss.json", Map.class);
-
         this.plugin = PluginUtils.getPlugin();
         this.server = plugin.getServer();
-        this.bossesName = (List<String>) file.get("bosses");
 
         server.getScheduler().scheduleSyncRepeatingTask(plugin, this::setSpawnObserver, 100, 100);
     }

@@ -2,7 +2,9 @@ package com.wilmion.bossesplugin.mobsDificulties.special;
 
 import com.wilmion.bossesplugin.objects.special_entity.SpecialEntityDataModel;
 import com.wilmion.bossesplugin.objects.special_entity.SpecialEntityModel;
+import com.wilmion.bossesplugin.utils.RandomUtils;
 import com.wilmion.bossesplugin.utils.Resources;
+import com.wilmion.bossesplugin.utils.material.EquipmentUtils;
 
 import lombok.Getter;
 
@@ -88,6 +90,8 @@ public class SpecialEntity {
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(meta);
         item.setDurability(Short.MAX_VALUE);
+
+        if(RandomUtils.getRandomInPercentage() <= 30) item = EquipmentUtils.enchantmentToItemStack(item);
 
         return item;
     }

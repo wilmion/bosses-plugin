@@ -10,18 +10,17 @@ _BossesPlugin_ is a minecraft plugin that it increment the mobs difficulties in 
 -  Soldier Spider (soldier-spider)
 -  Queen Spider (queen-spider)
 -  Master Wizard (master-wizard)
+-  Expert Enderman (expert-enderman)
+-  Queen Bee (queen-bee)
 
 ## Installation
 
-The Installation consist in two steps.
-
-#### Jar File
-
 Move the output file to minecraft folder plugins.
 
-#### Natural generation (IMPORTANT!)
+## FEATURES V1.3
+It's the v1.3 of **Bosses Plugin**, and it have a some updates
 
-It's important to copy this file in your server files. Download and copy the file of this [Link](./static/jordi_tower.json) to **[Server_path]/plugins/bosses-plugin-data/buildings** (Create the folders if you don't have)
+
 
 ## FEATURES V1.2
 

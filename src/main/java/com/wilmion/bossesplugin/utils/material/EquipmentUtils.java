@@ -14,6 +14,9 @@ public class EquipmentUtils {
     public static ItemStack enchantmentToItemStack(ItemStack item) {
         ItemMeta itemMeta = item.getItemMeta();
         List<Enchantment> enchantmentsList = Arrays.stream(Enchantment.values()).filter(e -> e.canEnchantItem(item)).collect(Collectors.toList());
+
+        if(enchantmentsList.size() == 0) return item;
+
         ItemStack book = EnchantmentUtils.getRandomEnchantmentBook(enchantmentsList.toArray(new Enchantment[0]));
         EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) book.getItemMeta();
         Map<Enchantment, Integer> enchantments = bookMeta.getStoredEnchants();
