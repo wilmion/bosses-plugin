@@ -1,9 +1,6 @@
 package com.wilmion.bossesplugin;
 
-import com.wilmion.bossesplugin.events.CommandManager;
-import com.wilmion.bossesplugin.events.EntityEvents;
-import com.wilmion.bossesplugin.events.ObserverPlayer;
-import com.wilmion.bossesplugin.events.SpawnBossProbability;
+import com.wilmion.bossesplugin.events.*;
 import com.wilmion.bossesplugin.models.metadata.BossesMetadata;
 import com.wilmion.bossesplugin.utils.PluginUtils;
 
@@ -22,6 +19,7 @@ public final class BossesPlugin extends JavaPlugin {
 
         // Create my custom commands
         getCommand("bsspl").setExecutor(new CommandManager());
+        getCommand("bsspl").setTabCompleter(new TabCompleterManager());
 
         new SpawnBossProbability();
         new ObserverPlayer();

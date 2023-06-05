@@ -1,10 +1,11 @@
 package com.wilmion.bossesplugin.commands;
 
+import com.wilmion.bossesplugin.enums.BossEnum;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.utils.AreaUtils;
 import com.wilmion.bossesplugin.utils.Resources;
-
 import com.wilmion.bossesplugin.utils.WorldUtils;
+
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.ChatColor;
@@ -16,8 +17,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class MetadataBlockCommand {
-    private List<String> specialEntitiesName;
-    private List<String> bossesNames;
+    public List<String> specialEntitiesName;
+    private List<String> bossesNames = BossEnum.getKeys();
 
     private String helpMtdShow = "/bsspl metadata-block show <Duration = 5> -> Show metadata in 20x20x20 range with duration\n";
     private String helpMtdEntitySpawn = "/bsspl metadata-block spawn-entity <NAME> <Quantity> -> Set metadata on current block of spawn entity\n";
@@ -26,11 +27,9 @@ public class MetadataBlockCommand {
 
     public MetadataBlockCommand() {
         Map<String, Object> file = Resources.getJsonByData("special-entities.json", Map.class);
-        Map<String, Object> bossesFile = Resources.getJsonByData("commands-boss.json", Map.class);
         List<Map<String, Object>> entities = (List<Map<String, Object>>) file.get("entities");
 
         this.specialEntitiesName = entities.stream().map(entity -> (String) entity.get("key")).collect(Collectors.toList());
-        this.bossesNames = (List<String>) bossesFile.get("bosses");
     }
 
     public List<String> handleCommand(Player player, String[] args) {

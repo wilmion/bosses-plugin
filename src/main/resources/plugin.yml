@@ -7,4 +7,4 @@ description: Plugin de jefes en los mods naturales para una mayor dificultad,
 commands:
   bsspl:
     description: Core comands for the Bosses Plugin
-    usage: /<command> subCommand <args>
+    usage: /bsspl <subcommands> <args>

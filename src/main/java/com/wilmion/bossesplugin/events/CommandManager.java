@@ -13,7 +13,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
@@ -44,10 +43,13 @@ public class CommandManager implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!(sender instanceof Player) || args.length == 0) return false;
+        if(!(sender instanceof Player)) return noPlayer(sender);
+        if(args.length == 0) return false;
 
         Player player = (Player) sender;
         String subCommand = args[0];
+
+        if(!player.isOp()) return noOp(player);
 
         if(subCommand.equals("spawnboss")) return spawnBossCommand(player, args);
         if(subCommand.equals("build")) return build(player, args);
@@ -118,6 +120,16 @@ public class CommandManager implements CommandExecutor {
         WorldUtils.cleanInRange(player.getLocation().clone(), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
         player.sendMessage(Component.text(ChatColor.DARK_GREEN + "Range cleaned!"));
 
+        return true;
+    }
+
+    private Boolean noOp(Player player) {
+        player.sendMessage(ChatColor.YELLOW + "You need to be OP for use bosses plugins commands");
+        return true;
+    }
+
+    private Boolean noPlayer(CommandSender sender) {
+        sender.sendMessage(ChatColor.YELLOW + "Only players that be Op use bosses plugins commands");
         return true;
     }
 

@@ -1,29 +1,19 @@
 package com.wilmion.bossesplugin.commands;
 
-import com.wilmion.bossesplugin.utils.PluginUtils;
-import com.wilmion.bossesplugin.utils.Resources;
+import com.wilmion.bossesplugin.enums.BossEnum;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 public class SpawnBossCommand {
-    private List<String> bossesName;
-
-    public SpawnBossCommand() {
-        Map<String, Object> file = Resources.getJsonByData("commands-boss.json", Map.class);
-
-        this.bossesName = (List<String>) file.get("bosses");
-    }
-
+    private List<String> bossesName = BossEnum.getKeys();
 
     public boolean handleCommand(Player player, String[] args) {
         if(args.length < 2) return false;

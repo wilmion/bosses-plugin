@@ -36,7 +36,7 @@ public class BuildCommand {
 
     private Plugin plugin;
 
-    private List<String> buildingsNames;
+    public List<String> buildingsNames;
 
     private Type buildType = new TypeToken<Map<String, List<BuildFileModel>>>() {}.getType();
 
