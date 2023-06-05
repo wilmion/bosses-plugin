@@ -9,8 +9,8 @@ import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.boss.BossDataModel;
 import com.wilmion.bossesplugin.utils.AreaUtils;
 import com.wilmion.bossesplugin.utils.RandomUtils;
-
 import com.wilmion.bossesplugin.utils.WorldUtils;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -53,6 +53,7 @@ public class MasterSkeleton extends BoosesModel {
 
         ItemStack helmet = new ItemStack(Material.IRON_HELMET);
         ItemStack bow = new ItemStack(Material.BOW);
+        PotionEffect reduceDamage = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999999, 6);
 
         helmet.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, 4);
         bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 6);
@@ -60,6 +61,7 @@ public class MasterSkeleton extends BoosesModel {
 
         boss.getEquipment().setHelmet(helmet);
         boss.getEquipment().setItemInMainHand(bow);
+        boss.addPotionEffect(reduceDamage);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.wilmion.bossesplugin.models.Perk;
 import com.wilmion.bossesplugin.objects.metadata.MetadataModel;
 import com.wilmion.bossesplugin.utils.RandomUtils;
 import com.wilmion.bossesplugin.utils.WorldUtils;
+import com.wilmion.bossesplugin.utils.material.EquipmentUtils;
 
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -19,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -48,11 +50,25 @@ public class SupportZombie extends BoosesModel {
     protected void equipBoss() {
         Zombie zombie = getBoss();
 
-        zombie.getEquipment().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
-        zombie.getEquipment().setChestplate(new ItemStack(Material.GOLDEN_CHESTPLATE));
-        zombie.getEquipment().setLeggings(new ItemStack(Material.GOLDEN_LEGGINGS));
-        zombie.getEquipment().setBoots(new ItemStack(Material.GOLDEN_BOOTS));
+        PotionEffect damage = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 999999999, 3);
+        PotionEffect reduceDamage = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999999, 5);
+
+        ItemStack helmet = EquipmentUtils.enchantmentToItemStack(new ItemStack(Material.GOLDEN_HELMET));
+        ItemStack chestPlate = EquipmentUtils.enchantmentToItemStack(new ItemStack(Material.GOLDEN_CHESTPLATE));
+        ItemStack leggings = EquipmentUtils.enchantmentToItemStack(new ItemStack(Material.GOLDEN_LEGGINGS));
+        ItemStack boots = EquipmentUtils.enchantmentToItemStack(new ItemStack(Material.GOLDEN_BOOTS));
+        ItemMeta helmetMeta = helmet.getItemMeta();
+
+        helmetMeta.setUnbreakable(true);
+        helmet.setItemMeta(helmetMeta);
+
+        zombie.getEquipment().setHelmet(helmet);
+        zombie.getEquipment().setChestplate(chestPlate);
+        zombie.getEquipment().setLeggings(leggings);
+        zombie.getEquipment().setBoots(boots);
         zombie.getEquipment().setItemInMainHand(new ItemStack(Material.STICK));
+        zombie.addPotionEffect(damage);
+        zombie.addPotionEffect(reduceDamage);
     }
 
     @Override
