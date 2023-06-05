@@ -7,7 +7,6 @@ import com.wilmion.bossesplugin.mobsDificulties.*;
 import com.wilmion.bossesplugin.models.metadata.BlockMetadata;
 import com.wilmion.bossesplugin.player.PlayerDifficulty;
 import com.wilmion.bossesplugin.player.PlayerExp;
-import com.wilmion.bossesplugin.utils.PluginUtils;
 
 import io.papermc.paper.event.entity.EntityMoveEvent;
 
@@ -116,7 +115,5 @@ public class EntityEvents implements Listener {
     public void onSeverLoad(ServerLoadEvent event) {
         BlockMetadata.getData();
         new StructureGeneration();
-
-        if (PluginUtils.getPlugin().isEnabled()) PlayerDifficulty.watchDifficulty();
     }
 }
