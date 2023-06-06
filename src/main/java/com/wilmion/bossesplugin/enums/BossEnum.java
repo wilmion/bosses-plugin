@@ -9,6 +9,7 @@ public enum BossEnum {
     ANN("master-skeleton"),
     MIQUEL("soldier-spider"),
     AURORA("queen-spider"),
+    JACK("master-creeper"),
     ZETANNA("master-wizard"),
     ATTICUS("expert-enderman"),
     MILENIA("queen-bee");
