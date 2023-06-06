@@ -267,6 +267,7 @@ public class SupportZombie extends BoosesModel {
 
         drowned.setHealth(boss.getHealth());
         drowned.setRemoveWhenFarAway(false);
+        drowned.addPotionEffects(boss.getActivePotionEffects());
 
         BossesMetadata.deleteBoss(currentUniqueUUID);
         bossModel.get().entity = drowned;
