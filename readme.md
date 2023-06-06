@@ -56,7 +56,6 @@ In this update we did add a boss that represents to the **Bee** mob of minecraft
 
 ![Queen Bee boss](./static/milenia_preview.jpg)
 
-<!--
 ## FEATURES V1.2
 
 It's the v1.2 of **Bosses Plugin**, and it have a some updates.
@@ -90,8 +89,6 @@ This is a resume of the new commands:
 - /bsspl build <name> <angle = 0deg> _Build a structure by name that you save in X angle._
 - /bsspl metadata-block <opts> _Set group of metadata._
 - /bsspl clean-range <XSize> <Zsize> _Clean a range depending by X and Z size._
-
--->
 
 ## Contributing
 
