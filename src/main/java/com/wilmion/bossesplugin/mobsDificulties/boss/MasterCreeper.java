@@ -63,7 +63,7 @@ public class MasterCreeper extends BoosesModel {
     }
 
     private void usePassive() {
-        if(!isAlive() || minions >= 5) return;
+        if(!isAlive() || minions >= 5 || getBoss().getTarget() == null) return;
 
         setTemporalInvunerability();
 
